@@ -1,9 +1,10 @@
 use std::fmt;
+use std::ops::{Add, AddAssign, Sub, SubAssign};
 
 /**
  * TimeTuples should **always** be called with `.resolve()`.
  */
-#[derive(Eq)]
+#[derive(Eq, Debug, Copy, Clone)]
 pub struct TimeTuple {
     h: i32,
     m: i32,
@@ -49,6 +50,48 @@ impl PartialEq for TimeTuple {
         let res = self.resolve();
         let o_res = other.resolve();
         res.h == o_res.h && res.m == o_res.m && res.s == o_res.s
+    }
+}
+
+impl Add for TimeTuple {
+    type Output = TimeTuple;
+    fn add(self, other: TimeTuple) -> TimeTuple {
+        TimeTuple {
+            h: self.h + other.h,
+            m: self.m + other.m,
+            s: self.s + other.s,
+        }.resolve()
+    }
+}
+
+impl AddAssign for TimeTuple {
+    fn add_assign(&mut self, other: TimeTuple) {
+        *self = TimeTuple {
+            h: self.h + other.h,
+            m: self.m + other.m,
+            s: self.s + other.s,
+        }.resolve();
+    }
+}
+
+impl Sub for TimeTuple {
+    type Output = TimeTuple;
+    fn sub(self, other: TimeTuple) -> TimeTuple {
+        TimeTuple {
+            h: self.h - other.h,
+            m: self.m - other.m,
+            s: self.s - other.s,
+        }.resolve()
+    }
+}
+
+impl SubAssign for TimeTuple {
+    fn sub_assign(&mut self, other: TimeTuple) {
+        *self = TimeTuple {
+            h: self.h - other.h,
+            m: self.m - other.m,
+            s: self.s - other.s,
+        }.resolve();
     }
 }
 
@@ -157,6 +200,15 @@ mod tests {
     fn test_to_hhmm_string() {
         let tuple = super::TimeTuple { h: 3, m: 0, s: 39 }.resolve();
         assert_eq!(String::from("03:00"), tuple.to_hhmm_string())
+    }
+
+    #[test]
+    fn test_operators() {
+        let zeroes = super::TimeTuple { h: 0, m: 0, s: 0 };
+        let ones = super::TimeTuple { h: 1, m: 1, s: 1 };
+        let twos = super::TimeTuple { h: 2, m: 2, s: 2 };
+        assert_eq!(twos, ones + ones);
+        assert_eq!(zeroes, ones - ones);
     }
 
 }
