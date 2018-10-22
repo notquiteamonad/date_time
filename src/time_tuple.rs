@@ -1,3 +1,5 @@
+use std::fmt;
+
 /**
  * TimeTuples should **always** be called with `.resolve()`.
  */
@@ -12,7 +14,7 @@ impl TimeTuple {
      * Resolves any overflow/underflow in the TimeTuple.
      */
     pub fn resolve(&self) -> TimeTuple {
-        let mut total_seconds = &self.s + 60 * &self.m + 3600 * &self.h;
+        let mut total_seconds = self.s + 60 * self.m + 3600 * self.h;
         while total_seconds > 86400 {
             total_seconds -= 86400;
         }
@@ -28,6 +30,16 @@ impl TimeTuple {
             m,
             s: total_seconds,
         }
+    }
+
+    pub fn to_hhmm_string(&self) -> String {
+        format!("{:02}:{:02}", self.h, self.m)
+    }
+}
+
+impl fmt::Display for TimeTuple {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:02}:{:02}:{:02}", self.h, self.m, self.s)
     }
 }
 
@@ -124,6 +136,18 @@ mod tests {
         assert_eq!(18, tuple.h);
         assert_eq!(58, tuple.m);
         assert_eq!(59, tuple.s);
+    }
+
+    #[test]
+    fn test_to_string() {
+        let tuple = super::TimeTuple { h: 3, m: 0, s: 39 }.resolve();
+        assert_eq!(String::from("03:00:39"), tuple.to_string())
+    }
+
+    #[test]
+    fn test_to_hhmm_string() {
+        let tuple = super::TimeTuple { h: 3, m: 0, s: 39 }.resolve();
+        assert_eq!(String::from("03:00"), tuple.to_hhmm_string())
     }
 
 }
