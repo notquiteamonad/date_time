@@ -33,6 +33,7 @@ impl TimeTuple {
 
 #[cfg(test)]
 mod tests {
+
     #[test]
     fn test_no_seconds() {
         let tuple = super::TimeTuple { h: 5, m: 30, s: 0 }.resolve();
@@ -40,4 +41,89 @@ mod tests {
         assert_eq!(30, tuple.m);
         assert_eq!(0, tuple.s);
     }
+
+    #[test]
+    fn test_no_overlap() {
+        let tuple = super::TimeTuple { h: 5, m: 30, s: 30 }.resolve();
+        assert_eq!(5, tuple.h);
+        assert_eq!(30, tuple.m);
+        assert_eq!(30, tuple.s);
+    }
+
+    #[test]
+    fn test_second_overlap() {
+        let tuple = super::TimeTuple { h: 6, m: 30, s: 90 }.resolve();
+        assert_eq!(6, tuple.h);
+        assert_eq!(31, tuple.m);
+        assert_eq!(30, tuple.s);
+    }
+
+    #[test]
+    fn test_minute_overlap() {
+        let tuple = super::TimeTuple { h: 6, m: 90, s: 30 }.resolve();
+        assert_eq!(7, tuple.h);
+        assert_eq!(30, tuple.m);
+        assert_eq!(30, tuple.s);
+    }
+
+    #[test]
+    fn test_hour_overlap() {
+        let tuple = super::TimeTuple {
+            h: 25,
+            m: 30,
+            s: 30,
+        }.resolve();
+        assert_eq!(1, tuple.h);
+        assert_eq!(30, tuple.m);
+        assert_eq!(30, tuple.s);
+    }
+
+    #[test]
+    fn test_all_overlap() {
+        let tuple = super::TimeTuple {
+            h: 25,
+            m: 90,
+            s: 90,
+        }.resolve();
+        assert_eq!(2, tuple.h);
+        assert_eq!(31, tuple.m);
+        assert_eq!(30, tuple.s);
+    }
+
+    #[test]
+    fn test_minutes_to_hours_overlap() {
+        let tuple = super::TimeTuple {
+            h: 18,
+            m: 420,
+            s: 0,
+        }.resolve();
+        assert_eq!(1, tuple.h);
+        assert_eq!(0, tuple.m);
+        assert_eq!(0, tuple.s);
+    }
+
+    #[test]
+    fn test_negative_seconds() {
+        let tuple = super::TimeTuple {
+            h: 6,
+            m: 30,
+            s: -60,
+        }.resolve();
+        assert_eq!(6, tuple.h);
+        assert_eq!(29, tuple.m);
+        assert_eq!(0, tuple.s);
+    }
+
+    #[test]
+    fn test_all_negative_overlaps() {
+        let tuple = super::TimeTuple {
+            h: -3,
+            m: -116,
+            s: -301,
+        }.resolve();
+        assert_eq!(18, tuple.h);
+        assert_eq!(58, tuple.m);
+        assert_eq!(59, tuple.s);
+    }
+
 }
