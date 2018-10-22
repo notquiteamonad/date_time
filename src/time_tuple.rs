@@ -37,6 +37,11 @@ impl TimeTuple {
     pub fn to_hhmm_string(&self) -> String {
         format!("{:02}:{:02}", self.h, self.m)
     }
+
+    pub fn to_seconds(&self) -> i32 {
+        let res = &self.resolve();
+        3600 * res.h + 60 * res.m + res.s
+    }
 }
 
 impl fmt::Display for TimeTuple {
@@ -209,6 +214,12 @@ mod tests {
         let twos = super::TimeTuple { h: 2, m: 2, s: 2 };
         assert_eq!(twos, ones + ones);
         assert_eq!(zeroes, ones - ones);
+    }
+
+    #[test]
+    fn test_to_seconds() {
+        let tuple = super::TimeTuple { h: 2, m: 30, s: 30 }.resolve();
+        assert_eq!(9030, tuple.to_seconds())
     }
 
 }
