@@ -3,6 +3,7 @@ use std::fmt;
 /**
  * TimeTuples should **always** be called with `.resolve()`.
  */
+#[derive(Eq)]
 pub struct TimeTuple {
     h: i32,
     m: i32,
@@ -40,6 +41,14 @@ impl TimeTuple {
 impl fmt::Display for TimeTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:02}:{:02}:{:02}", self.h, self.m, self.s)
+    }
+}
+
+impl PartialEq for TimeTuple {
+    fn eq(&self, other: &TimeTuple) -> bool {
+        let res = self.resolve();
+        let o_res = other.resolve();
+        res.h == o_res.h && res.m == o_res.m && res.s == o_res.s
     }
 }
 
