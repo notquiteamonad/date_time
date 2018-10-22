@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 
@@ -55,6 +56,18 @@ impl PartialEq for TimeTuple {
         let res = self.resolve();
         let o_res = other.resolve();
         res.h == o_res.h && res.m == o_res.m && res.s == o_res.s
+    }
+}
+
+impl PartialOrd for TimeTuple {
+    fn partial_cmp(&self, other: &TimeTuple) -> Option<Ordering> {
+        self.to_seconds().partial_cmp(&other.to_seconds())
+    }
+}
+
+impl Ord for TimeTuple {
+    fn cmp(&self, other: &TimeTuple) -> Ordering {
+        self.to_seconds().cmp(&other.to_seconds())
     }
 }
 
@@ -214,6 +227,11 @@ mod tests {
         let twos = super::TimeTuple { h: 2, m: 2, s: 2 };
         assert_eq!(twos, ones + ones);
         assert_eq!(zeroes, ones - ones);
+        assert!(zeroes < ones);
+        assert!(zeroes < twos);
+        assert!(twos > ones);
+        assert!(zeroes <= ones);
+        assert!(ones <= ones);
     }
 
     #[test]
