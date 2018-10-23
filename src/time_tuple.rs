@@ -2,9 +2,6 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 
-/**
- * TimeTuples should **always** be called with `.resolve()`.
- */
 #[derive(Eq, Debug, Copy, Clone)]
 pub struct TimeTuple {
     h: i32,
@@ -13,10 +10,26 @@ pub struct TimeTuple {
 }
 
 impl TimeTuple {
+    pub fn new(h: i32, m: i32, s: i32) -> TimeTuple {
+        TimeTuple { h, m, s }.resolve()
+    }
+
+    pub fn get_hours(&self) -> u32 {
+        self.resolve().h as u32
+    }
+
+    pub fn get_minutes(&self) -> u32 {
+        self.resolve().m as u32
+    }
+
+    pub fn get_seconds(&self) -> u32 {
+        self.resolve().s as u32
+    }
+
     /**
      * Resolves any overflow/underflow in the TimeTuple.
      */
-    pub fn resolve(&self) -> TimeTuple {
+    fn resolve(&self) -> TimeTuple {
         let mut total_seconds = self.s + 60 * self.m + 3600 * self.h;
         while total_seconds > 86400 {
             total_seconds -= 86400;

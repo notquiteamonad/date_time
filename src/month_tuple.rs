@@ -16,6 +16,21 @@ pub struct MonthTuple {
 }
 
 impl MonthTuple {
+    pub fn new(y: u32, m: u32) -> MonthTuple {
+        MonthTuple { y, m }
+    }
+
+    pub fn get_year(&self) -> u32 {
+        self.y
+    }
+
+    /**
+     * Note this month is **ZERO-BASED** (zero represents January).
+     */
+    pub fn get_month(&self) -> u32 {
+        self.m
+    }
+
     pub fn next_month(self) -> MonthTuple {
         if self.m == 11 {
             MonthTuple {
