@@ -2,6 +2,10 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
 
+const MONTH_STRINGS: [&str; 12] = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
 /**
  * **NOTE:** MonthTuple's `m` field is zero-based (zero represents January).
  */
@@ -37,6 +41,13 @@ impl MonthTuple {
                 y: self.y,
                 m: self.m - 1,
             }
+        }
+    }
+
+    pub fn to_readable_string(&self) -> String {
+        match MONTH_STRINGS.iter().skip(self.m as usize).next() {
+            Some(s) => return format!("{} {:04}", s, self.y),
+            None => panic!("Invalid MonthTuple: {:?}", self),
         }
     }
 }
@@ -85,7 +96,11 @@ mod tests {
         );
     }
 
-    //todo toreadablestring
+    #[test]
+    fn test_to_readable_string() {
+        let tuple = super::MonthTuple { y: 2000, m: 5 };
+        assert_eq!(String::from("Jun 2000"), tuple.to_readable_string());
+    }
 
     #[test]
     fn test_to_string() {
