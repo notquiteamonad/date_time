@@ -11,26 +11,7 @@ pub struct TimeTuple {
 
 impl TimeTuple {
     pub fn new(h: i32, m: i32, s: i32) -> TimeTuple {
-        TimeTuple { h, m, s }.resolve()
-    }
-
-    pub fn get_hours(&self) -> u32 {
-        self.resolve().h as u32
-    }
-
-    pub fn get_minutes(&self) -> u32 {
-        self.resolve().m as u32
-    }
-
-    pub fn get_seconds(&self) -> u32 {
-        self.resolve().s as u32
-    }
-
-    /**
-     * Resolves any overflow/underflow in the TimeTuple.
-     */
-    fn resolve(&self) -> TimeTuple {
-        let mut total_seconds = self.s + 60 * self.m + 3600 * self.h;
+        let mut total_seconds = s + 60 * m + 3600 * h;
         while total_seconds > 86400 {
             total_seconds -= 86400;
         }
@@ -48,13 +29,24 @@ impl TimeTuple {
         }
     }
 
+    pub fn get_hours(&self) -> u32 {
+        self.h as u32
+    }
+
+    pub fn get_minutes(&self) -> u32 {
+        self.m as u32
+    }
+
+    pub fn get_seconds(&self) -> u32 {
+        self.s as u32
+    }
+
     pub fn to_hhmm_string(&self) -> String {
         format!("{:02}:{:02}", self.h, self.m)
     }
 
     pub fn to_seconds(&self) -> i32 {
-        let res = &self.resolve();
-        3600 * res.h + 60 * res.m + res.s
+        3600 * self.h + 60 * self.m + self.s
     }
 }
 
@@ -66,9 +58,7 @@ impl fmt::Display for TimeTuple {
 
 impl PartialEq for TimeTuple {
     fn eq(&self, other: &TimeTuple) -> bool {
-        let res = self.resolve();
-        let o_res = other.resolve();
-        res.h == o_res.h && res.m == o_res.m && res.s == o_res.s
+        self.h == other.h && self.m == other.m && self.s == other.s
     }
 }
 
@@ -87,42 +77,26 @@ impl Ord for TimeTuple {
 impl Add for TimeTuple {
     type Output = TimeTuple;
     fn add(self, other: TimeTuple) -> TimeTuple {
-        TimeTuple {
-            h: self.h + other.h,
-            m: self.m + other.m,
-            s: self.s + other.s,
-        }.resolve()
+        TimeTuple::new(self.h + other.h, self.m + other.m, self.s + other.s)
     }
 }
 
 impl AddAssign for TimeTuple {
     fn add_assign(&mut self, other: TimeTuple) {
-        *self = TimeTuple {
-            h: self.h + other.h,
-            m: self.m + other.m,
-            s: self.s + other.s,
-        }.resolve();
+        *self = TimeTuple::new(self.h + other.h, self.m + other.m, self.s + other.s);
     }
 }
 
 impl Sub for TimeTuple {
     type Output = TimeTuple;
     fn sub(self, other: TimeTuple) -> TimeTuple {
-        TimeTuple {
-            h: self.h - other.h,
-            m: self.m - other.m,
-            s: self.s - other.s,
-        }.resolve()
+        TimeTuple::new(self.h - other.h, self.m - other.m, self.s - other.s)
     }
 }
 
 impl SubAssign for TimeTuple {
     fn sub_assign(&mut self, other: TimeTuple) {
-        *self = TimeTuple {
-            h: self.h - other.h,
-            m: self.m - other.m,
-            s: self.s - other.s,
-        }.resolve();
+        *self = TimeTuple::new(self.h - other.h, self.m - other.m, self.s - other.s);
     }
 }
 
@@ -131,7 +105,7 @@ mod tests {
 
     #[test]
     fn test_no_seconds() {
-        let tuple = super::TimeTuple { h: 5, m: 30, s: 0 }.resolve();
+        let tuple = super::TimeTuple::new(5, 30, 0);
         assert_eq!(5, tuple.h);
         assert_eq!(30, tuple.m);
         assert_eq!(0, tuple.s);
@@ -139,7 +113,7 @@ mod tests {
 
     #[test]
     fn test_no_overlap() {
-        let tuple = super::TimeTuple { h: 5, m: 30, s: 30 }.resolve();
+        let tuple = super::TimeTuple::new(5, 30, 30);
         assert_eq!(5, tuple.h);
         assert_eq!(30, tuple.m);
         assert_eq!(30, tuple.s);
@@ -147,7 +121,7 @@ mod tests {
 
     #[test]
     fn test_second_overlap() {
-        let tuple = super::TimeTuple { h: 6, m: 30, s: 90 }.resolve();
+        let tuple = super::TimeTuple::new(6, 30, 90);
         assert_eq!(6, tuple.h);
         assert_eq!(31, tuple.m);
         assert_eq!(30, tuple.s);
@@ -155,7 +129,7 @@ mod tests {
 
     #[test]
     fn test_minute_overlap() {
-        let tuple = super::TimeTuple { h: 6, m: 90, s: 30 }.resolve();
+        let tuple = super::TimeTuple::new(6, 90, 30);
         assert_eq!(7, tuple.h);
         assert_eq!(30, tuple.m);
         assert_eq!(30, tuple.s);
@@ -163,11 +137,7 @@ mod tests {
 
     #[test]
     fn test_hour_overlap() {
-        let tuple = super::TimeTuple {
-            h: 25,
-            m: 30,
-            s: 30,
-        }.resolve();
+        let tuple = super::TimeTuple::new(25, 30, 30);
         assert_eq!(1, tuple.h);
         assert_eq!(30, tuple.m);
         assert_eq!(30, tuple.s);
@@ -175,11 +145,7 @@ mod tests {
 
     #[test]
     fn test_all_overlap() {
-        let tuple = super::TimeTuple {
-            h: 25,
-            m: 90,
-            s: 90,
-        }.resolve();
+        let tuple = super::TimeTuple::new(25, 90, 90);
         assert_eq!(2, tuple.h);
         assert_eq!(31, tuple.m);
         assert_eq!(30, tuple.s);
@@ -187,11 +153,7 @@ mod tests {
 
     #[test]
     fn test_minutes_to_hours_overlap() {
-        let tuple = super::TimeTuple {
-            h: 18,
-            m: 420,
-            s: 0,
-        }.resolve();
+        let tuple = super::TimeTuple::new(18, 420, 0);
         assert_eq!(1, tuple.h);
         assert_eq!(0, tuple.m);
         assert_eq!(0, tuple.s);
@@ -199,11 +161,7 @@ mod tests {
 
     #[test]
     fn test_negative_seconds() {
-        let tuple = super::TimeTuple {
-            h: 6,
-            m: 30,
-            s: -60,
-        }.resolve();
+        let tuple = super::TimeTuple::new(6, 30, -60);
         assert_eq!(6, tuple.h);
         assert_eq!(29, tuple.m);
         assert_eq!(0, tuple.s);
@@ -211,11 +169,7 @@ mod tests {
 
     #[test]
     fn test_all_negative_overlaps() {
-        let tuple = super::TimeTuple {
-            h: -3,
-            m: -116,
-            s: -301,
-        }.resolve();
+        let tuple = super::TimeTuple::new(-3, -116, -301);
         assert_eq!(18, tuple.h);
         assert_eq!(58, tuple.m);
         assert_eq!(59, tuple.s);
@@ -223,21 +177,21 @@ mod tests {
 
     #[test]
     fn test_to_string() {
-        let tuple = super::TimeTuple { h: 3, m: 0, s: 39 }.resolve();
+        let tuple = super::TimeTuple::new(3, 0, 39);
         assert_eq!(String::from("03:00:39"), tuple.to_string())
     }
 
     #[test]
     fn test_to_hhmm_string() {
-        let tuple = super::TimeTuple { h: 3, m: 0, s: 39 }.resolve();
+        let tuple = super::TimeTuple::new(3, 0, 39);
         assert_eq!(String::from("03:00"), tuple.to_hhmm_string())
     }
 
     #[test]
     fn test_operators() {
-        let zeroes = super::TimeTuple { h: 0, m: 0, s: 0 };
-        let ones = super::TimeTuple { h: 1, m: 1, s: 1 };
-        let twos = super::TimeTuple { h: 2, m: 2, s: 2 };
+        let zeroes = super::TimeTuple::new(0, 0, 0);
+        let ones = super::TimeTuple::new(1, 1, 1);
+        let twos = super::TimeTuple::new(2, 2, 2);
         assert_eq!(twos, ones + ones);
         assert_eq!(zeroes, ones - ones);
         assert!(zeroes < ones);
@@ -249,7 +203,7 @@ mod tests {
 
     #[test]
     fn test_to_seconds() {
-        let tuple = super::TimeTuple { h: 2, m: 30, s: 30 }.resolve();
+        let tuple = super::TimeTuple::new(2, 30, 30);
         assert_eq!(9030, tuple.to_seconds())
     }
 
