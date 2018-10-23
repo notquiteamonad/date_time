@@ -16,8 +16,15 @@ pub struct MonthTuple {
 }
 
 impl MonthTuple {
-    pub fn new(y: u32, m: u32) -> MonthTuple {
-        MonthTuple { y, m }
+    pub fn new(y: u32, m: u32) -> Result<MonthTuple, String> {
+        if m <= 11 {
+            Ok(MonthTuple { y, m })
+        } else {
+            Err(format!(
+                "Invalid month in MonthTuple: {:?}\nMonth must be <= 11; Note that months are ZERO-BASED.",
+                MonthTuple { y, m }
+            ))
+        }
     }
 
     pub fn get_year(&self) -> u32 {
@@ -94,16 +101,16 @@ mod tests {
 
     #[test]
     fn test_next_month() {
-        let tuple1 = super::MonthTuple { y: 2000, m: 5 };
-        let tuple2 = super::MonthTuple { y: 2000, m: 11 };
+        let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple2 = super::MonthTuple::new(2000, 11).unwrap();
         assert_eq!(super::MonthTuple { y: 2000, m: 6 }, tuple1.next_month());
         assert_eq!(super::MonthTuple { y: 2001, m: 0 }, tuple2.next_month());
     }
 
     #[test]
     fn test_previous_month() {
-        let tuple1 = super::MonthTuple { y: 2000, m: 5 };
-        let tuple2 = super::MonthTuple { y: 2000, m: 0 };
+        let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple2 = super::MonthTuple::new(2000, 0).unwrap();
         assert_eq!(super::MonthTuple { y: 2000, m: 4 }, tuple1.previous_month());
         assert_eq!(
             super::MonthTuple { y: 1999, m: 11 },
@@ -113,35 +120,42 @@ mod tests {
 
     #[test]
     fn test_to_readable_string() {
-        let tuple = super::MonthTuple { y: 2000, m: 5 };
+        let tuple = super::MonthTuple::new(2000, 5).unwrap();
         assert_eq!(String::from("Jun 2000"), tuple.to_readable_string());
     }
 
     #[test]
     fn test_to_string() {
-        let tuple = super::MonthTuple { y: 2000, m: 5 };
+        let tuple = super::MonthTuple::new(2000, 5).unwrap();
         assert_eq!(String::from("200005"), tuple.to_string());
     }
 
     #[test]
     fn test_equals() {
-        let tuple1 = super::MonthTuple { y: 2000, m: 5 };
-        let tuple2 = super::MonthTuple { y: 2000, m: 5 };
+        let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple2 = super::MonthTuple::new(2000, 5).unwrap();
         assert_eq!(tuple1, tuple2);
     }
 
     #[test]
     fn test_comparisons() {
-        let tuple1 = super::MonthTuple { y: 2000, m: 5 };
-        let tuple2 = super::MonthTuple { y: 2000, m: 5 };
-        let tuple3 = super::MonthTuple { y: 2000, m: 6 };
-        let tuple4 = super::MonthTuple { y: 2001, m: 0 };
+        let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple2 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple3 = super::MonthTuple::new(2000, 6).unwrap();
+        let tuple4 = super::MonthTuple::new(2001, 0).unwrap();
         assert!(tuple1 <= tuple2);
         assert!(!(tuple1 < tuple2));
         assert!(tuple1 >= tuple2);
         assert!(tuple1 < tuple3);
         assert!(tuple3 < tuple4);
         assert!(tuple4 > tuple2);
+    }
+
+    #[test]
+    fn test_invalid() {
+        if let Ok(_) = super::MonthTuple::new(2000, 12) {
+            assert!(false)
+        }
     }
 
 }
