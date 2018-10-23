@@ -1,6 +1,6 @@
 use std::fmt;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct MonthTuple {
     y: u32,
     m: u32,
@@ -25,7 +25,13 @@ mod tests {
         assert_eq!(String::from("200005"), tuple.to_string());
     }
 
-    //todo equals
+    #[test]
+    fn test_equals() {
+        let tuple1 = super::MonthTuple { y: 2000, m: 5 };
+        let tuple2 = super::MonthTuple { y: 2000, m: 5 };
+        assert_eq!(tuple1, tuple2);
+    }
+
     //todo compareto
 
 }
