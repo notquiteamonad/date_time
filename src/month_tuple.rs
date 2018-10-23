@@ -11,6 +11,36 @@ pub struct MonthTuple {
     m: u32,
 }
 
+impl MonthTuple {
+    pub fn next_month(self) -> MonthTuple {
+        if self.m == 11 {
+            MonthTuple {
+                y: self.y + 1,
+                m: 0,
+            }
+        } else {
+            MonthTuple {
+                y: self.y,
+                m: self.m + 1,
+            }
+        }
+    }
+
+    pub fn previous_month(self) -> MonthTuple {
+        if self.m == 0 {
+            MonthTuple {
+                y: self.y - 1,
+                m: 11,
+            }
+        } else {
+            MonthTuple {
+                y: self.y,
+                m: self.m - 1,
+            }
+        }
+    }
+}
+
 impl fmt::Display for MonthTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:04}{:02}", self.y, self.m)
@@ -36,8 +66,25 @@ impl Ord for MonthTuple {
 #[cfg(test)]
 mod tests {
 
-    //todo nextmonth
-    //todo previousmonth
+    #[test]
+    fn test_next_month() {
+        let tuple1 = super::MonthTuple { y: 2000, m: 5 };
+        let tuple2 = super::MonthTuple { y: 2000, m: 11 };
+        assert_eq!(super::MonthTuple { y: 2000, m: 6 }, tuple1.next_month());
+        assert_eq!(super::MonthTuple { y: 2001, m: 0 }, tuple2.next_month());
+    }
+
+    #[test]
+    fn test_previous_month() {
+        let tuple1 = super::MonthTuple { y: 2000, m: 5 };
+        let tuple2 = super::MonthTuple { y: 2000, m: 0 };
+        assert_eq!(super::MonthTuple { y: 2000, m: 4 }, tuple1.previous_month());
+        assert_eq!(
+            super::MonthTuple { y: 1999, m: 11 },
+            tuple2.previous_month()
+        );
+    }
+
     //todo toreadablestring
 
     #[test]
