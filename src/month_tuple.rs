@@ -1,4 +1,6 @@
+use date_tuple::DateTuple;
 use std::cmp::Ordering;
+use std::convert::From;
 use std::fmt;
 use std::str::FromStr;
 
@@ -74,6 +76,15 @@ impl Ord for MonthTuple {
     }
 }
 
+impl From<DateTuple> for MonthTuple {
+    fn from(date: DateTuple) -> Self {
+        MonthTuple {
+            y: date.get_year(),
+            m: date.get_month(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -127,6 +138,15 @@ mod tests {
         assert!(tuple1 < tuple3);
         assert!(tuple3 < tuple4);
         assert!(tuple4 > tuple2);
+    }
+
+    #[test]
+    fn test_from_date() {
+        let date = ::date_tuple::DateTuple::new(2000, 5, 10);
+        assert_eq!(
+            super::MonthTuple { y: 2000, m: 5 },
+            super::MonthTuple::from(date)
+        );
     }
 
 }
