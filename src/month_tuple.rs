@@ -171,7 +171,7 @@ mod tests {
 
     #[test]
     fn test_from_date() {
-        let date = ::date_tuple::DateTuple::new(2000, 5, 10);
+        let date = ::date_tuple::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(
             super::MonthTuple { y: 2000, m: 5 },
             super::MonthTuple::from(date)
