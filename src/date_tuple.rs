@@ -1,5 +1,6 @@
 use date_utils;
 use month_tuple::MonthTuple;
+use std::cmp::Ordering;
 use std::fmt;
 
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
@@ -68,6 +69,34 @@ impl fmt::Display for DateTuple {
     }
 }
 
+impl PartialOrd for DateTuple {
+    fn partial_cmp(&self, other: &DateTuple) -> Option<Ordering> {
+        if self.y == other.y {
+            if self.m == other.m {
+                self.d.partial_cmp(&other.d)
+            } else {
+                self.m.partial_cmp(&other.m)
+            }
+        } else {
+            self.y.partial_cmp(&other.y)
+        }
+    }
+}
+
+impl Ord for DateTuple {
+    fn cmp(&self, other: &DateTuple) -> Ordering {
+        if self.y == other.y {
+            if self.m == other.m {
+                self.d.cmp(&other.d)
+            } else {
+                self.m.cmp(&other.m)
+            }
+        } else {
+            self.y.cmp(&other.y)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -90,7 +119,19 @@ mod tests {
         assert_eq!(tuple1, tuple2);
     }
 
-    //todo compareTo
+    #[test]
+    fn test_comparisons() {
+        let tuple1 = super::DateTuple::new(2000, 5, 5).unwrap();
+        let tuple2 = super::DateTuple::new(2000, 5, 5).unwrap();
+        let tuple3 = super::DateTuple::new(2000, 6, 4).unwrap();
+        let tuple4 = super::DateTuple::new(2001, 0, 1).unwrap();
+        assert!(tuple1 <= tuple2);
+        assert!(!(tuple1 < tuple2));
+        assert!(tuple1 >= tuple2);
+        assert!(tuple1 < tuple3);
+        assert!(tuple3 < tuple4);
+        assert!(tuple4 > tuple2);
+    }
 
     #[test]
     fn test_validity() {
