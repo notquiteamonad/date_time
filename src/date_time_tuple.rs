@@ -56,4 +56,17 @@ mod tests {
         );
     }
 
+    #[test]
+    fn test_equals() {
+        let tuple1 = super::DateTimeTuple::new(
+            ::date_tuple::DateTuple::new(2000, 5, 10).unwrap(),
+            ::time_tuple::TimeTuple::new(8, 30, 0),
+        );
+        let tuple2 = super::DateTimeTuple::new(
+            ::date_tuple::DateTuple::new(2000, 5, 10).unwrap(),
+            ::time_tuple::TimeTuple::new(8, 30, 0),
+        );
+        assert_eq!(tuple1, tuple2);
+    }
+
 }
