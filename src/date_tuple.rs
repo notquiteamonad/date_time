@@ -1,4 +1,5 @@
 use date_utils;
+use month_tuple::MonthTuple;
 use std::fmt;
 
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
@@ -54,6 +55,11 @@ impl DateTuple {
     pub fn get_date(&self) -> u32 {
         self.d
     }
+
+    pub fn to_readable_string(&self) -> String {
+        let month = MonthTuple::from(*self);
+        format!("{} {}", self.d, month.to_readable_string())
+    }
 }
 
 impl fmt::Display for DateTuple {
@@ -72,13 +78,18 @@ mod tests {
     }
 
     #[test]
+    fn test_to_readable_string() {
+        let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
+        assert_eq!(String::from("10 Jun 2000"), tuple.to_readable_string());
+    }
+
+    #[test]
     fn test_equals() {
         let tuple1 = super::DateTuple::new(2000, 5, 10).unwrap();
         let tuple2 = super::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(tuple1, tuple2);
     }
 
-    //todo equals
     //todo compareTo
 
     #[test]
