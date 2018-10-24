@@ -1,4 +1,5 @@
 use date_utils;
+use std::fmt;
 
 #[derive(Debug, Copy, Clone)]
 pub struct DateTuple {
@@ -55,10 +56,21 @@ impl DateTuple {
     }
 }
 
+impl fmt::Display for DateTuple {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:04}{:02}{:02}", self.y, self.m, self.d)
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
-    //todo toString
+    #[test]
+    fn test_to_string() {
+        let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
+        assert_eq!(String::from("20000510"), tuple.to_string());
+    }
+
     //todo equals
     //todo compareTo
 
