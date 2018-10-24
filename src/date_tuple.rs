@@ -1,7 +1,7 @@
 use date_utils;
 use std::fmt;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct DateTuple {
     y: u32,
     m: u32,
@@ -69,6 +69,13 @@ mod tests {
     fn test_to_string() {
         let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(String::from("20000510"), tuple.to_string());
+    }
+
+    #[test]
+    fn test_equals() {
+        let tuple1 = super::DateTuple::new(2000, 5, 10).unwrap();
+        let tuple2 = super::DateTuple::new(2000, 5, 10).unwrap();
+        assert_eq!(tuple1, tuple2);
     }
 
     //todo equals
