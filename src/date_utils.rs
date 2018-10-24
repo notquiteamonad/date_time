@@ -1,4 +1,4 @@
-pub fn is_leap_year(year: &usize) -> bool {
+pub fn is_leap_year(year: u32) -> bool {
     (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
 }
 
@@ -6,13 +6,13 @@ pub fn is_leap_year(year: &usize) -> bool {
 mod tests {
     #[test]
     fn test_leap_years() {
-        let valid: [usize; 3] = [2000, 2012, 2016];
-        let invalid: [usize; 3] = [2100, 2018, 2013];
+        let valid: [u32; 3] = [2000, 2012, 2016];
+        let invalid: [u32; 3] = [2100, 2018, 2013];
         for v in valid.iter() {
-            assert!(super::is_leap_year(v));
+            assert!(super::is_leap_year(*v));
         }
         for i in invalid.iter() {
-            assert!(!super::is_leap_year(i));
+            assert!(!super::is_leap_year(*i));
         }
     }
 }
