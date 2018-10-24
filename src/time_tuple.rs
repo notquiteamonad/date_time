@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 
-#[derive(Eq, Debug, Copy, Clone)]
+#[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct TimeTuple {
     h: i32,
     m: i32,
@@ -53,12 +53,6 @@ impl TimeTuple {
 impl fmt::Display for TimeTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:02}:{:02}:{:02}", self.h, self.m, self.s)
-    }
-}
-
-impl PartialEq for TimeTuple {
-    fn eq(&self, other: &TimeTuple) -> bool {
-        self.h == other.h && self.m == other.m && self.s == other.s
     }
 }
 
