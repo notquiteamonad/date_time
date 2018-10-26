@@ -1,6 +1,8 @@
+use regex::Regex;
 use std::cmp::Ordering;
 use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
+use std::str::FromStr;
 
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct TimeTuple {
@@ -53,6 +55,24 @@ impl TimeTuple {
 impl fmt::Display for TimeTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:02}:{:02}:{:02}", self.h, self.m, self.s)
+    }
+}
+
+impl FromStr for TimeTuple {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<TimeTuple, Self::Err> {
+        let valid_format = Regex::new(r"^\d{2}:\d{2}:\d{2}$").unwrap();
+        if !valid_format.is_match(s) {
+            Err(format!("Invalid str formatting of TimeTuple: {}", s))
+        } else {
+            let mut parts = s.split(':');
+            Ok(TimeTuple::new(
+                i32::from_str(parts.next().unwrap()).unwrap(),
+                i32::from_str(parts.next().unwrap()).unwrap(),
+                i32::from_str(parts.next().unwrap()).unwrap(),
+            ))
+        }
     }
 }
 
@@ -199,6 +219,12 @@ mod tests {
     fn test_to_seconds() {
         let tuple = super::TimeTuple::new(2, 30, 30);
         assert_eq!(9030, tuple.to_seconds())
+    }
+
+    #[test]
+    fn test_from_string() {
+        let tuple = super::TimeTuple::new(5, 30, 4);
+        assert_eq!(tuple, str::parse("05:30:04").unwrap());
     }
 
 }
