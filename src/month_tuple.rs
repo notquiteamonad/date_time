@@ -1,4 +1,5 @@
 use date_tuple::DateTuple;
+use regex::Regex;
 use std::cmp::Ordering;
 use std::convert::From;
 use std::fmt;
@@ -79,6 +80,20 @@ impl MonthTuple {
 impl fmt::Display for MonthTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:04}{:02}", self.y, self.m)
+    }
+}
+
+impl FromStr for MonthTuple {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<MonthTuple, Self::Err> {
+        let valid_format = Regex::new(r"^\d{6}$").unwrap();
+        if !valid_format.is_match(s) {
+            Err(format!("Invalid str formatting of MonthTuple: {}", s))
+        } else {
+            let (s1, s2) = s.split_at(4);
+            Ok(MonthTuple::new(u32::from_str(s1).unwrap(), u32::from_str(s2).unwrap()).unwrap())
+        }
     }
 }
 
@@ -176,6 +191,12 @@ mod tests {
             super::MonthTuple { y: 2000, m: 5 },
             super::MonthTuple::from(date)
         );
+    }
+
+    #[test]
+    fn test_from_string() {
+        let tuple = super::MonthTuple::new(2000, 5).unwrap();
+        assert_eq!(tuple, str::parse("200005").unwrap());
     }
 
 }
