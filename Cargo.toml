@@ -1,6 +1,7 @@
 [package]
 name = "time"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["samueldple <samueldple@gmail.com>"]
 
 [dependencies]
+regex = "1.0.5"

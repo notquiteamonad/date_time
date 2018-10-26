@@ -1,6 +1,8 @@
 use date_tuple::DateTuple;
+use regex::Regex;
 use std::cmp::Ordering;
 use std::fmt;
+use std::str::FromStr;
 use time_tuple::TimeTuple;
 
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
@@ -30,6 +32,23 @@ impl DateTimeTuple {
 impl fmt::Display for DateTimeTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}@{}", self.d.to_string(), self.t.to_string())
+    }
+}
+
+impl FromStr for DateTimeTuple {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<DateTimeTuple, Self::Err> {
+        let valid_format = Regex::new(r"^\d{8}@\d{2}:\d{2}:\d{2}$").unwrap();
+        if !valid_format.is_match(s) {
+            Err(format!("Invalid str formatting of DateTimeTuple: {}", s))
+        } else {
+            let mut parts = s.split('@');
+            Ok(DateTimeTuple::new(
+                str::parse(parts.next().unwrap()).unwrap(),
+                str::parse(parts.next().unwrap()).unwrap(),
+            ))
+        }
     }
 }
 
@@ -106,6 +125,15 @@ mod tests {
         );
         assert!(tuple1 < tuple2);
         assert!(tuple2 < tuple3);
+    }
+
+    #[test]
+    fn test_from_string() {
+        let tuple = super::DateTimeTuple::new(
+            ::date_tuple::DateTuple::new(2000, 5, 10).unwrap(),
+            ::time_tuple::TimeTuple::new(8, 30, 0),
+        );
+        assert_eq!(tuple, str::parse("20000510@08:30:00").unwrap());
     }
 
 }
