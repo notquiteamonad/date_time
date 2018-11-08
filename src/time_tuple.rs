@@ -13,9 +13,9 @@ use std::str::FromStr;
 /// The wrapping described in `TimeTuple::new()` also applies when adding and subtracting times.
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct TimeTuple {
-    h: i32,
-    m: i32,
-    s: i32,
+    h: u8,
+    m: u8,
+    s: u8,
 }
 
 impl TimeTuple {
@@ -40,22 +40,22 @@ impl TimeTuple {
         let m = total_seconds / 60;
         total_seconds -= m * 60;
         TimeTuple {
-            h,
-            m,
-            s: total_seconds,
+            h: h as u8,
+            m: m as u8,
+            s: total_seconds as u8,
         }
     }
 
-    pub fn get_hours(&self) -> u32 {
-        self.h as u32
+    pub fn get_hours(&self) -> u8 {
+        self.h
     }
 
-    pub fn get_minutes(&self) -> u32 {
-        self.m as u32
+    pub fn get_minutes(&self) -> u8 {
+        self.m
     }
 
-    pub fn get_seconds(&self) -> u32 {
-        self.s as u32
+    pub fn get_seconds(&self) -> u8 {
+        self.s
     }
 
     /// Produces a string such as 08:30 for 8 hours and 30 minutes.
@@ -66,8 +66,8 @@ impl TimeTuple {
     }
 
     /// Gets the total number of seconds in the tuple.
-    pub fn to_seconds(&self) -> i32 {
-        3600 * self.h + 60 * self.m + self.s
+    pub fn to_seconds(&self) -> u32 {
+        3600 * self.h as u32 + 60 * self.m as u32 + self.s as u32
     }
 }
 
@@ -113,26 +113,42 @@ impl Ord for TimeTuple {
 impl Add for TimeTuple {
     type Output = TimeTuple;
     fn add(self, other: TimeTuple) -> TimeTuple {
-        TimeTuple::new(self.h + other.h, self.m + other.m, self.s + other.s)
+        TimeTuple::new(
+            (self.h + other.h) as i32,
+            (self.m + other.m) as i32,
+            (self.s + other.s) as i32,
+        )
     }
 }
 
 impl AddAssign for TimeTuple {
     fn add_assign(&mut self, other: TimeTuple) {
-        *self = TimeTuple::new(self.h + other.h, self.m + other.m, self.s + other.s);
+        *self = TimeTuple::new(
+            (self.h + other.h) as i32,
+            (self.m + other.m) as i32,
+            (self.s + other.s) as i32,
+        );
     }
 }
 
 impl Sub for TimeTuple {
     type Output = TimeTuple;
     fn sub(self, other: TimeTuple) -> TimeTuple {
-        TimeTuple::new(self.h - other.h, self.m - other.m, self.s - other.s)
+        TimeTuple::new(
+            (self.h - other.h) as i32,
+            (self.m - other.m) as i32,
+            (self.s - other.s) as i32,
+        )
     }
 }
 
 impl SubAssign for TimeTuple {
     fn sub_assign(&mut self, other: TimeTuple) {
-        *self = TimeTuple::new(self.h - other.h, self.m - other.m, self.s - other.s);
+        *self = TimeTuple::new(
+            (self.h - other.h) as i32,
+            (self.m - other.m) as i32,
+            (self.s - other.s) as i32,
+        );
     }
 }
 
