@@ -9,19 +9,33 @@ const MONTH_STRINGS: [&str; 12] = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-/**
- * **NOTE:** MonthTuple's `m` field is zero-based (zero represents January).
- */
+/// A container for a month of a specific year.
+///
+/// **NOTE:** MonthTuple's `m` field is zero-based (zero represents January).
+///
+/// Only handles values between Jan 0000 and Dec 9999 (inclusive).
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct MonthTuple {
-    y: u32,
-    m: u32,
+    y: u16,
+    m: u8,
 }
 
 impl MonthTuple {
-    pub fn new(y: u32, m: u32) -> Result<MonthTuple, String> {
+    /// Produces a new MonthTuple.
+    ///
+    /// Only accepts a valid month value (`0 <= m <= 11`).
+    ///
+    /// Only accepts a valid year value (`0 <= y <= 9999`).
+    pub fn new(y: u16, m: u8) -> Result<MonthTuple, String> {
         if m <= 11 {
-            Ok(MonthTuple { y, m })
+            if y <= 9999 {
+                Ok(MonthTuple { y, m })
+            } else {
+                Err(format!(
+                    "Invalid year in MonthTuple: {:?}\nYear must be <= 9999.",
+                    MonthTuple { y, m }
+                ))
+            }
         } else {
             Err(format!(
                 "Invalid month in MonthTuple: {:?}\nMonth must be <= 11; Note that months are ZERO-BASED.",
@@ -30,18 +44,23 @@ impl MonthTuple {
         }
     }
 
-    pub fn get_year(&self) -> u32 {
+    pub fn get_year(&self) -> u16 {
         self.y
     }
 
-    /**
-     * Note this month is **ZERO-BASED** (zero represents January).
-     */
-    pub fn get_month(&self) -> u32 {
+    /// Retrieves the month component of the tuple.
+    ///
+    /// Note this month is **ZERO-BASED** (zero represents January).
+    pub fn get_month(&self) -> u8 {
         self.m
     }
 
+    /// Gets a MonthTuple representing the month immediately following
+    /// the current one. Will not go past Dec 9999.
     pub fn next_month(self) -> MonthTuple {
+        if self.y == 9999 && self.m == 11 {
+            return self;
+        }
         if self.m == 11 {
             MonthTuple {
                 y: self.y + 1,
@@ -55,7 +74,12 @@ impl MonthTuple {
         }
     }
 
+    /// Gets a MonthTuple representing the month immediately preceding
+    /// the current one. Will not go past Jan 0000.
     pub fn previous_month(self) -> MonthTuple {
+        if self.y == 0 && self.m == 0 {
+            return self;
+        }
         if self.m == 0 {
             MonthTuple {
                 y: self.y - 1,
@@ -69,6 +93,11 @@ impl MonthTuple {
         }
     }
 
+    /// Returns the month formatted to be human-readable.
+    ///
+    /// ## Examples
+    /// * Jan 2018
+    /// * Dec 1994
     pub fn to_readable_string(&self) -> String {
         match MONTH_STRINGS.iter().skip(self.m as usize).next() {
             Some(s) => return format!("{} {:04}", s, self.y),
@@ -89,10 +118,13 @@ impl FromStr for MonthTuple {
     fn from_str(s: &str) -> Result<MonthTuple, Self::Err> {
         let valid_format = Regex::new(r"^\d{6}$").unwrap();
         if !valid_format.is_match(s) {
-            Err(format!("Invalid str formatting of MonthTuple: {}", s))
+            Err(format!(
+                "Invalid str formatting of MonthTuple: {}\nExpects a string formatted like 201811",
+                s
+            ))
         } else {
             let (s1, s2) = s.split_at(4);
-            Ok(MonthTuple::new(u32::from_str(s1).unwrap(), u32::from_str(s2).unwrap()).unwrap())
+            Ok(MonthTuple::new(u16::from_str(s1).unwrap(), u8::from_str(s2).unwrap()).unwrap())
         }
     }
 }

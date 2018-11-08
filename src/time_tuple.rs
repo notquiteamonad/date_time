@@ -4,14 +4,29 @@ use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
 
+/// A wrapper for a particular time of day or a duration.
+///
+/// Precise to second-level.
+///
+/// **NOTE:** This cannot be 24 hours or greater - see `TimeTuple::new()` for more details.
+///
+/// The wrapping described in `TimeTuple::new()` also applies when adding and subtracting times.
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct TimeTuple {
-    h: i32,
-    m: i32,
-    s: i32,
+    h: u8,
+    m: u8,
+    s: u8,
 }
 
 impl TimeTuple {
+    /// Produces a new TimeTuple.
+    ///
+    /// Times of 24 hours or greater and negative times
+    /// will wrap around 24 hours to always produce a positive time.
+    ///
+    /// The value is calculated from total number of seconds so a time
+    /// with a minute value of 90 would add an hour to the resulting tuple
+    /// and set the minutes to 30, for example.
     pub fn new(h: i32, m: i32, s: i32) -> TimeTuple {
         let mut total_seconds = s + 60 * m + 3600 * h;
         while total_seconds > 86400 {
@@ -25,30 +40,34 @@ impl TimeTuple {
         let m = total_seconds / 60;
         total_seconds -= m * 60;
         TimeTuple {
-            h,
-            m,
-            s: total_seconds,
+            h: h as u8,
+            m: m as u8,
+            s: total_seconds as u8,
         }
     }
 
-    pub fn get_hours(&self) -> u32 {
-        self.h as u32
+    pub fn get_hours(&self) -> u8 {
+        self.h
     }
 
-    pub fn get_minutes(&self) -> u32 {
-        self.m as u32
+    pub fn get_minutes(&self) -> u8 {
+        self.m
     }
 
-    pub fn get_seconds(&self) -> u32 {
-        self.s as u32
+    pub fn get_seconds(&self) -> u8 {
+        self.s
     }
 
+    /// Produces a string such as 08:30 for 8 hours and 30 minutes.
+    ///
+    /// Ignores seconds.
     pub fn to_hhmm_string(&self) -> String {
         format!("{:02}:{:02}", self.h, self.m)
     }
 
-    pub fn to_seconds(&self) -> i32 {
-        3600 * self.h + 60 * self.m + self.s
+    /// Gets the total number of seconds in the tuple.
+    pub fn to_seconds(&self) -> u32 {
+        3600 * self.h as u32 + 60 * self.m as u32 + self.s as u32
     }
 }
 
@@ -64,7 +83,10 @@ impl FromStr for TimeTuple {
     fn from_str(s: &str) -> Result<TimeTuple, Self::Err> {
         let valid_format = Regex::new(r"^\d{2}:\d{2}:\d{2}$").unwrap();
         if !valid_format.is_match(s) {
-            Err(format!("Invalid str formatting of TimeTuple: {}", s))
+            Err(format!(
+                "Invalid str formatting of TimeTuple: {}\nExpects a string formatted like 08:30:05",
+                s
+            ))
         } else {
             let mut parts = s.split(':');
             Ok(TimeTuple::new(
@@ -91,26 +113,42 @@ impl Ord for TimeTuple {
 impl Add for TimeTuple {
     type Output = TimeTuple;
     fn add(self, other: TimeTuple) -> TimeTuple {
-        TimeTuple::new(self.h + other.h, self.m + other.m, self.s + other.s)
+        TimeTuple::new(
+            (self.h + other.h) as i32,
+            (self.m + other.m) as i32,
+            (self.s + other.s) as i32,
+        )
     }
 }
 
 impl AddAssign for TimeTuple {
     fn add_assign(&mut self, other: TimeTuple) {
-        *self = TimeTuple::new(self.h + other.h, self.m + other.m, self.s + other.s);
+        *self = TimeTuple::new(
+            (self.h + other.h) as i32,
+            (self.m + other.m) as i32,
+            (self.s + other.s) as i32,
+        );
     }
 }
 
 impl Sub for TimeTuple {
     type Output = TimeTuple;
     fn sub(self, other: TimeTuple) -> TimeTuple {
-        TimeTuple::new(self.h - other.h, self.m - other.m, self.s - other.s)
+        TimeTuple::new(
+            (self.h - other.h) as i32,
+            (self.m - other.m) as i32,
+            (self.s - other.s) as i32,
+        )
     }
 }
 
 impl SubAssign for TimeTuple {
     fn sub_assign(&mut self, other: TimeTuple) {
-        *self = TimeTuple::new(self.h - other.h, self.m - other.m, self.s - other.s);
+        *self = TimeTuple::new(
+            (self.h - other.h) as i32,
+            (self.m - other.m) as i32,
+            (self.s - other.s) as i32,
+        );
     }
 }
 

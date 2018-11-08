@@ -5,19 +5,31 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
 
+/// Holds a specific date by year, month, and day.
+///
+/// Handles values from 01 Jan 0000 to 31 Dec 9999.
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct DateTuple {
-    y: u32,
-    m: u32,
-    d: u32,
+    y: u16,
+    m: u8,
+    d: u8,
 }
 
 impl DateTuple {
-    pub fn new(y: u32, m: u32, d: u32) -> Result<DateTuple, String> {
+    /// Takes a year, month, and day and converts them into a DateTuple.
+    ///
+    /// Will not overlap - the date entered must be valid without further calculation.
+    pub fn new(y: u16, m: u8, d: u8) -> Result<DateTuple, String> {
+        if y > 9999 {
+            return Err(format!(
+                "Invalid year in DateTuple {:?}: year must be <= 9999.",
+                DateTuple { y, m, d }
+            ));
+        }
         if m <= 11 {
             let max_date = match m {
                 1 => {
-                    if date_utils::is_leap_year(y) {
+                    if date_utils::is_leap_year(y as u16) {
                         29
                     } else {
                         28
@@ -38,7 +50,7 @@ impl DateTuple {
                     DateTuple { y, m, d }
                 ));
             }
-            Ok(DateTuple { y, m, d })
+            Ok(DateTuple { y: y, m, d })
         } else {
             Err(format!(
                 "Invalid month in DateTuple: {:?}\nMonth must be <= 11; Note that months are ZERO-BASED.",
@@ -47,18 +59,23 @@ impl DateTuple {
         }
     }
 
-    pub fn get_year(&self) -> u32 {
+    pub fn get_year(&self) -> u16 {
         self.y
     }
 
-    pub fn get_month(&self) -> u32 {
+    pub fn get_month(&self) -> u8 {
         self.m
     }
 
-    pub fn get_date(&self) -> u32 {
+    pub fn get_date(&self) -> u8 {
         self.d
     }
 
+    /// Produces a readable date.
+    ///
+    /// ## Examples
+    /// * 2 Oct 2018
+    /// * 13 Jan 2019
     pub fn to_readable_string(&self) -> String {
         let month = MonthTuple::from(*self);
         format!("{} {}", self.d, month.to_readable_string())
@@ -74,17 +91,18 @@ impl fmt::Display for DateTuple {
 impl FromStr for DateTuple {
     type Err = String;
 
+    /// Expects a string formatted like 20181102.
     fn from_str(s: &str) -> Result<DateTuple, Self::Err> {
         let valid_format = Regex::new(r"^\d{8}$").unwrap();
         if !valid_format.is_match(s) {
-            Err(format!("Invalid str formatting of DateTuple: {}", s))
+            Err(format!("Invalid str formatting of DateTuple: {}\nExpects a string formatted like 20181102.", s))
         } else {
             let (s1, s2) = s.split_at(4);
             let (s2, s3) = s2.split_at(2);
             Ok(DateTuple::new(
-                u32::from_str(s1).unwrap(),
-                u32::from_str(s2).unwrap(),
-                u32::from_str(s3).unwrap(),
+                u16::from_str(s1).unwrap(),
+                u8::from_str(s2).unwrap(),
+                u8::from_str(s3).unwrap(),
             ).unwrap())
         }
     }

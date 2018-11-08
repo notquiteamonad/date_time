@@ -5,6 +5,9 @@ use std::fmt;
 use std::str::FromStr;
 use time_tuple::TimeTuple;
 
+/// Wrapper for a specific date and time.
+///
+/// Comprised of a DateTuple and a TimeTuple.
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct DateTimeTuple {
     d: DateTuple,
@@ -24,11 +27,20 @@ impl DateTimeTuple {
         self.t
     }
 
+    /// Produces a readable date and time.
+    ///
+    /// ## Examples
+    /// * 2 Oct 2018 08:30:00
+    /// * 13 Jan 2019 11:00:10
     pub fn to_readable_string(&self) -> String {
         format!("{} {}", self.d.to_readable_string(), self.t.to_string())
     }
 }
 
+/// Gets a string to to use for storage. This string can be interpreted
+/// by `str::parse`.
+///
+/// Formatted like 20181002@08:30:00
 impl fmt::Display for DateTimeTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}@{}", self.d.to_string(), self.t.to_string())
@@ -38,10 +50,11 @@ impl fmt::Display for DateTimeTuple {
 impl FromStr for DateTimeTuple {
     type Err = String;
 
+    /// Expects a string formatted like one obtained by calling `DateTimeTuple.to_string()`
     fn from_str(s: &str) -> Result<DateTimeTuple, Self::Err> {
         let valid_format = Regex::new(r"^\d{8}@\d{2}:\d{2}:\d{2}$").unwrap();
         if !valid_format.is_match(s) {
-            Err(format!("Invalid str formatting of DateTimeTuple: {}", s))
+            Err(format!("Invalid str formatting of DateTimeTuple: {}\nExpects a string formatted like 20181102@08:30:00", s))
         } else {
             let mut parts = s.split('@');
             Ok(DateTimeTuple::new(
