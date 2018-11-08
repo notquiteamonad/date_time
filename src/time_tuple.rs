@@ -4,6 +4,13 @@ use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
 
+/// A wrapper for a particular time of day or a duration.
+///
+/// Precise to second-level.
+///
+/// **NOTE:** This cannot be 24 hours or greater - see `TimeTuple::new()` for more details.
+///
+/// The wrapping described in `TimeTuple::new()` also applies when adding and subtracting times.
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct TimeTuple {
     h: i32,
@@ -12,6 +19,14 @@ pub struct TimeTuple {
 }
 
 impl TimeTuple {
+    /// Produces a new TimeTuple.
+    ///
+    /// Times of 24 hours or greater and negative times
+    /// will wrap around 24 hours to always produce a positive time.
+    ///
+    /// The value is calculated from total number of seconds so a time
+    /// with a minute value of 90 would add an hour to the resulting tuple
+    /// and set the minutes to 30, for example.
     pub fn new(h: i32, m: i32, s: i32) -> TimeTuple {
         let mut total_seconds = s + 60 * m + 3600 * h;
         while total_seconds > 86400 {
@@ -43,10 +58,14 @@ impl TimeTuple {
         self.s as u32
     }
 
+    /// Produces a string such as 08:30 for 8 hours and 30 minutes.
+    ///
+    /// Ignores seconds.
     pub fn to_hhmm_string(&self) -> String {
         format!("{:02}:{:02}", self.h, self.m)
     }
 
+    /// Gets the total number of seconds in the tuple.
     pub fn to_seconds(&self) -> i32 {
         3600 * self.h + 60 * self.m + self.s
     }
@@ -64,7 +83,10 @@ impl FromStr for TimeTuple {
     fn from_str(s: &str) -> Result<TimeTuple, Self::Err> {
         let valid_format = Regex::new(r"^\d{2}:\d{2}:\d{2}$").unwrap();
         if !valid_format.is_match(s) {
-            Err(format!("Invalid str formatting of TimeTuple: {}", s))
+            Err(format!(
+                "Invalid str formatting of TimeTuple: {}\nExpects a string formatted like 08:30:05",
+                s
+            ))
         } else {
             let mut parts = s.split(':');
             Ok(TimeTuple::new(

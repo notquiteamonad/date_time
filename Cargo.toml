@@ -1,6 +1,6 @@
 [package]
-name = "time"
-version = "1.1.0"
+name = "date_time"
+version = "1.2.0"
 authors = ["samueldple <samueldple@gmail.com>"]
 
 [dependencies]

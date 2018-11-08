@@ -9,9 +9,9 @@ const MONTH_STRINGS: [&str; 12] = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-/**
- * **NOTE:** MonthTuple's `m` field is zero-based (zero represents January).
- */
+/// A container for a month of a specific year.
+///
+/// **NOTE:** MonthTuple's `m` field is zero-based (zero represents January).
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct MonthTuple {
     y: u32,
@@ -19,6 +19,9 @@ pub struct MonthTuple {
 }
 
 impl MonthTuple {
+    /// Produces a new MonthTuple.
+    ///
+    /// Only accepts a valid month value (`0 <= m <= 11`).
     pub fn new(y: u32, m: u32) -> Result<MonthTuple, String> {
         if m <= 11 {
             Ok(MonthTuple { y, m })
@@ -34,13 +37,16 @@ impl MonthTuple {
         self.y
     }
 
-    /**
-     * Note this month is **ZERO-BASED** (zero represents January).
-     */
+    /// Retrieves the month component of the tuple.
+    ///
+    /// Note this month is **ZERO-BASED** (zero represents January).
     pub fn get_month(&self) -> u32 {
         self.m
     }
 
+    /// Gets a MonthTuple representing the month immediately following
+    /// the current one. It is the user's responsibility to ensure that
+    /// this does not cause an overflow in the year.
     pub fn next_month(self) -> MonthTuple {
         if self.m == 11 {
             MonthTuple {
@@ -55,6 +61,9 @@ impl MonthTuple {
         }
     }
 
+    /// Gets a MonthTuple representing the month immediately preceding
+    /// the current one. It is the user's responsibility to ensure that
+    /// this does not cause an underflow in the year.
     pub fn previous_month(self) -> MonthTuple {
         if self.m == 0 {
             MonthTuple {
@@ -69,6 +78,11 @@ impl MonthTuple {
         }
     }
 
+    /// Returns the month formatted to be human-readable.
+    ///
+    /// ## Examples
+    /// * Jan 2018
+    /// * Dec 1994
     pub fn to_readable_string(&self) -> String {
         match MONTH_STRINGS.iter().skip(self.m as usize).next() {
             Some(s) => return format!("{} {:04}", s, self.y),
@@ -89,7 +103,10 @@ impl FromStr for MonthTuple {
     fn from_str(s: &str) -> Result<MonthTuple, Self::Err> {
         let valid_format = Regex::new(r"^\d{6}$").unwrap();
         if !valid_format.is_match(s) {
-            Err(format!("Invalid str formatting of MonthTuple: {}", s))
+            Err(format!(
+                "Invalid str formatting of MonthTuple: {}\nExpects a string formatted like 201811",
+                s
+            ))
         } else {
             let (s1, s2) = s.split_at(4);
             Ok(MonthTuple::new(u32::from_str(s1).unwrap(), u32::from_str(s2).unwrap()).unwrap())
