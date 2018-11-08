@@ -145,5 +145,5 @@ For a more precise wrapper of dates, try a crate such as [chrono](https://crates
 
 * This library is only designed for use when dates need only to be precise to the level of seconds.
 * This library is timezone-agnostic; it doesn't deal with any difference between time zones.
-* Only datetimes between `01 Jan 0000 00:00:00` and `31 Dec 9999 23:23:23` are supported.
+* Only datetimes between `01 Jan 0000 00:00:00` and `31 Dec 9999 23:59:59` are supported.
 
