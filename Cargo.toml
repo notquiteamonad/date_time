@@ -2,6 +2,16 @@
 name = "date_time"
 version = "1.2.0"
 authors = ["samueldple <samueldple@gmail.com>"]
+description = "Date_Time is a high-level rust library for use in situations where precision beyond seconds is not necessary."
+documentation = "https://docs.rs/date_time"
+repository = "https://github.com/samueldple/date_time"
+readme = "README.md"
+keywords = ["date", "time", "datetime", "month"]
+categories = ["date-and-time"]
+license = "GPL-3.0-or-later"
+
+[badges]
+travis-ci = { repository = "samueldple/date_time" }
 
 [dependencies]
 regex = "1.0.5"
