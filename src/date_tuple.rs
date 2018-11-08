@@ -6,18 +6,26 @@ use std::fmt;
 use std::str::FromStr;
 
 /// Holds a specific date by year, month, and day.
+///
+/// Handles values from 01 Jan 0000 to 31 Dec 9999.
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct DateTuple {
-    y: u32,
-    m: u32,
-    d: u32,
+    y: u16,
+    m: u8,
+    d: u8,
 }
 
 impl DateTuple {
     /// Takes a year, month, and day and converts them into a DateTuple.
     ///
     /// Will not overlap - the date entered must be valid without further calculation.
-    pub fn new(y: u16, m: u32, d: u32) -> Result<DateTuple, String> {
+    pub fn new(y: u16, m: u8, d: u8) -> Result<DateTuple, String> {
+        if y > 9999 {
+            return Err(format!(
+                "Invalid year in DateTuple {:?}: year must be <= 9999.",
+                DateTuple { y, m, d }
+            ));
+        }
         if m <= 11 {
             let max_date = match m {
                 1 => {
@@ -39,27 +47,27 @@ impl DateTuple {
             if d == 0 || d > max_date {
                 return Err(format!(
                     "Invalid date in DateTuple: {:?}",
-                    DateTuple { y: y as u32, m, d }
+                    DateTuple { y, m, d }
                 ));
             }
-            Ok(DateTuple { y: y as u32, m, d })
+            Ok(DateTuple { y: y, m, d })
         } else {
             Err(format!(
                 "Invalid month in DateTuple: {:?}\nMonth must be <= 11; Note that months are ZERO-BASED.",
-                DateTuple { y: y as u32, m, d }
+                DateTuple { y, m, d }
             ))
         }
     }
 
-    pub fn get_year(&self) -> u32 {
+    pub fn get_year(&self) -> u16 {
         self.y
     }
 
-    pub fn get_month(&self) -> u32 {
+    pub fn get_month(&self) -> u8 {
         self.m
     }
 
-    pub fn get_date(&self) -> u32 {
+    pub fn get_date(&self) -> u8 {
         self.d
     }
 
@@ -93,8 +101,8 @@ impl FromStr for DateTuple {
             let (s2, s3) = s2.split_at(2);
             Ok(DateTuple::new(
                 u16::from_str(s1).unwrap(),
-                u32::from_str(s2).unwrap(),
-                u32::from_str(s3).unwrap(),
+                u8::from_str(s2).unwrap(),
+                u8::from_str(s3).unwrap(),
             ).unwrap())
         }
     }
