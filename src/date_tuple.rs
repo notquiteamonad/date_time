@@ -29,24 +29,7 @@ impl DateTuple {
             ));
         }
         if m <= 11 {
-            let max_date = match m {
-                1 => {
-                    if date_utils::is_leap_year(y as u16) {
-                        29
-                    } else {
-                        28
-                    }
-                }
-                0 => 31,
-                2 => 31,
-                4 => 31,
-                6 => 31,
-                7 => 31,
-                9 => 31,
-                11 => 31,
-                _ => 30,
-            };
-            if d == 0 || d > max_date {
+            if d == 0 || d > get_last_date_in_month(m, y) {
                 return Err(format!(
                     "Invalid date in DateTuple: {:?}",
                     DateTuple { y, m, d }
@@ -71,6 +54,64 @@ impl DateTuple {
 
     pub fn get_date(&self) -> u8 {
         self.d
+    }
+
+    /// Gets a DateTuple representing the date immediately following
+    /// the current one. Will not go past Dec 9999.
+    pub fn next_date(self) -> DateTuple {
+        if self.y == 9999 && self.m == 11 && self.d == 31 {
+            return self;
+        }
+        if self.d == get_last_date_in_month(self.m, self.y) {
+            if self.m == 11 {
+                return DateTuple {
+                    y: self.y + 1,
+                    m: 0,
+                    d: 1,
+                };
+            } else {
+                return DateTuple {
+                    y: self.y,
+                    m: self.m + 1,
+                    d: 1,
+                };
+            }
+        } else {
+            return DateTuple {
+                y: self.y,
+                m: self.m,
+                d: self.d + 1,
+            };
+        }
+    }
+
+    /// Gets a DateTuple representing the date immediately preceding
+    /// the current one. Will not go past 1 Jan 0000.
+    pub fn previous_date(self) -> DateTuple {
+        if self.y == 0 && self.m == 0 && self.d == 1 {
+            return self;
+        }
+        if self.d == 1 {
+            if self.m == 0 {
+                return DateTuple {
+                    y: self.y - 1,
+                    m: 11,
+                    d: get_last_date_in_month(11, self.y - 1),
+                };
+            } else {
+                return DateTuple {
+                    y: self.y,
+                    m: self.m - 1,
+                    d: get_last_date_in_month(self.m - 1, self.y),
+                };
+            }
+        } else {
+            return DateTuple {
+                y: self.y,
+                m: self.m,
+                d: self.d - 1,
+            };
+        }
     }
 
     /// Produces a readable date.
@@ -135,6 +176,28 @@ impl Ord for DateTuple {
         } else {
             self.y.cmp(&other.y)
         }
+    }
+}
+
+/// Produces the integer representing the last date in the **ZERO-BASED**
+/// month in year.
+fn get_last_date_in_month(month: u8, year: u16) -> u8 {
+    match month {
+        1 => {
+            if date_utils::is_leap_year(year) {
+                29
+            } else {
+                28
+            }
+        }
+        0 => 31,
+        2 => 31,
+        4 => 31,
+        6 => 31,
+        7 => 31,
+        9 => 31,
+        11 => 31,
+        _ => 30,
     }
 }
 
@@ -203,6 +266,61 @@ mod tests {
     fn test_from_string() {
         let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(tuple, str::parse("20000510").unwrap());
+    }
+
+    #[test]
+    fn test_next_date() {
+        let tuple1 = super::Date::new(2000, 5, 10).unwrap();
+        let tuple2 = super::Date::new(2000, 2, 31).unwrap();
+        let tuple3 = super::Date::new(9999, 11, 31).unwrap();
+        assert_eq!(
+            super::Date {
+                y: 2000,
+                m: 5,
+                d: 11
+            },
+            tuple1.next_date()
+        );
+        assert_eq!(
+            super::Date {
+                y: 2000,
+                m: 3,
+                d: 1
+            },
+            tuple2.next_date()
+        );
+        assert_eq!(
+            super::Date {
+                y: 9999,
+                m: 11,
+                d: 31
+            },
+            tuple3.next_date()
+        );
+    }
+
+    #[test]
+    fn test_previous_date() {
+        let tuple1 = super::Date::new(2000, 5, 10).unwrap();
+        let tuple2 = super::Date::new(2000, 2, 1).unwrap();
+        let tuple3 = super::Date::new(0, 0, 1).unwrap();
+        assert_eq!(
+            super::Date {
+                y: 2000,
+                m: 5,
+                d: 9
+            },
+            tuple1.previous_date()
+        );
+        assert_eq!(
+            super::Date {
+                y: 2000,
+                m: 1,
+                d: 29
+            },
+            tuple2.previous_date()
+        );
+        assert_eq!(super::Date { y: 0, m: 0, d: 1 }, tuple3.previous_date());
     }
 
 }
