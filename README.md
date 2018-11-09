@@ -2,7 +2,7 @@
 =====================================================
 
 [![DateTime on Travis CI][travis-image]][travis]
-[![Chrono on crates.io][cratesio-image]][cratesio]
+[![DateTime on crates.io][cratesio-image]][cratesio]
 [![DateTime on docs.rs][docsrs-image]][docsrs]
 
 [travis-image]: https://travis-ci.com/samueldple/date_time.svg?branch=master
