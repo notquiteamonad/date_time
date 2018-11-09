@@ -102,11 +102,29 @@ impl MonthTuple {
         }
     }
 
-    /// Adds a number of months from a MonthTuple.
+    /// Subtracts a number of months from a MonthTuple.
     pub fn subtract_months(&mut self, months: u32) {
         for _ in 0..months {
             *self = self.previous_month();
         }
+    }
+
+    /// Adds a number of years to a MonthTuple.
+    pub fn add_years(&mut self, years: u16) {
+        let mut new_years = self.y + years;
+        if new_years > 9999 {
+            new_years = 9999;
+        }
+        self.y = new_years;
+    }
+
+    /// Subtracts a number of years from a MonthTuple.
+    pub fn subtract_years(&mut self, years: u16) {
+        let mut new_years = self.y as i32 - years as i32;
+        if new_years < 0 {
+            new_years = 0;
+        }
+        self.y = new_years as u16;
     }
 
     /// Returns the month formatted to be human-readable.
