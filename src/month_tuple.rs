@@ -95,6 +95,38 @@ impl MonthTuple {
         }
     }
 
+    /// Adds a number of months to a MonthTuple.
+    pub fn add_months(&mut self, months: u32) {
+        for _ in 0..months {
+            *self = self.next_month();
+        }
+    }
+
+    /// Subtracts a number of months from a MonthTuple.
+    pub fn subtract_months(&mut self, months: u32) {
+        for _ in 0..months {
+            *self = self.previous_month();
+        }
+    }
+
+    /// Adds a number of years to a MonthTuple.
+    pub fn add_years(&mut self, years: u16) {
+        let mut new_years = self.y + years;
+        if new_years > 9999 {
+            new_years = 9999;
+        }
+        self.y = new_years;
+    }
+
+    /// Subtracts a number of years from a MonthTuple.
+    pub fn subtract_years(&mut self, years: u16) {
+        let mut new_years = self.y as i32 - years as i32;
+        if new_years < 0 {
+            new_years = 0;
+        }
+        self.y = new_years as u16;
+    }
+
     /// Returns the month formatted to be human-readable.
     ///
     /// ## Examples
@@ -231,6 +263,30 @@ mod tests {
     fn test_from_string() {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
         assert_eq!(tuple, str::parse("200005").unwrap());
+    }
+
+    #[test]
+    fn test_add_months() {
+        let mut tuple1 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple1_orig = super::MonthTuple::new(2000, 5).unwrap();
+        let mut tuple2 = super::MonthTuple::new(2000, 11).unwrap();
+        let tuple2_orig = super::MonthTuple::new(2000, 11).unwrap();
+        tuple1.add_months(1);
+        assert_eq!(tuple1, tuple1_orig.next_month());
+        tuple2.add_months(2);
+        assert_eq!(tuple2, tuple2_orig.next_month().next_month());
+    }
+
+    #[test]
+    fn test_subtract_months() {
+        let mut tuple1 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple1_orig = super::MonthTuple::new(2000, 5).unwrap();
+        let mut tuple2 = super::MonthTuple::new(2000, 11).unwrap();
+        let tuple2_orig = super::MonthTuple::new(2000, 11).unwrap();
+        tuple1.subtract_months(1);
+        assert_eq!(tuple1, tuple1_orig.previous_month());
+        tuple2.subtract_months(2);
+        assert_eq!(tuple2, tuple2_orig.previous_month().previous_month());
     }
 
 }
