@@ -4,6 +4,8 @@ use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
 
+pub type Time = TimeTuple;
+
 /// A wrapper for a particular time of day or a duration.
 ///
 /// Precise to second-level.

@@ -5,6 +5,8 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
 
+pub type Date = DateTuple;
+
 /// Holds a specific date by year, month, and day.
 ///
 /// Handles values from 01 Jan 0000 to 31 Dec 9999.

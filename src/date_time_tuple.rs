@@ -5,6 +5,8 @@ use std::fmt;
 use std::str::FromStr;
 use time_tuple::TimeTuple;
 
+pub type DateTime = DateTimeTuple;
+
 /// Wrapper for a specific date and time.
 ///
 /// Comprised of a DateTuple and a TimeTuple.

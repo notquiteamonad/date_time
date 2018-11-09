@@ -37,6 +37,13 @@ extern crate date_time;
 
 All of the types in this library implement `Debug`, `Copy`, and `Clone` traits.
 
+##### Naming
+
+This library was originally a port from a closed-source Kotlin library with
+similar functionality. As such, each of the types are suffixed with "Tuple".
+
+Type aliases exist without the Tuple suffixes from version 1.2.1 onwards.
+
 ### Times
 
 Times can be generated using the `timetuple::TimeTuple` type.

@@ -9,6 +9,8 @@ const MONTH_STRINGS: [&str; 12] = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
+pub type Month = MonthTuple;
+
 /// A container for a month of a specific year.
 ///
 /// **NOTE:** MonthTuple's `m` field is zero-based (zero represents January).
