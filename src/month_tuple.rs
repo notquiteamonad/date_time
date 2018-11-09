@@ -95,6 +95,13 @@ impl MonthTuple {
         }
     }
 
+    /// Adds a number of months to a MonthTuple.
+    pub fn add_months(&mut self, months: u32) {
+        for _ in 0..months {
+            *self = self.next_month();
+        }
+    }
+
     /// Returns the month formatted to be human-readable.
     ///
     /// ## Examples
@@ -231,6 +238,18 @@ mod tests {
     fn test_from_string() {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
         assert_eq!(tuple, str::parse("200005").unwrap());
+    }
+
+    #[test]
+    fn test_add_months() {
+        let mut tuple1 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple1_orig = super::MonthTuple::new(2000, 5).unwrap();
+        let mut tuple2 = super::MonthTuple::new(2000, 11).unwrap();
+        let tuple2_orig = super::MonthTuple::new(2000, 11).unwrap();
+        tuple1.add_months(1);
+        assert_eq!(tuple1, tuple1_orig.next_month());
+        tuple2.add_months(2);
+        assert_eq!(tuple2, tuple2_orig.next_month().next_month());
     }
 
 }
