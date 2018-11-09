@@ -1,6 +1,16 @@
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
+
 /// Takes a year as a u16 and returns whether it is a leap year.
 pub fn is_leap_year(year: u16) -> bool {
     (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
+}
+
+/// Gets a duration using `std::time::SystemTime::now()` since the
+/// unix epoch.
+pub fn duration_since_unix_epoch() -> Duration {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_else(|_| Duration::new(0, 0))
 }
 
 #[cfg(test)]
