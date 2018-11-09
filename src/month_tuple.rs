@@ -102,6 +102,13 @@ impl MonthTuple {
         }
     }
 
+    /// Adds a number of months from a MonthTuple.
+    pub fn subtract_months(&mut self, months: u32) {
+        for _ in 0..months {
+            *self = self.previous_month();
+        }
+    }
+
     /// Returns the month formatted to be human-readable.
     ///
     /// ## Examples
@@ -250,6 +257,18 @@ mod tests {
         assert_eq!(tuple1, tuple1_orig.next_month());
         tuple2.add_months(2);
         assert_eq!(tuple2, tuple2_orig.next_month().next_month());
+    }
+
+    #[test]
+    fn test_subtract_months() {
+        let mut tuple1 = super::MonthTuple::new(2000, 5).unwrap();
+        let tuple1_orig = super::MonthTuple::new(2000, 5).unwrap();
+        let mut tuple2 = super::MonthTuple::new(2000, 11).unwrap();
+        let tuple2_orig = super::MonthTuple::new(2000, 11).unwrap();
+        tuple1.subtract_months(1);
+        assert_eq!(tuple1, tuple1_orig.previous_month());
+        tuple2.subtract_months(2);
+        assert_eq!(tuple2, tuple2_orig.previous_month().previous_month());
     }
 
 }
