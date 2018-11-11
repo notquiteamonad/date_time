@@ -1,3 +1,4 @@
+use date_utils;
 use regex::Regex;
 use std::cmp::Ordering;
 use std::fmt;
@@ -30,7 +31,10 @@ impl TimeTuple {
     /// with a minute value of 90 would add an hour to the resulting tuple
     /// and set the minutes to 30, for example.
     pub fn new(h: i32, m: i32, s: i32) -> TimeTuple {
-        let total_seconds = s + 60 * m + 3600 * h;
+        let mut total_seconds = s + 60 * m + 3600 * h;
+        while total_seconds < 0 {
+            total_seconds += 86400;
+        }
         TimeTuple::from_seconds(total_seconds as u64)
     }
 
@@ -41,9 +45,6 @@ impl TimeTuple {
         while total_seconds >= 86400 {
             total_seconds -= 86400;
         }
-        while total_seconds < 0 {
-            total_seconds += 86400;
-        }
         let h = total_seconds / 3600;
         total_seconds -= h * 3600;
         let m = total_seconds / 60;
@@ -53,6 +54,11 @@ impl TimeTuple {
             m: m as u8,
             s: total_seconds as u8,
         }
+    }
+
+    /// Returns a `TimeTuple` of the current time as `std::time::SystemTime` provides it.
+    pub fn now() -> TimeTuple {
+        date_utils::now_as_timetuple()
     }
 
     pub fn get_hours(&self) -> u8 {
