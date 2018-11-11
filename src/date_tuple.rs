@@ -119,6 +119,20 @@ impl DateTuple {
         }
     }
 
+    /// Adds a number of days to a DateTuple.
+    pub fn add_days(&mut self, days: u32) {
+        for _ in 0..days {
+            *self = self.next_date();
+        }
+    }
+
+    /// Subtracts a number of days from a DateTuple.
+    pub fn subtract_days(&mut self, days: u32) {
+        for _ in 0..days {
+            *self = self.previous_date();
+        }
+    }
+
     /// Adds a number of months to a DateTuple.
     ///
     /// If the day of month is beyond the last date in the resulting month, the day of
@@ -389,6 +403,30 @@ mod tests {
             tuple2.previous_date()
         );
         assert_eq!(super::Date { y: 0, m: 0, d: 1 }, tuple3.previous_date());
+    }
+
+    #[test]
+    fn test_add_days() {
+        let mut tuple1 = super::DateTuple::new(2000, 5, 5).unwrap();
+        let tuple1_orig = super::DateTuple::new(2000, 5, 5).unwrap();
+        let mut tuple2 = super::DateTuple::new(2000, 11, 31).unwrap();
+        let tuple2_orig = super::DateTuple::new(2000, 11, 31).unwrap();
+        tuple1.add_days(1);
+        assert_eq!(tuple1, tuple1_orig.next_date());
+        tuple2.add_days(2);
+        assert_eq!(tuple2, tuple2_orig.next_date().next_date());
+    }
+
+    #[test]
+    fn test_subtract_days() {
+        let mut tuple1 = super::DateTuple::new(2000, 5, 5).unwrap();
+        let tuple1_orig = super::DateTuple::new(2000, 5, 5).unwrap();
+        let mut tuple2 = super::DateTuple::new(2000, 11, 31).unwrap();
+        let tuple2_orig = super::DateTuple::new(2000, 11, 31).unwrap();
+        tuple1.subtract_days(1);
+        assert_eq!(tuple1, tuple1_orig.previous_date());
+        tuple2.subtract_days(2);
+        assert_eq!(tuple2, tuple2_orig.previous_date().previous_date());
     }
 
     #[test]
