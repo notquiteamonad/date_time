@@ -168,12 +168,6 @@ For January 2002, the former will produce `"200200"` and the latter will produce
 
 A `MonthTuple` can be instantiated by calling `std::str::parse()` with a string in the format of `yyyymm`.
 
-#### The date_utils module
-
-There is an additional module with a single function: `date_utils::is_leap_year(year: u16) -> bool`.
-
-It takes a year and returns whether it is a leap year.
-
 ### DateTime
 
 The `date_time_tuple::DateTimeTuple` type wraps a `DateTuple` and a `TimeTuple`.
