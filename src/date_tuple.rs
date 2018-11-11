@@ -119,6 +119,37 @@ impl DateTuple {
         }
     }
 
+    /// Adds a number of years to a DateTuple.
+    ///
+    /// If the date is set to Feb 29 and the resulting year is not a leap year,
+    /// it will be changed to Feb 28.
+    pub fn add_years(&mut self, years: u16) {
+        let mut new_years = self.y + years;
+        if new_years > 9999 {
+            new_years = 9999;
+        }
+        if self.m == 1 && self.d == 29 && !date_utils::is_leap_year(new_years) {
+            self.d = 28
+        }
+        self.y = new_years;
+    }
+
+    /// Subtracts a number of years from a DateTuple.
+    ///
+    /// If the date is set to Feb 29 and the resulting year is not a leap year,
+    /// it will be changed to Feb 28.
+    pub fn subtract_years(&mut self, years: u16) {
+        let mut new_years = self.y as i32 - years as i32;
+        if new_years < 0 {
+            new_years = 0;
+        }
+        let new_years = new_years as u16;
+        if self.m == 1 && self.d == 29 && !date_utils::is_leap_year(new_years) {
+            self.d = 28
+        }
+        self.y = new_years;
+    }
+
     /// Produces a readable date.
     ///
     /// ## Examples
