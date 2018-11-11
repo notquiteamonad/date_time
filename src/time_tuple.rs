@@ -84,6 +84,48 @@ impl TimeTuple {
     pub fn to_seconds(&self) -> u32 {
         3600 * self.h as u32 + 60 * self.m as u32 + self.s as u32
     }
+
+    /// Adds a number of seconds to the TimeTuple,
+    /// wrapping the same way `TimeTuple::new()` does.
+    pub fn add_seconds(&mut self, seconds: i32) {
+        let new_seconds = self.s as i32 + seconds;
+        *self = TimeTuple::new(self.h as i32, self.m as i32, new_seconds);
+    }
+
+    /// Subtracts a number of seconds from the TimeTuple,
+    /// wrapping the same way `TimeTuple::new()` does.
+    pub fn subtract_seconds(&mut self, seconds: i32) {
+        let new_seconds = self.s as i32 - seconds;
+        *self = TimeTuple::new(self.h as i32, self.m as i32, new_seconds);
+    }
+
+    /// Adds a number of minutes to the TimeTuple,
+    /// wrapping the same way `TimeTuple::new()` does.
+    pub fn add_minutes(&mut self, minutes: i32) {
+        let new_minutes = self.m as i32 + minutes;
+        *self = TimeTuple::new(self.h as i32, new_minutes, self.s as i32);
+    }
+
+    /// Subtracts a number of minutes from the TimeTuple,
+    /// wrapping the same way `TimeTuple::new()` does.
+    pub fn subtract_minutes(&mut self, minutes: i32) {
+        let new_minutes = self.m as i32 - minutes;
+        *self = TimeTuple::new(self.h as i32, new_minutes, self.s as i32);
+    }
+
+    /// Adds a number of hours to the TimeTuple,
+    /// wrapping the same way `TimeTuple::new()` does.
+    pub fn add_hours(&mut self, hours: i32) {
+        let new_hours = self.h as i32 + hours;
+        *self = TimeTuple::new(new_hours, self.m as i32, self.s as i32);
+    }
+
+    /// Subtracts a number of hours from the TimeTuple,
+    /// wrapping the same way `TimeTuple::new()` does.
+    pub fn subtract_hours(&mut self, hours: i32) {
+        let new_hours = self.h as i32 - hours;
+        *self = TimeTuple::new(new_hours, self.m as i32, self.s as i32);
+    }
 }
 
 impl fmt::Display for TimeTuple {
@@ -284,6 +326,36 @@ mod tests {
     fn test_from_string() {
         let tuple = super::TimeTuple::new(5, 30, 4);
         assert_eq!(tuple, str::parse("05:30:04").unwrap());
+    }
+
+    #[test]
+    fn test_manipulate_seconds() {
+        let mut tuple = super::TimeTuple::new(10, 58, 59);
+        tuple.add_seconds(3);
+        assert_eq!(super::TimeTuple::new(10, 59, 2), tuple);
+        tuple.subtract_seconds(1);
+        tuple.subtract_seconds(2);
+        assert_eq!(super::TimeTuple::new(10, 58, 59), tuple);
+    }
+
+    #[test]
+    fn test_manipulate_minutes() {
+        let mut tuple = super::TimeTuple::new(10, 58, 59);
+        tuple.add_minutes(3);
+        assert_eq!(super::TimeTuple::new(11, 1, 59), tuple);
+        tuple.subtract_minutes(1);
+        tuple.subtract_minutes(2);
+        assert_eq!(super::TimeTuple::new(10, 58, 59), tuple);
+    }
+
+    #[test]
+    fn test_manipulate_hours() {
+        let mut tuple = super::TimeTuple::new(10, 58, 59);
+        tuple.add_hours(3);
+        assert_eq!(super::TimeTuple::new(13, 58, 59), tuple);
+        tuple.subtract_hours(1);
+        tuple.subtract_hours(2);
+        assert_eq!(super::TimeTuple::new(10, 58, 59), tuple);
     }
 
 }
