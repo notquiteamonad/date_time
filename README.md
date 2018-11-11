@@ -18,6 +18,10 @@ precision beyond seconds is not necessary.
 It handles serialisable dates and times from 01 Jan 0000 at 00:00:00 to
 Dec 31 23:59:59.
 
+[Changelog](https://github.com/samueldple/date_time/blob/master/CHANGELOG.md)
+
+[Code of Conduct](https://github.com/samueldple/date_time/blob/master/CODE_OF_CONDUCT.md)
+
 ## Usage
 
 Put this in your `Cargo.toml`:
@@ -48,7 +52,7 @@ Type aliases exist without the Tuple suffixes from version 1.2.1 onwards.
 
 Times can be generated using the `timetuple::TimeTuple` type.
 
-Times must be instantiated using `TimeTuple::new()` which takes hour, minute, and second parameters. These are then converted into seconds and split apart again to create a tuple between 00:00:00 and 23:59:59.
+Times must either be instantiated using `TimeTuple::new()` which takes hour, minute, and second parameters or `TimeTuple::from_seconds()`, which just takes a total number of seconds. These are then converted into seconds and split apart again to create a tuple between 00:00:00 and 23:59:59.
 
 TimeTuple implements the following traits and is therefore fully comparable with other TimeTuples.
 
@@ -71,6 +75,18 @@ For example:
 For 8:30:30 AM, the former will produce `"08:30:30"` and the latter will produce `"08:30"`.
 
 A `TimeTuple` can be instantiated by calling `std::str::parse()` with a string in the format of `hh:mm:ss`.
+
+##### Mutation
+
+The following methods exist to manipulate an existing `TimeTuple`:
+* `add_seconds()`
+* `subtract_seconds()`
+* `add_minutes()`
+* `subtract_minutes()`
+* `add_hours()`
+* `subtract_hours()`
+
+Each takes a single argument of the number to add/subtract. These methods all wrap such that the resulting time is a valid time between `00:00:00` and `23:59:59`.
 
 ### Dates
 
@@ -96,6 +112,24 @@ A `DateTuple` can be instantiated by calling `std::str::parse()` with a string i
 
 If listing multiple `DateTuple` objects in a human readable format, you may wish to pad them with a space to the left to ensure alignment. This can be done with the format specifier `{:>11}` in a call such as `format!()`.
 
+##### Mutation
+
+The following methods exist to manipulate an existing `DateTuple`:
+* `add_days()`
+* `subtract_days()`
+* `add_months()`
+* `subtract_months()`
+* `add_years()`
+* `subtract_years()`
+
+Each takes a single argument of the number to add/subtract. These methods will always return a valid date. If the date were to fall after the end of a month, such as after adding one year to Feb 29 on a leap year, the last valid date in the month will be returned.
+
+The following two methods consume a `DateTuple` and return another:
+* `next_date()`
+* `previous_date()`
+
+They work similarly to `next_month()` and `previous_month()` described below.
+
 #### MonthTuple
 
 ***NOTE: The month in a `MonthTuple` is zero-based.***
@@ -108,7 +142,17 @@ It can be instantiated using `MonthTuple::new()`, passing a year between 0000 an
 
 `MonthTuple` also implements `From<DateTuple>` so a `DateTuple` can be converted to a `MonthTuple` using `MonthTuple::from(date_tuple: DateTuple)`.
 
-##### `next_month` and `previous_month`
+##### Mutation
+
+The following methods exist to manipulate an existing `MonthTuple`:
+* `add_months()`
+* `subtract_months()`
+* `add_years()`
+* `subtract_years()`
+
+Each takes a single argument of the number to add/subtract.
+
+###### `next_month` and `previous_month`
 
 `MonthTuple` provides two methods: `next_month` and `previous_month` which consume the `MonthTuple` and return the `MonthTuple` which chronologically follows or precedes it.
 
