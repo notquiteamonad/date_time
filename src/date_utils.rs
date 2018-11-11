@@ -1,8 +1,13 @@
 use date_tuple::DateTuple;
 use month_tuple::MonthTuple;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use time_tuple::TimeTuple;
 
 const UNIX_EPOCH_START_YEAR: u16 = 1970;
+
+const SECONDS_IN_A_YEAR: u64 = 31557600;
+const SECONDS_IN_A_MONTH: u64 = 2629800;
+const SECONDS_IN_A_DAY: u64 = 86400;
 
 /// Takes a year as a u16 and returns whether it is a leap year.
 pub fn is_leap_year(year: u16) -> bool {
@@ -14,7 +19,7 @@ pub fn now_as_datetuple() -> DateTuple {
     let mut seconds = duration_since_unix_epoch().as_secs();
     let parts = extract_year_and_month_from_duration(seconds);
     seconds = parts.2;
-    let days = seconds / 86400 + 1; //Days past plus current
+    let days = seconds / SECONDS_IN_A_DAY + 1; //Days past plus current
     DateTuple::new(parts.0, parts.1, days as u8).unwrap()
 }
 
@@ -25,15 +30,21 @@ pub fn now_as_monthtuple() -> MonthTuple {
     MonthTuple::new(parts.0, parts.1).unwrap()
 }
 
+/// Gets the current time of day from `std::time::SystemTime` as a TimeTuple
+pub fn now_as_timetuple() -> TimeTuple {
+    let seconds = duration_since_unix_epoch().as_secs();
+    TimeTuple::from_seconds(seconds)
+}
+
 /// Takes a duration in seconds and removes the year and month parts from it, returning
 /// a tuple of the year, month, and remaining seconds.
 ///
 /// Month is returned zero-based
 fn extract_year_and_month_from_duration(mut seconds: u64) -> (u16, u8, u64) {
-    let years = seconds / 31557600;
-    seconds -= years * 31557600;
-    let months = seconds / 2629800;
-    seconds -= months * 2629800;
+    let years = seconds / SECONDS_IN_A_YEAR;
+    seconds -= years * SECONDS_IN_A_YEAR;
+    let months = seconds / SECONDS_IN_A_MONTH;
+    seconds -= months * SECONDS_IN_A_MONTH;
     (years as u16 + UNIX_EPOCH_START_YEAR, months as u8, seconds)
 }
 
