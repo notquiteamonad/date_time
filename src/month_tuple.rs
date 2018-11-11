@@ -1,4 +1,5 @@
 use date_tuple::DateTuple;
+use date_utils;
 use regex::Regex;
 use std::cmp::Ordering;
 use std::convert::From;
@@ -44,6 +45,11 @@ impl MonthTuple {
                 MonthTuple { y, m }
             ))
         }
+    }
+
+    /// Returns a `MonthTuple` of the current month according to the system clock.
+    pub fn this_month() -> MonthTuple {
+        date_utils::now_as_monthtuple()
     }
 
     pub fn get_year(&self) -> u16 {
