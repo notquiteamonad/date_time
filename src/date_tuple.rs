@@ -44,6 +44,11 @@ impl DateTuple {
         }
     }
 
+    /// Returns a `DateTuple` of the current date according to the system clock.
+    pub fn today() -> DateTuple {
+        date_utils::now_as_datetuple()
+    }
+
     pub fn get_year(&self) -> u16 {
         self.y
     }
