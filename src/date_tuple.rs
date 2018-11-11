@@ -135,6 +135,22 @@ impl DateTuple {
         self.m = new_month.get_month();
     }
 
+    /// Subtracts a number of months from a DateTuple.
+    ///
+    /// If the day of month is beyond the last date in the resulting month, the day of
+    /// month will be set to the last day of that month.
+    pub fn subtract_months(&mut self, months: u32) {
+        let mut new_month = MonthTuple::from(*self);
+        new_month.subtract_months(months);
+        let last_date_in_month =
+            get_last_date_in_month(new_month.get_month(), new_month.get_year());
+        if self.d > last_date_in_month {
+            self.d = last_date_in_month;
+        }
+        self.y = new_month.get_year();
+        self.m = new_month.get_month();
+    }
+
     /// Adds a number of years to a DateTuple.
     ///
     /// If the date is set to Feb 29 and the resulting year is not a leap year,
@@ -383,6 +399,16 @@ mod tests {
         assert_eq!(tuple1, super::DateTuple::new(2000, 6, 1).unwrap());
         tuple2.add_months(2);
         assert_eq!(tuple2, super::DateTuple::new(2000, 8, 30).unwrap());
+    }
+
+    #[test]
+    fn test_subtract_months() {
+        let mut tuple1 = super::DateTuple::new(2000, 5, 1).unwrap();
+        let mut tuple2 = super::DateTuple::new(2000, 6, 31).unwrap();
+        tuple1.subtract_months(1);
+        assert_eq!(tuple1, super::DateTuple::new(2000, 4, 1).unwrap());
+        tuple2.subtract_months(3);
+        assert_eq!(tuple2, super::DateTuple::new(2000, 3, 30).unwrap());
     }
 
     #[test]
