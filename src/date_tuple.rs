@@ -359,4 +359,18 @@ mod tests {
         assert_eq!(super::Date { y: 0, m: 0, d: 1 }, tuple3.previous_date());
     }
 
+    #[test]
+    fn test_add_and_subtract_years() {
+        let mut tuple1 = super::Date::new(2000, 1, 29).unwrap();
+        let mut tuple2 = super::Date::new(2000, 1, 29).unwrap();
+        tuple1.add_years(1);
+        tuple2.add_years(4);
+        assert_eq!(super::Date::new(2001, 1, 28).unwrap(), tuple1);
+        assert_eq!(super::Date::new(2004, 1, 29).unwrap(), tuple2);
+        tuple1.subtract_years(1);
+        tuple2.subtract_years(4);
+        assert_eq!(super::Date::new(2000, 1, 28).unwrap(), tuple1);
+        assert_eq!(super::Date::new(2000, 1, 29).unwrap(), tuple2);
+    }
+
 }
