@@ -1,6 +1,7 @@
 use date_utils;
 use regex::Regex;
 use std::cmp::Ordering;
+use std::convert::From;
 use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
@@ -217,6 +218,7 @@ impl SubAssign for TimeTuple {
 /// Precise to second-level.
 ///
 /// Cannot be negative.
+#[derive(PartialEq, Eq, Debug, Copy, Clone)]
 pub struct Duration {
     h: u32,
     m: u8,
@@ -315,6 +317,93 @@ impl Duration {
     pub fn subtract_hours(&mut self, hours: u32) {
         let new_hours = self.h as u32 - hours;
         *self = Duration::new(new_hours, self.m as u32, self.s as u32);
+    }
+}
+
+impl fmt::Display for Duration {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}:{:02}:{:02}", self.h, self.m, self.s)
+    }
+}
+
+impl FromStr for Duration {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Duration, Self::Err> {
+        let valid_format = Regex::new(r"^\d+:\d{2}:\d{2}$").unwrap();
+        if !valid_format.is_match(s) {
+            Err(format!(
+                "Invalid str formatting of Duration: {}\nExpects a string formatted like 8:30:05",
+                s
+            ))
+        } else {
+            let mut parts = s.split(':');
+            Ok(Duration::new(
+                u32::from_str(parts.next().unwrap()).unwrap(),
+                u32::from_str(parts.next().unwrap()).unwrap(),
+                u32::from_str(parts.next().unwrap()).unwrap(),
+            ))
+        }
+    }
+}
+
+impl PartialOrd for Duration {
+    fn partial_cmp(&self, other: &Duration) -> Option<Ordering> {
+        self.to_seconds().partial_cmp(&other.to_seconds())
+    }
+}
+
+impl Ord for Duration {
+    fn cmp(&self, other: &Duration) -> Ordering {
+        self.to_seconds().cmp(&other.to_seconds())
+    }
+}
+
+impl Add for Duration {
+    type Output = Duration;
+    fn add(self, other: Duration) -> Duration {
+        Duration::new(
+            (self.h + other.h) as u32,
+            (self.m + other.m) as u32,
+            (self.s + other.s) as u32,
+        )
+    }
+}
+
+impl AddAssign for Duration {
+    fn add_assign(&mut self, other: Duration) {
+        *self = Duration::new(
+            (self.h + other.h) as u32,
+            (self.m + other.m) as u32,
+            (self.s + other.s) as u32,
+        );
+    }
+}
+
+impl Sub for Duration {
+    type Output = Duration;
+    fn sub(self, other: Duration) -> Duration {
+        Duration::new(
+            (self.h - other.h) as u32,
+            (self.m - other.m) as u32,
+            (self.s - other.s) as u32,
+        )
+    }
+}
+
+impl SubAssign for Duration {
+    fn sub_assign(&mut self, other: Duration) {
+        *self = Duration::new(
+            (self.h - other.h) as u32,
+            (self.m - other.m) as u32,
+            (self.s - other.s) as u32,
+        );
+    }
+}
+
+impl From<TimeTuple> for Duration {
+    fn from(time: TimeTuple) -> Self {
+        Duration::from_seconds(time.to_seconds() as u64)
     }
 }
 
