@@ -211,7 +211,7 @@ impl SubAssign for TimeTuple {
     }
 }
 
-/// A wrapper for a Duration.
+/// A wrapper for a duration.
 ///
 /// Does not count in days, but can have hours >24 (up to `u32::MAX`)
 ///
