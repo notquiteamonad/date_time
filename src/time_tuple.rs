@@ -556,4 +556,17 @@ mod tests {
         assert_eq!(super::TimeTuple::new(10, 58, 59), tuple);
     }
 
+    #[test]
+    fn test_time_to_duration() {
+        let time = super::Time::new(20, 20, 20);
+        let duration = super::Duration::from(time);
+        assert_eq!(super::Duration::new(20, 20, 20), duration);
+    }
+
+    #[test]
+    fn test_large_duration() {
+        let duration = super::Duration::new(200, 0, 0);
+        assert_eq!(String::from("200:00:00"), duration.to_string());
+    }
+
 }
