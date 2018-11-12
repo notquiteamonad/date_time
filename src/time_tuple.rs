@@ -232,7 +232,7 @@ impl Duration {
     /// with a minute value of 90 would add an hour to the resulting tuple
     /// and set the minutes to 30, for example.
     pub fn new(h: u32, m: u32, s: u32) -> Duration {
-        let mut total_seconds = s + 60 * m + 3600 * h;
+        let total_seconds = s + 60 * m + 3600 * h;
         Duration::from_seconds(total_seconds as u64)
     }
 
