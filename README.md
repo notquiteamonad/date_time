@@ -50,6 +50,8 @@ Type aliases exist without the Tuple suffixes from version 1.2.1 onwards.
 
 ### Times
 
+#### TimeTuple
+
 Times can be generated using the `timetuple::TimeTuple` type.
 
 Times must either be instantiated using `TimeTuple::new()` which takes hour, minute, and second parameters or `TimeTuple::from_seconds()`, which just takes a total number of seconds. These are then converted into seconds and split apart again to create a tuple between 00:00:00 and 23:59:59.
@@ -87,6 +89,10 @@ The following methods exist to manipulate an existing `TimeTuple`:
 * `subtract_hours()`
 
 Each takes a single argument of the number to add/subtract. These methods all wrap such that the resulting time is a valid time between `00:00:00` and `23:59:59`.
+
+#### Duration
+
+A second time type, `Duration` exists for cases where a duration should be stored in hours, minutes and seconds. This is similar to the `TimeTuple` type but allows hours to be greater than 24.
 
 ### Dates
 
