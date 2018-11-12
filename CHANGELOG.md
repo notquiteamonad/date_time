@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.4.0
+-------------
+
+* Added the `Duration` type to hold a time longer than 24 hours.
+
 Version 1.3.0
 -------------
 
