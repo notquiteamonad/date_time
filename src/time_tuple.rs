@@ -6,8 +6,9 @@ use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
 
 pub type Time = TimeTuple;
+pub type TimeOfDay = TimeTuple;
 
-/// A wrapper for a particular time of day or a duration.
+/// A wrapper for a particular time of day.
 ///
 /// Precise to second-level.
 ///
@@ -206,6 +207,114 @@ impl SubAssign for TimeTuple {
             (self.m - other.m) as i32,
             (self.s - other.s) as i32,
         );
+    }
+}
+
+/// A wrapper for a Duration.
+///
+/// Does not count in days, but can have hours >24 (up to `u32::MAX`)
+///
+/// Precise to second-level.
+///
+/// Cannot be negative.
+pub struct Duration {
+    h: u32,
+    m: u8,
+    s: u8,
+}
+
+impl Duration {
+    /// Produces a new Duration.
+    ///
+    /// The value is calculated from total number of seconds so a duration
+    /// with a minute value of 90 would add an hour to the resulting tuple
+    /// and set the minutes to 30, for example.
+    pub fn new(h: u32, m: u32, s: u32) -> Duration {
+        let mut total_seconds = s + 60 * m + 3600 * h;
+        Duration::from_seconds(total_seconds as u64)
+    }
+
+    /// Same as `Duration::new()` but takes the total number of seconds
+    /// as its argument and calculates the hours, minutes, and seconds
+    /// from that.
+    pub fn from_seconds(mut total_seconds: u64) -> Duration {
+        let h = total_seconds / 3600;
+        total_seconds -= h * 3600;
+        let m = total_seconds / 60;
+        total_seconds -= m * 60;
+        Duration {
+            h: h as u32,
+            m: m as u8,
+            s: total_seconds as u8,
+        }
+    }
+
+    pub fn get_hours(&self) -> u32 {
+        self.h
+    }
+
+    pub fn get_minutes(&self) -> u8 {
+        self.m
+    }
+
+    pub fn get_seconds(&self) -> u8 {
+        self.s
+    }
+
+    /// Produces a string such as 8:30 for 8 hours and 30 minutes.
+    ///
+    /// Hours field will expand as necessary; 150:30 is a possible result.
+    ///
+    /// Ignores seconds.
+    pub fn to_hours_and_minutes_string(&self) -> String {
+        format!("{}:{:02}", self.h, self.m)
+    }
+
+    /// Gets the total number of seconds in the tuple.
+    pub fn to_seconds(&self) -> u64 {
+        3600 * self.h as u64 + 60 * self.m as u64 + self.s as u64
+    }
+
+    /// Adds a number of seconds to the Duration,
+    /// wrapping the same way `Duration::new()` does.
+    pub fn add_seconds(&mut self, seconds: u32) {
+        let new_seconds = self.s as u32 + seconds;
+        *self = Duration::new(self.h as u32, self.m as u32, new_seconds);
+    }
+
+    /// Subtracts a number of seconds from the Duration,
+    /// wrapping the same way `Duration::new()` does.
+    pub fn subtract_seconds(&mut self, seconds: u32) {
+        let new_seconds = self.s as u32 - seconds;
+        *self = Duration::new(self.h as u32, self.m as u32, new_seconds);
+    }
+
+    /// Adds a number of minutes to the Duration,
+    /// wrapping the same way `Duration::new()` does.
+    pub fn add_minutes(&mut self, minutes: u32) {
+        let new_minutes = self.m as u32 + minutes;
+        *self = Duration::new(self.h as u32, new_minutes, self.s as u32);
+    }
+
+    /// Subtracts a number of minutes from the Duration,
+    /// wrapping the same way `Duration::new()` does.
+    pub fn subtract_minutes(&mut self, minutes: u32) {
+        let new_minutes = self.m as u32 - minutes;
+        *self = Duration::new(self.h as u32, new_minutes, self.s as u32);
+    }
+
+    /// Adds a number of hours to the Duration,
+    /// wrapping the same way `Duration::new()` does.
+    pub fn add_hours(&mut self, hours: u32) {
+        let new_hours = self.h as u32 + hours;
+        *self = Duration::new(new_hours, self.m as u32, self.s as u32);
+    }
+
+    /// Subtracts a number of hours from the Duration,
+    /// wrapping the same way `Duration::new()` does.
+    pub fn subtract_hours(&mut self, hours: u32) {
+        let new_hours = self.h as u32 - hours;
+        *self = Duration::new(new_hours, self.m as u32, self.s as u32);
     }
 }
 
