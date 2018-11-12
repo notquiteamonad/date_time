@@ -74,7 +74,7 @@ For example:
 
 For 8:30:30 AM, the former will produce `"08:30:30"` and the latter will produce `"08:30"`.
 
-A `TimeTuple` can be instantiated by calling `std::str::parse()` with a string in the format of `hh:mm:ss`.
+A `TimeTuple` can be instantiated by calling `TimeTuple::from_str()` with a string in the format of `hh:mm:ss`.
 
 ##### Mutation
 
@@ -108,7 +108,7 @@ A `DateTuple` can be created using `DateTuple::new()`, passing a year between 0 
 
 For 23rd January 2002, the former will produce `"20020023"` and the latter will produce `"23 Jan 2002"`.
 
-A `DateTuple` can be instantiated by calling `std::str::parse()` with a string in the format of `yyyymmdd`.
+A `DateTuple` can be instantiated by calling `DateTuple::from_str()` with a string in the format of `yyyymmdd`.
 
 If listing multiple `DateTuple` objects in a human readable format, you may wish to pad them with a space to the left to ensure alignment. This can be done with the format specifier `{:>11}` in a call such as `format!()`.
 
@@ -166,7 +166,7 @@ These methods consume the existing `MonthTuple`.
 
 For January 2002, the former will produce `"200200"` and the latter will produce `"Jan 2002"`.
 
-A `MonthTuple` can be instantiated by calling `std::str::parse()` with a string in the format of `yyyymm`.
+A `MonthTuple` can be instantiated by calling `MonthTuple::from_str()` with a string in the format of `yyyymm`.
 
 ### DateTime
 
@@ -180,7 +180,7 @@ Like the other modules in this library, it is fully comparable with other `DateT
 
 For 23rd January 2002 at 08:30:30 AM, the former will produce `"20020023@08:30:30"` and the latter will produce `"23 Jan 2002 08:30:30"`.
 
-A `DateTimeTuple` can be instantiated by calling `std::str::parse()` with a string in the format of `yyyymmdd@hh:mm:ss`.
+A `DateTimeTuple` can be instantiated by calling `DateTimeTuple::from_str()` with a string in the format of `yyyymmdd@hh:mm:ss`.
 
 ## Limitations
 
