@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.4.1
+-------------
+
+* Updated documentation
+
 Version 1.4.0
 -------------
 
