@@ -16,7 +16,7 @@ Date_Time is a high-level rust library for use in situations where
 precision beyond seconds is not necessary.
 
 It handles serialisable dates and times from 01 Jan 0000 at 00:00:00 to
-Dec 31 23:59:59.
+Dec 31 9999 at 23:59:59.
 
 [Changelog](https://github.com/samueldple/date_time/blob/master/CHANGELOG.md)
 
@@ -28,7 +28,7 @@ Put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-date_time = "1.2.0"
+date_time = "1.4.1"
 ```
 
 Then put this in your crate root:
