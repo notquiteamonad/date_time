@@ -4,6 +4,7 @@
 [![DateTime on Travis CI][travis-image]][travis]
 [![DateTime on crates.io][cratesio-image]][cratesio]
 [![DateTime on docs.rs][docsrs-image]][docsrs]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsamueldple%2Fdate_time.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsamueldple%2Fdate_time?ref=badge_shield)
 
 [travis-image]: https://travis-ci.com/samueldple/date_time.svg?branch=master
 [travis]: https://travis-ci.com/samueldple/date_time
