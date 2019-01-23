@@ -149,6 +149,7 @@ mod tests {
             ::time_tuple::TimeTuple::new(8, 30, 0),
         );
         assert_eq!(tuple, str::parse("20000510@08:30:00").unwrap());
+        assert!(str::parse::<super::DateTimeTuple>("2-a11111@05:a:04").is_err());
     }
 
 }
