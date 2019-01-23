@@ -21,15 +21,21 @@ addons:
     - oracle-java8-installer
 
 after_success:
-- 'TARGET=$HOME/kcov && mkdir $TARGET && export PATH=$TARGET/bin:$PATH &&
+- 'if [ "$TRAVIS_RUST_VERSION" == "stable" ]; then
+    TARGET=$HOME/kcov && mkdir $TARGET && export PATH=$TARGET/bin:$PATH &&
     wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
     tar xzf master.tar.gz && mkdir kcov-master/build && cd kcov-master/build &&
     cmake .. -DCMAKE_INSTALL_PREFIX:PATH=$TARGET && make && make install && cd ../.. &&
-    ls target/debug && ls $TARGET/bin && echo $PATH'
-- 'for file in target/debug/*; do
+    ls target/debug && ls $TARGET/bin && echo $PATH;
+  fi'
+- 'if [ "$TRAVIS_RUST_VERSION" == "stable" ]; then
+      for file in target/debug/*; do
       if [[ -x $file && -f $file ]]; then
         mkdir -p "target/cov/$(basename $file)";
         kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file";
       fi;
-    done'
-- 'kcov --coveralls-id=$TRAVIS_JOB_ID --merge target/cov target/cov/*'
+    done;
+  fi'
+- 'if [ "$TRAVIS_RUST_VERSION" == "stable" ]; then
+    kcov --coveralls-id=$TRAVIS_JOB_ID --merge target/cov target/cov/*;
+  fi'
