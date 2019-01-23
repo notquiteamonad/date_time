@@ -198,28 +198,44 @@ impl From<DateTuple> for MonthTuple {
 mod tests {
 
     #[test]
+    fn test_year_too_large() {
+        assert!(super::MonthTuple::new(10000, 5).is_err());
+    }
+
+    #[test]
     fn test_next_month() {
         let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
         let tuple2 = super::MonthTuple::new(2000, 11).unwrap();
+        let tuple3 = super::MonthTuple::new(9999, 11).unwrap();
         assert_eq!(super::MonthTuple { y: 2000, m: 6 }, tuple1.next_month());
         assert_eq!(super::MonthTuple { y: 2001, m: 0 }, tuple2.next_month());
+        assert_eq!(tuple3, tuple3.next_month());
     }
 
     #[test]
     fn test_previous_month() {
         let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
         let tuple2 = super::MonthTuple::new(2000, 0).unwrap();
+        let tuple3 = super::MonthTuple::new(0, 0).unwrap();
         assert_eq!(super::MonthTuple { y: 2000, m: 4 }, tuple1.previous_month());
         assert_eq!(
             super::MonthTuple { y: 1999, m: 11 },
             tuple2.previous_month()
         );
+        assert_eq!(tuple3, tuple3.previous_month());
     }
 
     #[test]
     fn test_to_readable_string() {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
         assert_eq!(String::from("Jun 2000"), tuple.to_readable_string());
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_to_readable_string_panic() {
+        let tuple = super::MonthTuple { y: 2000, m: 12 };
+        tuple.to_readable_string();
     }
 
     #[test]
@@ -250,13 +266,6 @@ mod tests {
     }
 
     #[test]
-    fn test_invalid() {
-        if let Ok(_) = super::MonthTuple::new(2000, 12) {
-            assert!(false)
-        }
-    }
-
-    #[test]
     fn test_from_date() {
         let date = ::date_tuple::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(
@@ -269,6 +278,7 @@ mod tests {
     fn test_from_string() {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
         assert_eq!(tuple, str::parse("200005").unwrap());
+        assert!(str::parse::<super::MonthTuple>("200O05").is_err());
     }
 
     #[test]
