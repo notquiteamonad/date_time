@@ -524,6 +524,7 @@ mod tests {
     fn test_from_string() {
         let tuple = super::TimeTuple::new(5, 30, 4);
         assert_eq!(tuple, str::parse("05:30:04").unwrap());
+        assert!(str::parse::<super::TimeTuple>("05:a:04").is_err());
     }
 
     #[test]

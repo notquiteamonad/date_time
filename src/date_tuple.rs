@@ -287,6 +287,11 @@ fn get_last_date_in_month(month: u8, year: u16) -> u8 {
 mod tests {
 
     #[test]
+    fn test_year_too_large() {
+        assert!(super::DateTuple::new(10000, 5, 10).is_err());
+    }
+
+    #[test]
     fn test_to_string() {
         let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(String::from("20000510"), tuple.to_string());
@@ -348,6 +353,7 @@ mod tests {
     fn test_from_string() {
         let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(tuple, str::parse("20000510").unwrap());
+        assert!(str::parse::<super::DateTuple>("2O00051O").is_err());
     }
 
     #[test]
@@ -386,6 +392,7 @@ mod tests {
         let tuple1 = super::Date::new(2000, 5, 10).unwrap();
         let tuple2 = super::Date::new(2000, 2, 1).unwrap();
         let tuple3 = super::Date::new(0, 0, 1).unwrap();
+        let tuple4 = super::Date::new(2000, 0, 1).unwrap();
         assert_eq!(
             super::Date {
                 y: 2000,
@@ -403,6 +410,14 @@ mod tests {
             tuple2.previous_date()
         );
         assert_eq!(super::Date { y: 0, m: 0, d: 1 }, tuple3.previous_date());
+        assert_eq!(
+            super::Date {
+                y: 1999,
+                m: 11,
+                d: 31
+            },
+            tuple4.previous_date()
+        );
     }
 
     #[test]
@@ -435,6 +450,8 @@ mod tests {
         let mut tuple2 = super::DateTuple::new(2000, 6, 31).unwrap();
         tuple1.add_months(1);
         assert_eq!(tuple1, super::DateTuple::new(2000, 6, 1).unwrap());
+        tuple1.add_months(1);
+        assert_eq!(tuple1, super::DateTuple::new(2000, 7, 1).unwrap());
         tuple2.add_months(2);
         assert_eq!(tuple2, super::DateTuple::new(2000, 8, 30).unwrap());
     }
@@ -443,10 +460,13 @@ mod tests {
     fn test_subtract_months() {
         let mut tuple1 = super::DateTuple::new(2000, 5, 1).unwrap();
         let mut tuple2 = super::DateTuple::new(2000, 6, 31).unwrap();
+        let mut tuple3 = super::DateTuple::new(2000, 10, 30).unwrap();
         tuple1.subtract_months(1);
         assert_eq!(tuple1, super::DateTuple::new(2000, 4, 1).unwrap());
         tuple2.subtract_months(3);
         assert_eq!(tuple2, super::DateTuple::new(2000, 3, 30).unwrap());
+        tuple3.subtract_months(1);
+        assert_eq!(tuple3, super::DateTuple::new(2000, 9, 30).unwrap());
     }
 
     #[test]
@@ -461,6 +481,14 @@ mod tests {
         tuple2.subtract_years(4);
         assert_eq!(super::Date::new(2000, 1, 28).unwrap(), tuple1);
         assert_eq!(super::Date::new(2000, 1, 29).unwrap(), tuple2);
+        tuple2.subtract_years(1);
+        assert_eq!(super::Date::new(1999, 1, 28).unwrap(), tuple2);
+        let mut tuple3 = super::Date::new(9999, 5, 10).unwrap();
+        let mut tuple4 = super::Date::new(0, 5, 10).unwrap();
+        tuple3.add_years(1);
+        tuple4.subtract_years(1);
+        assert_eq!(9999, tuple3.get_year());
+        assert_eq!(0, tuple4.get_year());
     }
 
 }
