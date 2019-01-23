@@ -1,6 +1,8 @@
 [DateTime][docsrs]: High-Level Date and Time for Rust
 =====================================================
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b32cd32fbf4a486e9dbb0e0620344f9d)](https://app.codacy.com/app/samueldple/date_time?utm_source=github.com&utm_medium=referral&utm_content=samueldple/date_time&utm_campaign=Badge_Grade_Dashboard)
+
 [![DateTime on Travis CI][travis-image]][travis]
 [![DateTime on crates.io][cratesio-image]][cratesio]
 [![DateTime on docs.rs][docsrs-image]][docsrs]
