@@ -3,6 +3,17 @@ rust:
   - stable
   - beta
   - nightly
+
 matrix:
   allow_failures:
     - rust: nightly
+
+addons:
+  apt:
+    packages:
+      - kcov
+
+after_success: |
+  kcov --exclude-pattern=/.cargo,/usr/lib --verify target/cov target/debug/date_time-* &&
+  bash <(curl -s https://codecov.io/bash) &&
+  echo "Uploaded code coverage"
