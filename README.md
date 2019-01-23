@@ -1,15 +1,14 @@
 # [DateTime][docsrs]: High-Level Date and Time for Rust
 
-[![DateTime on Travis CI][travis-image]][travis]
 [![DateTime on crates.io][cratesio-image]][cratesio]
 [![DateTime on docs.rs][docsrs-image]][docsrs]
 
+[![DateTime on Travis CI][travis-image]][travis]
 [![FOSSA Status][fossa-image]][fossa]
+[![Coverage Status][coveralls-image]][coveralls]
+
 [![Average time to resolve an issue][isitmaintained-resolution-image]][isitmaintained]
 [![Percentage of issues still open][isitmaintained-open-image]][isitmaintained]
-
-[![Codacy Badge][codacy-image]][codacy]
-[![Coverage Status][coveralls-image]][coveralls]
 
 [travis-image]: https://travis-ci.com/samueldple/date_time.svg?branch=master
 
@@ -32,10 +31,6 @@
 [isitmaintained-resolution-image]: http://isitmaintained.com/badge/resolution/samueldple/date_time.svg
 
 [isitmaintained-open-image]: http://isitmaintained.com/badge/open/samueldple/date_time.svg
-
-[codacy]: https://www.codacy.com/app/samueldple/date_time?utm_source=github.com&utm_medium=referral&utm_content=samueldple/date_time&utm_campaign=Badge_Grade
-
-[codacy-image]: https://api.codacy.com/project/badge/Grade/108f395d855f4499a929a09c4614edf5
 
 [coveralls]: https://coveralls.io/github/samueldple/date_time
 
