@@ -14,6 +14,4 @@ addons:
       - kcov
 
 after_success: |
-  kcov --exclude-pattern=/.cargo,/usr/lib target/cov target/debug/date_time-* &&
-  bash <(curl -s https://codecov.io/bash) &&
-  echo "Uploaded code coverage"
+  kcov --coveralls-id=$TRAVIS_JOB_ID --exclude-pattern=/.cargo,/usr/lib target/cov target/debug/date_time-*
