@@ -4,7 +4,10 @@
 [![DateTime on Travis CI][travis-image]][travis]
 [![DateTime on crates.io][cratesio-image]][cratesio]
 [![DateTime on docs.rs][docsrs-image]][docsrs]
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsamueldple%2Fdate_time.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsamueldple%2Fdate_time?ref=badge_shield)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/samueldple/date_time.svg)](http://isitmaintained.com/project/samueldple/date_time "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/samueldple/date_time.svg)](http://isitmaintained.com/project/samueldple/date_time "Percentage of issues still open")
 
 [travis-image]: https://travis-ci.com/samueldple/date_time.svg?branch=master
 [travis]: https://travis-ci.com/samueldple/date_time
