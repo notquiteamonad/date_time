@@ -9,6 +9,7 @@
 [![Percentage of issues still open][isitmaintained-open-image]][isitmaintained]
 
 [![Codacy Badge][codacy-image]][codacy]
+[![Coverage Status][coveralls-image]][coveralls]
 
 [travis-image]: https://travis-ci.com/samueldple/date_time.svg?branch=master
 
@@ -35,6 +36,10 @@
 [codacy]: https://www.codacy.com/app/samueldple/date_time?utm_source=github.com&utm_medium=referral&utm_content=samueldple/date_time&utm_campaign=Badge_Grade
 
 [codacy-image]: https://api.codacy.com/project/badge/Grade/108f395d855f4499a929a09c4614edf5
+
+[coveralls]: https://coveralls.io/github/samueldple/date_time
+
+[coveralls-image]: https://coveralls.io/repos/github/samueldple/date_time/badge.svg
 
 Date_Time is a high-level rust library for use in situations where
 precision beyond seconds is not necessary.

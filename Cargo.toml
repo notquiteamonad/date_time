@@ -14,6 +14,7 @@ license = "Apache-2.0"
 travis-ci = { repository = "samueldple/date_time" }
 is-it-maintained-issue-resolution = { repository = "samueldple/date_time" }
 is-it-maintained-open-issues = { repository = "samueldple/date_time" }
+coveralls = { repository = "samueldple/date_time", branch = "master", service = "github" }
 
 [dependencies]
 regex = "1.0.5"
