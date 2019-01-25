@@ -87,6 +87,11 @@ impl TimeTuple {
         3600 * self.h as u32 + 60 * self.m as u32 + self.s as u32
     }
 
+    /// Gets the total number of minutes in the tuple, ignoring seconds.
+    pub fn to_minutes(&self) -> u32 {
+        60 * self.h as u32 + self.m as u32
+    }
+
     /// Adds a number of seconds to the TimeTuple,
     /// wrapping the same way `TimeTuple::new()` does.
     pub fn add_seconds(&mut self, seconds: i32) {
@@ -272,9 +277,14 @@ impl Duration {
         format!("{}:{:02}", self.h, self.m)
     }
 
-    /// Gets the total number of seconds in the tuple.
+    /// Gets the total number of seconds in the Duration.
     pub fn to_seconds(&self) -> u64 {
         3600 * self.h as u64 + 60 * self.m as u64 + self.s as u64
+    }
+
+    /// Gets the total number of minutes in the Duration, ignoring seconds.
+    pub fn to_minutes(&self) -> u32 {
+        60 * self.h as u32 + self.m as u32
     }
 
     /// Adds a number of seconds to the Duration,
@@ -511,7 +521,15 @@ mod tests {
     #[test]
     fn test_to_seconds() {
         let tuple = super::TimeTuple::new(2, 30, 30);
-        assert_eq!(9030, tuple.to_seconds())
+        assert_eq!(9030, tuple.to_seconds());
+    }
+
+    #[test]
+    fn test_to_minutes() {
+        let tuple = super::TimeTuple::new(2, 30, 30);
+        let duration = super::Duration::new(26, 30, 30);
+        assert_eq!(150, tuple.to_minutes());
+        assert_eq!(1590, duration.to_minutes());
     }
 
     #[test]
