@@ -52,7 +52,7 @@ Put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-date_time = "1.4.3"
+date_time = "1.4.4"
 ```
 
 Then put this in your crate root:
