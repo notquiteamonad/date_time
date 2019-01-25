@@ -198,7 +198,8 @@ impl From<DateTuple> for MonthTuple {
 mod tests {
 
     #[test]
-    fn test_year_too_large() {
+    fn test_component_too_large() {
+        assert!(super::MonthTuple::new(2000, 12).is_err());
         assert!(super::MonthTuple::new(10000, 5).is_err());
     }
 

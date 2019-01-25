@@ -326,27 +326,14 @@ mod tests {
 
     #[test]
     fn test_validity() {
-        let valid = [
-            super::DateTuple::new(2000, 5, 5),
-            super::DateTuple::new(2000, 6, 31),
-            super::DateTuple::new(2000, 1, 2),
-            super::DateTuple::new(2000, 1, 29),
-        ];
-        let invalid = [
-            super::DateTuple::new(2000, 5, 31),
-            super::DateTuple::new(2001, 1, 29),
-            super::DateTuple::new(2000, 12, 5),
-        ];
-        for v in valid.iter() {
-            if let Err(_) = v {
-                assert!(false);
-            }
-        }
-        for i in invalid.iter() {
-            if let Ok(_) = i {
-                assert!(false);
-            }
-        }
+        assert!(super::DateTuple::new(2000, 5, 5).is_ok());
+        assert!(super::DateTuple::new(2000, 6, 31).is_ok());
+        assert!(super::DateTuple::new(2000, 1, 2).is_ok());
+        assert!(super::DateTuple::new(2000, 1, 29).is_ok());
+
+        assert!(super::DateTuple::new(2000, 5, 31).is_err());
+        assert!(super::DateTuple::new(2001, 1, 29).is_err());
+        assert!(super::DateTuple::new(2000, 12, 5).is_err());
     }
 
     #[test]
