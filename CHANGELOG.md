@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 1.4.4
+
+-   Add `to_minutes` methods for `TimeTuple` and `Duration`
+-   Maximised test coverage
+
+## Versions 1.4.2 and 1.4.3
+
+-   Improved documentation
+
 ## Version 1.4.1
 
 -   Updated documentation
