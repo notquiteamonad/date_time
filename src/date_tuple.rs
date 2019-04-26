@@ -209,26 +209,41 @@ impl DateTuple {
 
 impl fmt::Display for DateTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:04}{:02}{:02}", self.y, self.m, self.d)
+        write!(f, "{:04}-{:02}-{:02}", self.y, self.m, self.d)
     }
 }
 
 impl FromStr for DateTuple {
     type Err = String;
 
-    /// Expects a string formatted like 20181102.
+    /// Expects a string formatted like 2018-11-02.
+    ///
+    /// Also accepts the legacy crate format of 2018-11-02.
     fn from_str(s: &str) -> Result<DateTuple, Self::Err> {
-        let valid_format = Regex::new(r"^\d{8}$").unwrap();
-        if !valid_format.is_match(s) {
-            Err(format!("Invalid str formatting of DateTuple: {}\nExpects a string formatted like 20181102.", s))
-        } else {
+        let valid_format = Regex::new(r"^\d{4}-\d{2}-\d{2}$").unwrap();
+        let legacy_format = Regex::new(r"^\d{8}$").unwrap();
+        if valid_format.is_match(s) {
+            match DateTuple::new(
+                u16::from_str(&s[0..4]).unwrap(),
+                u8::from_str(&s[5..7]).unwrap(),
+                u8::from_str(&s[8..10]).unwrap(),
+            ) {
+                Ok(d) => Ok(d),
+                Err(e) => Err(format!("Invalid date passed to from_str: {}", e)),
+            }
+        } else if legacy_format.is_match(s) {
             let (s1, s2) = s.split_at(4);
             let (s2, s3) = s2.split_at(2);
-            Ok(DateTuple::new(
+            match DateTuple::new(
                 u16::from_str(s1).unwrap(),
                 u8::from_str(s2).unwrap(),
                 u8::from_str(s3).unwrap(),
-            ).unwrap())
+            ) {
+                Ok(d) => Ok(d),
+                Err(e) => Err(format!("Invalid date passed to from_str: {}", e)),
+            }
+        } else {
+            Err(format!("Invalid str formatting of DateTuple: {}\nExpects a string formatted like 2018-11-02.", s))
         }
     }
 }
@@ -294,7 +309,7 @@ mod tests {
     #[test]
     fn test_to_string() {
         let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
-        assert_eq!(String::from("20000510"), tuple.to_string());
+        assert_eq!(String::from("2000-05-10"), tuple.to_string());
     }
 
     #[test]
@@ -339,8 +354,14 @@ mod tests {
     #[test]
     fn test_from_string() {
         let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
-        assert_eq!(tuple, str::parse("20000510").unwrap());
+        assert_eq!(tuple, str::parse("2000-05-10").unwrap());
         assert!(str::parse::<super::DateTuple>("2O00051O").is_err());
+    }
+
+    #[test]
+    fn test_from_legacy_string() {
+        let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
+        assert_eq!(tuple, str::parse("20000510").unwrap());
     }
 
     #[test]
