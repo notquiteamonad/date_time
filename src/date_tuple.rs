@@ -355,6 +355,7 @@ mod tests {
     fn test_from_string() {
         let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(tuple, str::parse("2000-05-10").unwrap());
+        assert!(str::parse::<super::DateTuple>("2000-15-10").is_err());
         assert!(str::parse::<super::DateTuple>("2O00051O").is_err());
     }
 
@@ -362,6 +363,7 @@ mod tests {
     fn test_from_legacy_string() {
         let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(tuple, str::parse("20000510").unwrap());
+        assert!(str::parse::<super::DateTuple>("20001510").is_err());
     }
 
     #[test]
