@@ -3,6 +3,7 @@ use month_tuple::MonthTuple;
 use regex::Regex;
 use std::cmp::Ordering;
 use std::fmt;
+use std::ops::Add;
 use std::str::FromStr;
 
 const DAYS_IN_A_COMMON_YEAR: u32 = 365;
@@ -45,6 +46,11 @@ impl DateTuple {
                 DateTuple { y, m, d }
             ))
         }
+    }
+
+    /// Returns the maximum date handled - 31st December 9999.
+    pub fn max_value() -> DateTuple {
+        DateTuple::new(9999, 11, 31).unwrap()
     }
 
     /// Returns a `DateTuple` of the current date according to the system clock.
@@ -323,6 +329,19 @@ impl Ord for DateTuple {
     }
 }
 
+impl Add for DateTuple {
+    type Output = DateTuple;
+
+    /// Adds other to self by number of days. If this would be greater than `DateTuple::max_value()`,
+    /// `DateTuple::max_value()` is returned.
+    fn add(self, other: DateTuple) -> DateTuple {
+        match DateTuple::from_days(self.to_days() + other.to_days()) {
+            Ok(d) => d,
+            Err(_) => DateTuple::max_value(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -395,7 +414,7 @@ mod tests {
     fn test_next_date() {
         let tuple1 = super::Date::new(2000, 5, 10).unwrap();
         let tuple2 = super::Date::new(2000, 2, 31).unwrap();
-        let tuple3 = super::Date::new(9999, 11, 31).unwrap();
+        let tuple3 = super::Date::max_value();
         assert_eq!(
             super::Date {
                 y: 2000,
@@ -536,6 +555,23 @@ mod tests {
     fn test_from_days() {
         let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
         assert_eq!(feb_29_2000, super::DateTuple::from_days(730545).unwrap());
+    }
+
+    #[test]
+    fn test_addition() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
+        assert_eq!(
+            super::DateTuple::new(2000, 2, 28).unwrap(),
+            feb_29_2000 + four_weeks
+        );
+    }
+
+    #[test]
+    fn test_addition_too_large() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let feb_29_8000 = super::DateTuple::new(8000, 1, 29).unwrap();
+        assert_eq!(super::DateTuple::max_value(), feb_29_2000 + feb_29_8000);
     }
 
 }
