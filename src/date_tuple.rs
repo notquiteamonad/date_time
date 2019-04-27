@@ -3,7 +3,11 @@ use month_tuple::MonthTuple;
 use regex::Regex;
 use std::cmp::Ordering;
 use std::fmt;
+use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
+
+const DAYS_IN_A_COMMON_YEAR: u32 = 365;
+const DAYS_IN_A_LEAP_YEAR: u32 = 366;
 
 pub type Date = DateTuple;
 
@@ -29,7 +33,7 @@ impl DateTuple {
             ));
         }
         if m <= 11 {
-            if d == 0 || d > get_last_date_in_month(m, y) {
+            if d == 0 || d > date_utils::get_last_date_in_month(m, y) {
                 return Err(format!(
                     "Invalid date in DateTuple: {:?}",
                     DateTuple { y, m, d }
@@ -42,6 +46,16 @@ impl DateTuple {
                 DateTuple { y, m, d }
             ))
         }
+    }
+
+    /// Returns the minimum date handled - 1st January 0000.
+    pub fn min_value() -> DateTuple {
+        DateTuple::new(0, 0, 1).unwrap()
+    }
+
+    /// Returns the maximum date handled - 31st December 9999.
+    pub fn max_value() -> DateTuple {
+        DateTuple::new(9999, 11, 31).unwrap()
     }
 
     /// Returns a `DateTuple` of the current date according to the system clock.
@@ -67,7 +81,7 @@ impl DateTuple {
         if self.y == 9999 && self.m == 11 && self.d == 31 {
             return self;
         }
-        if self.d == get_last_date_in_month(self.m, self.y) {
+        if self.d == date_utils::get_last_date_in_month(self.m, self.y) {
             if self.m == 11 {
                 return DateTuple {
                     y: self.y + 1,
@@ -101,13 +115,13 @@ impl DateTuple {
                 return DateTuple {
                     y: self.y - 1,
                     m: 11,
-                    d: get_last_date_in_month(11, self.y - 1),
+                    d: date_utils::get_last_date_in_month(11, self.y - 1),
                 };
             } else {
                 return DateTuple {
                     y: self.y,
                     m: self.m - 1,
-                    d: get_last_date_in_month(self.m - 1, self.y),
+                    d: date_utils::get_last_date_in_month(self.m - 1, self.y),
                 };
             }
         } else {
@@ -141,7 +155,7 @@ impl DateTuple {
         let mut new_month = MonthTuple::from(*self);
         new_month.add_months(months);
         let last_date_in_month =
-            get_last_date_in_month(new_month.get_month(), new_month.get_year());
+            date_utils::get_last_date_in_month(new_month.get_month(), new_month.get_year());
         if self.d > last_date_in_month {
             self.d = last_date_in_month;
         }
@@ -157,7 +171,7 @@ impl DateTuple {
         let mut new_month = MonthTuple::from(*self);
         new_month.subtract_months(months);
         let last_date_in_month =
-            get_last_date_in_month(new_month.get_month(), new_month.get_year());
+            date_utils::get_last_date_in_month(new_month.get_month(), new_month.get_year());
         if self.d > last_date_in_month {
             self.d = last_date_in_month;
         }
@@ -204,6 +218,50 @@ impl DateTuple {
     pub fn to_readable_string(&self) -> String {
         let month = MonthTuple::from(*self);
         format!("{} {}", self.d, month.to_readable_string())
+    }
+
+    /// Gets the total number of days in the tuple.
+    fn to_days(&self) -> u32 {
+        let mut total_days = 0u32;
+        for y in 0..self.y {
+            total_days += if date_utils::is_leap_year(y) {
+                DAYS_IN_A_LEAP_YEAR
+            } else {
+                DAYS_IN_A_COMMON_YEAR
+            }
+        }
+        for m in 0..self.m {
+            total_days += date_utils::get_last_date_in_month(m, self.y) as u32;
+        }
+        total_days + self.d as u32
+    }
+
+    /// Calculates years, months, and days from a total number of
+    /// days, with the first being Jan 1st 0000.
+    ///
+    /// Returns
+    fn from_days(mut total_days: u32) -> Result<DateTuple, String> {
+        let mut years = 0u16;
+        let mut months = 0u8;
+        while total_days
+            > if date_utils::is_leap_year(years) {
+                DAYS_IN_A_LEAP_YEAR
+            } else {
+                DAYS_IN_A_COMMON_YEAR
+            }
+        {
+            total_days -= if date_utils::is_leap_year(years) {
+                DAYS_IN_A_LEAP_YEAR
+            } else {
+                DAYS_IN_A_COMMON_YEAR
+            };
+            years += 1;
+        }
+        while total_days > date_utils::get_last_date_in_month(months, years) as u32 {
+            total_days -= date_utils::get_last_date_in_month(months, years) as u32;
+            months += 1;
+        }
+        DateTuple::new(years, months, total_days as u8)
     }
 }
 
@@ -276,25 +334,45 @@ impl Ord for DateTuple {
     }
 }
 
-/// Produces the integer representing the last date in the **ZERO-BASED**
-/// month in year.
-fn get_last_date_in_month(month: u8, year: u16) -> u8 {
-    match month {
-        1 => {
-            if date_utils::is_leap_year(year) {
-                29
-            } else {
-                28
-            }
+impl Add for DateTuple {
+    type Output = DateTuple;
+
+    /// Adds other to self by number of days. If this would be greater than `DateTuple::max_value()`,
+    /// `DateTuple::max_value()` is returned.
+    fn add(self, other: DateTuple) -> DateTuple {
+        match DateTuple::from_days(self.to_days() + other.to_days()) {
+            Ok(d) => d,
+            Err(_) => DateTuple::max_value(),
         }
-        0 => 31,
-        2 => 31,
-        4 => 31,
-        6 => 31,
-        7 => 31,
-        9 => 31,
-        11 => 31,
-        _ => 30,
+    }
+}
+
+impl Sub for DateTuple {
+    type Output = DateTuple;
+
+    /// Subtracts other from self by number of days. If this would be less than `DateTuple::min_value()`,
+    /// `DateTuple::min_value()` is returned.
+    fn sub(self, other: DateTuple) -> DateTuple {
+        let self_days = self.to_days();
+        let other_days = other.to_days();
+        if other_days > self_days {
+            return DateTuple::min_value();
+        }
+        DateTuple::from_days(self.to_days() - other.to_days()).unwrap()
+    }
+}
+
+impl AddAssign for DateTuple {
+    /// See the docs for the implementation of `Add`.
+    fn add_assign(&mut self, other: DateTuple) {
+        *self = *self + other
+    }
+}
+
+impl SubAssign for DateTuple {
+    /// See the docs for the implementation of `Sub`.
+    fn sub_assign(&mut self, other: DateTuple) {
+        *self = *self - other
     }
 }
 
@@ -370,7 +448,7 @@ mod tests {
     fn test_next_date() {
         let tuple1 = super::Date::new(2000, 5, 10).unwrap();
         let tuple2 = super::Date::new(2000, 2, 31).unwrap();
-        let tuple3 = super::Date::new(9999, 11, 31).unwrap();
+        let tuple3 = super::Date::max_value();
         assert_eq!(
             super::Date {
                 y: 2000,
@@ -499,6 +577,69 @@ mod tests {
         tuple4.subtract_years(1);
         assert_eq!(9999, tuple3.get_year());
         assert_eq!(0, tuple4.get_year());
+    }
+
+    #[test]
+    fn test_in_days() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        assert_eq!(730545, feb_29_2000.to_days());
+    }
+
+    #[test]
+    fn test_from_days() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        assert_eq!(feb_29_2000, super::DateTuple::from_days(730545).unwrap());
+        assert!(super::DateTuple::from_days(0).is_err());
+    }
+
+    #[test]
+    fn test_addition() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
+        assert_eq!(
+            super::DateTuple::new(2000, 2, 28).unwrap(),
+            feb_29_2000 + four_weeks
+        );
+    }
+
+    #[test]
+    fn test_addition_too_large() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let feb_29_8000 = super::DateTuple::new(8000, 1, 29).unwrap();
+        assert_eq!(super::DateTuple::max_value(), feb_29_2000 + feb_29_8000);
+    }
+
+    #[test]
+    fn test_addition_assignment() {
+        let mut start_date = super::DateTuple::new(2000, 1, 29).unwrap();
+        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
+        start_date += four_weeks;
+        assert_eq!(super::DateTuple::new(2000, 2, 28).unwrap(), start_date);
+    }
+
+    #[test]
+    fn test_subtraction() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
+        assert_eq!(
+            super::DateTuple::new(2000, 1, 1).unwrap(),
+            feb_29_2000 - four_weeks
+        );
+    }
+
+    #[test]
+    fn test_subtraction_too_small() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let feb_29_8000 = super::DateTuple::new(8000, 1, 29).unwrap();
+        assert_eq!(super::DateTuple::min_value(), feb_29_2000 - feb_29_8000);
+    }
+
+    #[test]
+    fn test_subtraction_assignment() {
+        let mut start_date = super::DateTuple::new(2000, 1, 29).unwrap();
+        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
+        start_date -= four_weeks;
+        assert_eq!(super::DateTuple::new(2000, 1, 1).unwrap(), start_date);
     }
 
 }
