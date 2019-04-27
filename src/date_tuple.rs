@@ -29,7 +29,7 @@ impl DateTuple {
             ));
         }
         if m <= 11 {
-            if d == 0 || d > get_last_date_in_month(m, y) {
+            if d == 0 || d > date_utils::get_last_date_in_month(m, y) {
                 return Err(format!(
                     "Invalid date in DateTuple: {:?}",
                     DateTuple { y, m, d }
@@ -67,7 +67,7 @@ impl DateTuple {
         if self.y == 9999 && self.m == 11 && self.d == 31 {
             return self;
         }
-        if self.d == get_last_date_in_month(self.m, self.y) {
+        if self.d == date_utils::get_last_date_in_month(self.m, self.y) {
             if self.m == 11 {
                 return DateTuple {
                     y: self.y + 1,
@@ -101,13 +101,13 @@ impl DateTuple {
                 return DateTuple {
                     y: self.y - 1,
                     m: 11,
-                    d: get_last_date_in_month(11, self.y - 1),
+                    d: date_utils::get_last_date_in_month(11, self.y - 1),
                 };
             } else {
                 return DateTuple {
                     y: self.y,
                     m: self.m - 1,
-                    d: get_last_date_in_month(self.m - 1, self.y),
+                    d: date_utils::get_last_date_in_month(self.m - 1, self.y),
                 };
             }
         } else {
@@ -141,7 +141,7 @@ impl DateTuple {
         let mut new_month = MonthTuple::from(*self);
         new_month.add_months(months);
         let last_date_in_month =
-            get_last_date_in_month(new_month.get_month(), new_month.get_year());
+            date_utils::get_last_date_in_month(new_month.get_month(), new_month.get_year());
         if self.d > last_date_in_month {
             self.d = last_date_in_month;
         }
@@ -157,7 +157,7 @@ impl DateTuple {
         let mut new_month = MonthTuple::from(*self);
         new_month.subtract_months(months);
         let last_date_in_month =
-            get_last_date_in_month(new_month.get_month(), new_month.get_year());
+            date_utils::get_last_date_in_month(new_month.get_month(), new_month.get_year());
         if self.d > last_date_in_month {
             self.d = last_date_in_month;
         }
@@ -273,28 +273,6 @@ impl Ord for DateTuple {
         } else {
             self.y.cmp(&other.y)
         }
-    }
-}
-
-/// Produces the integer representing the last date in the **ZERO-BASED**
-/// month in year.
-fn get_last_date_in_month(month: u8, year: u16) -> u8 {
-    match month {
-        1 => {
-            if date_utils::is_leap_year(year) {
-                29
-            } else {
-                28
-            }
-        }
-        0 => 31,
-        2 => 31,
-        4 => 31,
-        6 => 31,
-        7 => 31,
-        9 => 31,
-        11 => 31,
-        _ => 30,
     }
 }
 
