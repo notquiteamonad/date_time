@@ -148,7 +148,7 @@ impl MonthTuple {
 
 impl fmt::Display for MonthTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:04}{:02}", self.y, self.m)
+        write!(f, "{:04}-{:02}", self.y, self.m)
     }
 }
 
@@ -156,32 +156,48 @@ impl FromStr for MonthTuple {
     type Err = String;
 
     fn from_str(s: &str) -> Result<MonthTuple, Self::Err> {
-        let valid_format = Regex::new(r"^\d{6}$").unwrap();
-        if !valid_format.is_match(s) {
+        let valid_format = Regex::new(r"^\d{4}-\d{2}$").unwrap();
+        let legacy_format = Regex::new(r"^\d{6}$").unwrap();
+        if valid_format.is_match(s) {
+            match MonthTuple::new(
+                u16::from_str(&s[0..4]).unwrap(),
+                u8::from_str(&s[5..7]).unwrap(),
+            ) {
+                Ok(m) => Ok(m),
+                Err(e) => Err(format!("Invalid month passed to from_str: {}", e)),
+            }
+        } else if legacy_format.is_match(s) {
+            let (s1, s2) = s.split_at(4);
+            match MonthTuple::new(u16::from_str(s1).unwrap(), u8::from_str(s2).unwrap()) {
+                Ok(m) => Ok(m),
+                Err(e) => Err(format!("Invalid month passed to from_str: {}", e)),
+            }
+        } else {
             Err(format!(
-                "Invalid str formatting of MonthTuple: {}\nExpects a string formatted like 201811",
+                "Invalid str formatting of MonthTuple: {}\nExpects a string formatted like 2018-11",
                 s
             ))
-        } else {
-            let (s1, s2) = s.split_at(4);
-            Ok(MonthTuple::new(u16::from_str(s1).unwrap(), u8::from_str(s2).unwrap()).unwrap())
         }
     }
 }
 
 impl PartialOrd for MonthTuple {
     fn partial_cmp(&self, other: &MonthTuple) -> Option<Ordering> {
-        u32::from_str(&self.to_string())
-            .unwrap()
-            .partial_cmp(&u32::from_str(&other.to_string()).unwrap())
+        if self.y == other.y {
+            self.m.partial_cmp(&other.m)
+        } else {
+            self.y.partial_cmp(&other.y)
+        }
     }
 }
 
 impl Ord for MonthTuple {
     fn cmp(&self, other: &MonthTuple) -> Ordering {
-        u32::from_str(&self.to_string())
-            .unwrap()
-            .cmp(&u32::from_str(&other.to_string()).unwrap())
+        if self.y == other.y {
+            self.m.cmp(&other.m)
+        } else {
+            self.y.cmp(&other.y)
+        }
     }
 }
 
@@ -242,7 +258,7 @@ mod tests {
     #[test]
     fn test_to_string() {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
-        assert_eq!(String::from("200005"), tuple.to_string());
+        assert_eq!(String::from("2000-05"), tuple.to_string());
     }
 
     #[test]
@@ -278,7 +294,10 @@ mod tests {
     #[test]
     fn test_from_string() {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
+        assert_eq!(tuple, str::parse("2000-05").unwrap());
         assert_eq!(tuple, str::parse("200005").unwrap());
+        assert!(str::parse::<super::MonthTuple>("2000-15").is_err());
+        assert!(str::parse::<super::MonthTuple>("200015").is_err());
         assert!(str::parse::<super::MonthTuple>("200O05").is_err());
     }
 
