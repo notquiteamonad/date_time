@@ -42,7 +42,7 @@ impl DateTimeTuple {
 /// Gets a string to to use for storage. This string can be interpreted
 /// by `str::parse`.
 ///
-/// Formatted like 20181002@08:30:00
+/// Formatted like 2018-10-02@08:30:00
 impl fmt::Display for DateTimeTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}@{}", self.d.to_string(), self.t.to_string())
@@ -54,15 +54,18 @@ impl FromStr for DateTimeTuple {
 
     /// Expects a string formatted like one obtained by calling `DateTimeTuple.to_string()`
     fn from_str(s: &str) -> Result<DateTimeTuple, Self::Err> {
-        let valid_format = Regex::new(r"^\d{8}@\d{2}:\d{2}:\d{2}$").unwrap();
-        if !valid_format.is_match(s) {
-            Err(format!("Invalid str formatting of DateTimeTuple: {}\nExpects a string formatted like 20181102@08:30:00", s))
-        } else {
+        let valid_format = Regex::new(r"^\d{4}-\d{2}-\d{2}@\d{2}:\d{2}:\d{2}$").unwrap();
+        let legacy_format = Regex::new(r"^\d{8}@\d{2}:\d{2}:\d{2}$").unwrap();
+        if valid_format.is_match(s) || legacy_format.is_match(s) {
             let mut parts = s.split('@');
-            Ok(DateTimeTuple::new(
-                str::parse(parts.next().unwrap()).unwrap(),
-                str::parse(parts.next().unwrap()).unwrap(),
-            ))
+            let date_part = match DateTuple::from_str(parts.next().unwrap()) {
+                Ok(d) => d,
+                Err(e) => return Err(format!("Invalid date passed to from_str: {}", e)),
+            };
+            let time_part = TimeTuple::from_str(parts.next().unwrap()).unwrap();
+            Ok(DateTimeTuple::new(date_part, time_part))
+        } else {
+            Err(format!("Invalid str formatting of DateTimeTuple: {}\nExpects a string formatted like 2018-11-02@08:30:00", s))
         }
     }
 }
@@ -148,7 +151,9 @@ mod tests {
             ::date_tuple::DateTuple::new(2000, 5, 10).unwrap(),
             ::time_tuple::TimeTuple::new(8, 30, 0),
         );
+        assert_eq!(tuple, str::parse("2000-05-10@08:30:00").unwrap());
         assert_eq!(tuple, str::parse("20000510@08:30:00").unwrap());
+        assert!(str::parse::<super::DateTimeTuple>("2000-15-10@08:30:00").is_err());
         assert!(str::parse::<super::DateTimeTuple>("2-a11111@05:a:04").is_err());
     }
 

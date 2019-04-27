@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.5.0
+
+-   Changed `MonthTuple` and `DateTuple`'s serialisation to conform to [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html). Legacy formats can still be parsed via the `FromStr` implementation.
+
 ## Version 1.4.4
 
 -   Add `to_minutes` methods for `TimeTuple` and `Duration`
