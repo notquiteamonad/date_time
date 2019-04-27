@@ -96,7 +96,7 @@ mod tests {
             ::date_tuple::DateTuple::new(2000, 5, 10).unwrap(),
             ::time_tuple::TimeTuple::new(8, 30, 0),
         );
-        assert_eq!(String::from("20000510@08:30:00"), tuple.to_string());
+        assert_eq!(String::from("2000-05-10@08:30:00"), tuple.to_string());
     }
 
     #[test]
