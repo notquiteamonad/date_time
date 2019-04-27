@@ -209,9 +209,8 @@ impl DateTuple {
         format!("{} {}", self.d, month.to_readable_string())
     }
 
-    /// Gets this `DateTuple` as a number of elapsed days (including this one) since
-    /// Jan 1st 0000.
-    fn in_days(&self) -> u32 {
+    /// Gets the total number of days in the tuple.
+    fn to_days(&self) -> u32 {
         let mut total_days = 0u32;
         for y in 0..self.y {
             total_days += if date_utils::is_leap_year(y) {
@@ -502,7 +501,7 @@ mod tests {
     #[test]
     fn test_in_days() {
         let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
-        assert_eq!(730545, feb_29_2000.in_days());
+        assert_eq!(730545, feb_29_2000.to_days());
     }
 
 }
