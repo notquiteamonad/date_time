@@ -156,15 +156,27 @@ impl FromStr for MonthTuple {
     type Err = String;
 
     fn from_str(s: &str) -> Result<MonthTuple, Self::Err> {
-        let valid_format = Regex::new(r"^\d{6}$").unwrap();
-        if !valid_format.is_match(s) {
+        let valid_format = Regex::new(r"^\d{4}-\d{2}$").unwrap();
+        let legacy_format = Regex::new(r"^\d{6}$").unwrap();
+        if valid_format.is_match(s) {
+            match MonthTuple::new(
+                u16::from_str(&s[0..4]).unwrap(),
+                u8::from_str(&s[5..7]).unwrap(),
+            ) {
+                Ok(m) => Ok(m),
+                Err(e) => Err(format!("Invalid month passed to from_str: {}", e)),
+            }
+        } else if legacy_format.is_match(s) {
+            let (s1, s2) = s.split_at(4);
+            match MonthTuple::new(u16::from_str(s1).unwrap(), u8::from_str(s2).unwrap()) {
+                Ok(m) => Ok(m),
+                Err(e) => Err(format!("Invalid month passed to from_str: {}", e)),
+            }
+        } else {
             Err(format!(
                 "Invalid str formatting of MonthTuple: {}\nExpects a string formatted like 201811",
                 s
             ))
-        } else {
-            let (s1, s2) = s.split_at(4);
-            Ok(MonthTuple::new(u16::from_str(s1).unwrap(), u8::from_str(s2).unwrap()).unwrap())
         }
     }
 }
@@ -278,7 +290,9 @@ mod tests {
     #[test]
     fn test_from_string() {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
+        assert_eq!(tuple, str::parse("2000-05").unwrap());
         assert_eq!(tuple, str::parse("200005").unwrap());
+        assert!(str::parse::<super::MonthTuple>("200015").is_err());
         assert!(str::parse::<super::MonthTuple>("200O05").is_err());
     }
 
