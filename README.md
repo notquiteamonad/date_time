@@ -137,9 +137,9 @@ A `DateTuple` can be created using `DateTuple::new()`, passing a year between 0 
 
 `DateTuple` can be serialised using `to_string()` (generated from Display trait) and `to_readable_string()`.
 
-For 23rd January 2002, the former will produce `"20020023"` and the latter will produce `"23 Jan 2002"`.
+For 23rd January 2002, the former will produce `"2002-00-23"` and the latter will produce `"23 Jan 2002"`.
 
-A `DateTuple` can be instantiated by calling `DateTuple::from_str()` with a string in the format of `yyyymmdd`.
+A `DateTuple` can be instantiated by calling `DateTuple::from_str()` with a string in the format of `yyyy-mm-dd`.
 
 If listing multiple `DateTuple` objects in a human readable format, you may wish to pad them with a space to the left to ensure alignment. This can be done with the format specifier `{:>11}` in a call such as `format!()`.
 
@@ -198,9 +198,9 @@ These methods consume the existing `MonthTuple`.
 
 `MonthTuple` can be serialised using `to_string()` (generated from Display trait) and `to_readable_string()`.
 
-For January 2002, the former will produce `"200200"` and the latter will produce `"Jan 2002"`.
+For January 2002, the former will produce `"2002-00"` and the latter will produce `"Jan 2002"`.
 
-A `MonthTuple` can be instantiated by calling `MonthTuple::from_str()` with a string in the format of `yyyymm`.
+A `MonthTuple` can be instantiated by calling `MonthTuple::from_str()` with a string in the format of `yyyy-mm`.
 
 ### DateTime
 
@@ -212,9 +212,9 @@ Like the other modules in this library, it is fully comparable with other `DateT
 
 `DateTimeTuple` can be serialised using `to_string()` (generated from Display trait) and `to_readable_string()`.
 
-For 23rd January 2002 at 08:30:30 AM, the former will produce `"20020023@08:30:30"` and the latter will produce `"23 Jan 2002 08:30:30"`.
+For 23rd January 2002 at 08:30:30 AM, the former will produce `"2002-00-23@08:30:30"` and the latter will produce `"23 Jan 2002 08:30:30"`.
 
-A `DateTimeTuple` can be instantiated by calling `DateTimeTuple::from_str()` with a string in the format of `yyyymmdd@hh:mm:ss`.
+A `DateTimeTuple` can be instantiated by calling `DateTimeTuple::from_str()` with a string in the format of `yyyy-mm-dd@hh:mm:ss`.
 
 ## Limitations
 

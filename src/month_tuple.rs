@@ -174,7 +174,7 @@ impl FromStr for MonthTuple {
             }
         } else {
             Err(format!(
-                "Invalid str formatting of MonthTuple: {}\nExpects a string formatted like 201811",
+                "Invalid str formatting of MonthTuple: {}\nExpects a string formatted like 2018-11",
                 s
             ))
         }
