@@ -224,6 +224,34 @@ impl DateTuple {
         }
         total_days + self.d as u32
     }
+
+    /// Calculates years, months, and days from a total number of
+    /// days, with the first being Jan 1st 0000.
+    ///
+    /// Returns
+    fn from_days(mut total_days: u32) -> Result<DateTuple, String> {
+        let mut years = 0u16;
+        let mut months = 0u8;
+        while total_days
+            > if date_utils::is_leap_year(years) {
+                DAYS_IN_A_LEAP_YEAR
+            } else {
+                DAYS_IN_A_COMMON_YEAR
+            }
+        {
+            total_days -= if date_utils::is_leap_year(years) {
+                DAYS_IN_A_LEAP_YEAR
+            } else {
+                DAYS_IN_A_COMMON_YEAR
+            };
+            years += 1;
+        }
+        while total_days > date_utils::get_last_date_in_month(months, years) as u32 {
+            total_days -= date_utils::get_last_date_in_month(months, years) as u32;
+            months += 1;
+        }
+        DateTuple::new(years, months, total_days as u8)
+    }
 }
 
 impl fmt::Display for DateTuple {
@@ -502,6 +530,12 @@ mod tests {
     fn test_in_days() {
         let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
         assert_eq!(730545, feb_29_2000.to_days());
+    }
+
+    #[test]
+    fn test_from_days() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        assert_eq!(feb_29_2000, super::DateTuple::from_days(730545).unwrap());
     }
 
 }
