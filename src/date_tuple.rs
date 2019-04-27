@@ -3,7 +3,7 @@ use month_tuple::MonthTuple;
 use regex::Regex;
 use std::cmp::Ordering;
 use std::fmt;
-use std::ops::Add;
+use std::ops::{Add, Sub};
 use std::str::FromStr;
 
 const DAYS_IN_A_COMMON_YEAR: u32 = 365;
@@ -46,6 +46,11 @@ impl DateTuple {
                 DateTuple { y, m, d }
             ))
         }
+    }
+
+    /// Returns the minimum date handled - 1st January 0000.
+    pub fn min_value() -> DateTuple {
+        DateTuple::new(0, 0, 1).unwrap()
     }
 
     /// Returns the maximum date handled - 31st December 9999.
@@ -342,6 +347,21 @@ impl Add for DateTuple {
     }
 }
 
+impl Sub for DateTuple {
+    type Output = DateTuple;
+
+    /// Subtracts other from self by number of days. If this would be less than `DateTuple::min_value()`,
+    /// `DateTuple::min_value()` is returned.
+    fn sub(self, other: DateTuple) -> DateTuple {
+        let self_days = self.to_days();
+        let other_days = other.to_days();
+        if other_days > self_days {
+            return DateTuple::min_value();
+        }
+        DateTuple::from_days(self.to_days() - other.to_days()).unwrap()
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -555,6 +575,7 @@ mod tests {
     fn test_from_days() {
         let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
         assert_eq!(feb_29_2000, super::DateTuple::from_days(730545).unwrap());
+        assert!(super::DateTuple::from_days(0).is_err());
     }
 
     #[test]
@@ -572,6 +593,23 @@ mod tests {
         let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
         let feb_29_8000 = super::DateTuple::new(8000, 1, 29).unwrap();
         assert_eq!(super::DateTuple::max_value(), feb_29_2000 + feb_29_8000);
+    }
+
+    #[test]
+    fn test_subtraction() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
+        assert_eq!(
+            super::DateTuple::new(2000, 1, 1).unwrap(),
+            feb_29_2000 - four_weeks
+        );
+    }
+
+    #[test]
+    fn test_subtraction_too_small() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let feb_29_8000 = super::DateTuple::new(8000, 1, 29).unwrap();
+        assert_eq!(super::DateTuple::min_value(), feb_29_2000 - feb_29_8000);
     }
 
 }
