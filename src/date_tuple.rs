@@ -3,7 +3,7 @@ use month_tuple::MonthTuple;
 use regex::Regex;
 use std::cmp::Ordering;
 use std::fmt;
-use std::ops::{Add, Sub};
+use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
 
 const DAYS_IN_A_COMMON_YEAR: u32 = 365;
@@ -362,6 +362,20 @@ impl Sub for DateTuple {
     }
 }
 
+impl AddAssign for DateTuple {
+    /// See the docs for the implementation of `Add`.
+    fn add_assign(&mut self, other: DateTuple) {
+        *self = *self + other
+    }
+}
+
+impl SubAssign for DateTuple {
+    /// See the docs for the implementation of `Sub`.
+    fn sub_assign(&mut self, other: DateTuple) {
+        *self = *self - other
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -596,6 +610,14 @@ mod tests {
     }
 
     #[test]
+    fn test_addition_assignment() {
+        let mut start_date = super::DateTuple::new(2000, 1, 29).unwrap();
+        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
+        start_date += four_weeks;
+        assert_eq!(super::DateTuple::new(2000, 2, 28).unwrap(), start_date);
+    }
+
+    #[test]
     fn test_subtraction() {
         let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
         let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
@@ -610,6 +632,14 @@ mod tests {
         let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
         let feb_29_8000 = super::DateTuple::new(8000, 1, 29).unwrap();
         assert_eq!(super::DateTuple::min_value(), feb_29_2000 - feb_29_8000);
+    }
+
+    #[test]
+    fn test_subtraction_assignment() {
+        let mut start_date = super::DateTuple::new(2000, 1, 29).unwrap();
+        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
+        start_date -= four_weeks;
+        assert_eq!(super::DateTuple::new(2000, 1, 1).unwrap(), start_date);
     }
 
 }
