@@ -163,6 +163,8 @@ The following two methods consume a `DateTuple` and return another:
 
 They work similarly to `next_month()` and `previous_month()` described below.
 
+`Add`, `Sub`, `AddAssign`, and `SubAssign` are all implemented for `DateTuple`. They work by converting each date into a total number of days and operating on that. These operators will return the maximum or minimum date if it would have been exceeded.
+
 #### MonthTuple
 
 **_NOTE: The month in a `MonthTuple` is zero-based._**
