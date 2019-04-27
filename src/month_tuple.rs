@@ -148,7 +148,7 @@ impl MonthTuple {
 
 impl fmt::Display for MonthTuple {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:04}{:02}", self.y, self.m)
+        write!(f, "{:04}-{:02}", self.y, self.m)
     }
 }
 
@@ -183,17 +183,21 @@ impl FromStr for MonthTuple {
 
 impl PartialOrd for MonthTuple {
     fn partial_cmp(&self, other: &MonthTuple) -> Option<Ordering> {
-        u32::from_str(&self.to_string())
-            .unwrap()
-            .partial_cmp(&u32::from_str(&other.to_string()).unwrap())
+        if self.y == other.y {
+            self.m.partial_cmp(&other.m)
+        } else {
+            self.y.partial_cmp(&other.y)
+        }
     }
 }
 
 impl Ord for MonthTuple {
     fn cmp(&self, other: &MonthTuple) -> Ordering {
-        u32::from_str(&self.to_string())
-            .unwrap()
-            .cmp(&u32::from_str(&other.to_string()).unwrap())
+        if self.y == other.y {
+            self.m.cmp(&other.m)
+        } else {
+            self.y.cmp(&other.y)
+        }
     }
 }
 
@@ -254,7 +258,7 @@ mod tests {
     #[test]
     fn test_to_string() {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
-        assert_eq!(String::from("200005"), tuple.to_string());
+        assert_eq!(String::from("2000-05"), tuple.to_string());
     }
 
     #[test]
@@ -292,6 +296,7 @@ mod tests {
         let tuple = super::MonthTuple::new(2000, 5).unwrap();
         assert_eq!(tuple, str::parse("2000-05").unwrap());
         assert_eq!(tuple, str::parse("200005").unwrap());
+        assert!(str::parse::<super::MonthTuple>("2000-15").is_err());
         assert!(str::parse::<super::MonthTuple>("200015").is_err());
         assert!(str::parse::<super::MonthTuple>("200O05").is_err());
     }
