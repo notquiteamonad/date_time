@@ -5,6 +5,9 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
 
+const DAYS_IN_A_COMMON_YEAR: u32 = 365;
+const DAYS_IN_A_LEAP_YEAR: u32 = 366;
+
 pub type Date = DateTuple;
 
 /// Holds a specific date by year, month, and day.
@@ -204,6 +207,23 @@ impl DateTuple {
     pub fn to_readable_string(&self) -> String {
         let month = MonthTuple::from(*self);
         format!("{} {}", self.d, month.to_readable_string())
+    }
+
+    /// Gets this `DateTuple` as a number of elapsed days (including this one) since
+    /// Jan 1st 0000.
+    fn in_days(&self) -> u32 {
+        let mut total_days = 0u32;
+        for y in 0..self.y {
+            total_days += if date_utils::is_leap_year(y) {
+                DAYS_IN_A_LEAP_YEAR
+            } else {
+                DAYS_IN_A_COMMON_YEAR
+            }
+        }
+        for m in 0..self.m {
+            total_days += date_utils::get_last_date_in_month(m, self.y) as u32;
+        }
+        total_days + self.d as u32
     }
 }
 
@@ -477,6 +497,12 @@ mod tests {
         tuple4.subtract_years(1);
         assert_eq!(9999, tuple3.get_year());
         assert_eq!(0, tuple4.get_year());
+    }
+
+    #[test]
+    fn test_in_days() {
+        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        assert_eq!(730545, feb_29_2000.in_days());
     }
 
 }
