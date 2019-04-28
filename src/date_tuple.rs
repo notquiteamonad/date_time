@@ -220,8 +220,9 @@ impl DateTuple {
         format!("{} {}", self.d, month.to_readable_string())
     }
 
-    /// Gets the total number of days in the tuple.
-    fn to_days(&self) -> u32 {
+    /// Gets the total number of days in the tuple,
+    /// with the first being `DateTuple::min_value()`.
+    pub fn to_days(&self) -> u32 {
         let mut total_days = 0u32;
         for y in 0..self.y {
             total_days += if date_utils::is_leap_year(y) {
@@ -237,10 +238,8 @@ impl DateTuple {
     }
 
     /// Calculates years, months, and days from a total number of
-    /// days, with the first being Jan 1st 0000.
-    ///
-    /// Returns
-    fn from_days(mut total_days: u32) -> Result<DateTuple, String> {
+    /// days, with the first being `DateTuple::min_value()`.
+    pub fn from_days(mut total_days: u32) -> Result<DateTuple, String> {
         let mut years = 0u16;
         let mut months = 0u8;
         while total_days

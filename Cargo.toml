@@ -18,3 +18,4 @@ coveralls = { repository = "samueldple/date_time", branch = "master", service = 
 
 [dependencies]
 regex = "1.1.6"
+lazy_static = "1.3.0"
