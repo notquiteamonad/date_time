@@ -3,7 +3,6 @@ use month_tuple::MonthTuple;
 use regex::Regex;
 use std::cmp::Ordering;
 use std::fmt;
-use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
 
 const DAYS_IN_A_COMMON_YEAR: u32 = 365;
@@ -32,17 +31,17 @@ impl DateTuple {
                 DateTuple { y, m, d }
             ));
         }
-        if m <= 11 {
+        if 1 <= m && m <= 12 {
             if d == 0 || d > date_utils::get_last_date_in_month(m, y) {
                 return Err(format!(
                     "Invalid date in DateTuple: {:?}",
                     DateTuple { y, m, d }
                 ));
             }
-            Ok(DateTuple { y: y, m, d })
+            Ok(DateTuple { y, m, d })
         } else {
             Err(format!(
-                "Invalid month in DateTuple: {:?}\nMonth must be <= 11; Note that months are ZERO-BASED.",
+                "Invalid month in DateTuple: {:?}\nMonth must be between 1 and 12; Note that months are ONE-BASED since version 2.0.0.",
                 DateTuple { y, m, d }
             ))
         }
@@ -50,12 +49,12 @@ impl DateTuple {
 
     /// Returns the minimum date handled - 1st January 0000.
     pub fn min_value() -> DateTuple {
-        DateTuple::new(0, 0, 1).unwrap()
+        DateTuple::new(0, 1, 1).unwrap()
     }
 
     /// Returns the maximum date handled - 31st December 9999.
     pub fn max_value() -> DateTuple {
-        DateTuple::new(9999, 11, 31).unwrap()
+        DateTuple::new(9999, 12, 31).unwrap()
     }
 
     /// Returns a `DateTuple` of the current date according to the system clock.
@@ -78,14 +77,14 @@ impl DateTuple {
     /// Gets a DateTuple representing the date immediately following
     /// the current one. Will not go past Dec 9999.
     pub fn next_date(self) -> DateTuple {
-        if self.y == 9999 && self.m == 11 && self.d == 31 {
+        if self.y == 9999 && self.m == 12 && self.d == 31 {
             return self;
         }
         if self.d == date_utils::get_last_date_in_month(self.m, self.y) {
-            if self.m == 11 {
+            if self.m == 12 {
                 return DateTuple {
                     y: self.y + 1,
-                    m: 0,
+                    m: 1,
                     d: 1,
                 };
             } else {
@@ -107,15 +106,15 @@ impl DateTuple {
     /// Gets a DateTuple representing the date immediately preceding
     /// the current one. Will not go past 1 Jan 0000.
     pub fn previous_date(self) -> DateTuple {
-        if self.y == 0 && self.m == 0 && self.d == 1 {
+        if self.y == 0 && self.m == 1 && self.d == 1 {
             return self;
         }
         if self.d == 1 {
-            if self.m == 0 {
+            if self.m == 1 {
                 return DateTuple {
                     y: self.y - 1,
-                    m: 11,
-                    d: date_utils::get_last_date_in_month(11, self.y - 1),
+                    m: 12,
+                    d: date_utils::get_last_date_in_month(12, self.y - 1),
                 };
             } else {
                 return DateTuple {
@@ -188,7 +187,7 @@ impl DateTuple {
         if new_years > 9999 {
             new_years = 9999;
         }
-        if self.m == 1 && self.d == 29 && !date_utils::is_leap_year(new_years) {
+        if self.m == 2 && self.d == 29 && !date_utils::is_leap_year(new_years) {
             self.d = 28
         }
         self.y = new_years;
@@ -204,7 +203,7 @@ impl DateTuple {
             new_years = 0;
         }
         let new_years = new_years as u16;
-        if self.m == 1 && self.d == 29 && !date_utils::is_leap_year(new_years) {
+        if self.m == 2 && self.d == 29 && !date_utils::is_leap_year(new_years) {
             self.d = 28
         }
         self.y = new_years;
@@ -231,7 +230,7 @@ impl DateTuple {
                 DAYS_IN_A_COMMON_YEAR
             }
         }
-        for m in 0..self.m {
+        for m in 1..self.m {
             total_days += date_utils::get_last_date_in_month(m, self.y) as u32;
         }
         total_days + self.d as u32
@@ -241,7 +240,7 @@ impl DateTuple {
     /// days, with the first being `DateTuple::min_value()`.
     pub fn from_days(mut total_days: u32) -> Result<DateTuple, String> {
         let mut years = 0u16;
-        let mut months = 0u8;
+        let mut months = 1u8;
         while total_days
             > if date_utils::is_leap_year(years) {
                 DAYS_IN_A_LEAP_YEAR
@@ -333,81 +332,39 @@ impl Ord for DateTuple {
     }
 }
 
-impl Add for DateTuple {
-    type Output = DateTuple;
-
-    /// Adds other to self by number of days. If this would be greater than `DateTuple::max_value()`,
-    /// `DateTuple::max_value()` is returned.
-    fn add(self, other: DateTuple) -> DateTuple {
-        match DateTuple::from_days(self.to_days() + other.to_days()) {
-            Ok(d) => d,
-            Err(_) => DateTuple::max_value(),
-        }
-    }
-}
-
-impl Sub for DateTuple {
-    type Output = DateTuple;
-
-    /// Subtracts other from self by number of days. If this would be less than `DateTuple::min_value()`,
-    /// `DateTuple::min_value()` is returned.
-    fn sub(self, other: DateTuple) -> DateTuple {
-        let self_days = self.to_days();
-        let other_days = other.to_days();
-        if other_days > self_days {
-            return DateTuple::min_value();
-        }
-        DateTuple::from_days(self.to_days() - other.to_days()).unwrap()
-    }
-}
-
-impl AddAssign for DateTuple {
-    /// See the docs for the implementation of `Add`.
-    fn add_assign(&mut self, other: DateTuple) {
-        *self = *self + other
-    }
-}
-
-impl SubAssign for DateTuple {
-    /// See the docs for the implementation of `Sub`.
-    fn sub_assign(&mut self, other: DateTuple) {
-        *self = *self - other
-    }
-}
-
 #[cfg(test)]
 mod tests {
 
     #[test]
     fn test_year_too_large() {
-        assert!(super::DateTuple::new(10000, 5, 10).is_err());
+        assert!(super::DateTuple::new(10000, 6, 10).is_err());
     }
 
     #[test]
     fn test_to_string() {
-        let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
-        assert_eq!(String::from("2000-05-10"), tuple.to_string());
+        let tuple = super::DateTuple::new(2000, 6, 10).unwrap();
+        assert_eq!(String::from("2000-06-10"), tuple.to_string());
     }
 
     #[test]
     fn test_to_readable_string() {
-        let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
+        let tuple = super::DateTuple::new(2000, 6, 10).unwrap();
         assert_eq!(String::from("10 Jun 2000"), tuple.to_readable_string());
     }
 
     #[test]
     fn test_equals() {
-        let tuple1 = super::DateTuple::new(2000, 5, 10).unwrap();
-        let tuple2 = super::DateTuple::new(2000, 5, 10).unwrap();
+        let tuple1 = super::DateTuple::new(2000, 6, 10).unwrap();
+        let tuple2 = super::DateTuple::new(2000, 6, 10).unwrap();
         assert_eq!(tuple1, tuple2);
     }
 
     #[test]
     fn test_comparisons() {
-        let tuple1 = super::DateTuple::new(2000, 5, 5).unwrap();
-        let tuple2 = super::DateTuple::new(2000, 5, 5).unwrap();
-        let tuple3 = super::DateTuple::new(2000, 6, 4).unwrap();
-        let tuple4 = super::DateTuple::new(2001, 0, 1).unwrap();
+        let tuple1 = super::DateTuple::new(2000, 6, 5).unwrap();
+        let tuple2 = super::DateTuple::new(2000, 6, 5).unwrap();
+        let tuple3 = super::DateTuple::new(2000, 7, 4).unwrap();
+        let tuple4 = super::DateTuple::new(2001, 1, 1).unwrap();
         assert!(tuple1 <= tuple2);
         assert!(!(tuple1 < tuple2));
         assert!(tuple1 >= tuple2);
@@ -418,40 +375,40 @@ mod tests {
 
     #[test]
     fn test_validity() {
-        assert!(super::DateTuple::new(2000, 5, 5).is_ok());
-        assert!(super::DateTuple::new(2000, 6, 31).is_ok());
-        assert!(super::DateTuple::new(2000, 1, 2).is_ok());
-        assert!(super::DateTuple::new(2000, 1, 29).is_ok());
+        assert!(super::DateTuple::new(2000, 6, 5).is_ok());
+        assert!(super::DateTuple::new(2000, 7, 31).is_ok());
+        assert!(super::DateTuple::new(2000, 2, 2).is_ok());
+        assert!(super::DateTuple::new(2000, 2, 29).is_ok());
 
-        assert!(super::DateTuple::new(2000, 5, 31).is_err());
-        assert!(super::DateTuple::new(2001, 1, 29).is_err());
-        assert!(super::DateTuple::new(2000, 12, 5).is_err());
+        assert!(super::DateTuple::new(2000, 6, 31).is_err());
+        assert!(super::DateTuple::new(2001, 2, 29).is_err());
+        assert!(super::DateTuple::new(2000, 13, 5).is_err());
     }
 
     #[test]
     fn test_from_string() {
-        let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
-        assert_eq!(tuple, str::parse("2000-05-10").unwrap());
-        assert!(str::parse::<super::DateTuple>("2000-15-10").is_err());
-        assert!(str::parse::<super::DateTuple>("2O00051O").is_err());
+        let tuple = super::DateTuple::new(2000, 6, 10).unwrap();
+        assert_eq!(tuple, str::parse("2000-06-10").unwrap());
+        assert!(str::parse::<super::DateTuple>("2000-16-10").is_err());
+        assert!(str::parse::<super::DateTuple>("2O00061O").is_err());
     }
 
     #[test]
     fn test_from_legacy_string() {
-        let tuple = super::DateTuple::new(2000, 5, 10).unwrap();
-        assert_eq!(tuple, str::parse("20000510").unwrap());
-        assert!(str::parse::<super::DateTuple>("20001510").is_err());
+        let tuple = super::DateTuple::new(2000, 6, 10).unwrap();
+        assert_eq!(tuple, str::parse("20000610").unwrap());
+        assert!(str::parse::<super::DateTuple>("20001610").is_err());
     }
 
     #[test]
     fn test_next_date() {
-        let tuple1 = super::Date::new(2000, 5, 10).unwrap();
-        let tuple2 = super::Date::new(2000, 2, 31).unwrap();
+        let tuple1 = super::Date::new(2000, 6, 10).unwrap();
+        let tuple2 = super::Date::new(2000, 3, 31).unwrap();
         let tuple3 = super::Date::max_value();
         assert_eq!(
             super::Date {
                 y: 2000,
-                m: 5,
+                m: 6,
                 d: 11
             },
             tuple1.next_date()
@@ -459,7 +416,7 @@ mod tests {
         assert_eq!(
             super::Date {
                 y: 2000,
-                m: 3,
+                m: 4,
                 d: 1
             },
             tuple2.next_date()
@@ -467,7 +424,7 @@ mod tests {
         assert_eq!(
             super::Date {
                 y: 9999,
-                m: 11,
+                m: 12,
                 d: 31
             },
             tuple3.next_date()
@@ -476,14 +433,14 @@ mod tests {
 
     #[test]
     fn test_previous_date() {
-        let tuple1 = super::Date::new(2000, 5, 10).unwrap();
-        let tuple2 = super::Date::new(2000, 2, 1).unwrap();
-        let tuple3 = super::Date::new(0, 0, 1).unwrap();
-        let tuple4 = super::Date::new(2000, 0, 1).unwrap();
+        let tuple1 = super::Date::new(2000, 6, 10).unwrap();
+        let tuple2 = super::Date::new(2000, 3, 1).unwrap();
+        let tuple3 = super::Date::new(0, 1, 1).unwrap();
+        let tuple4 = super::Date::new(2000, 1, 1).unwrap();
         assert_eq!(
             super::Date {
                 y: 2000,
-                m: 5,
+                m: 6,
                 d: 9
             },
             tuple1.previous_date()
@@ -491,16 +448,16 @@ mod tests {
         assert_eq!(
             super::Date {
                 y: 2000,
-                m: 1,
+                m: 2,
                 d: 29
             },
             tuple2.previous_date()
         );
-        assert_eq!(super::Date { y: 0, m: 0, d: 1 }, tuple3.previous_date());
+        assert_eq!(super::Date { y: 0, m: 1, d: 1 }, tuple3.previous_date());
         assert_eq!(
             super::Date {
                 y: 1999,
-                m: 11,
+                m: 12,
                 d: 31
             },
             tuple4.previous_date()
@@ -509,10 +466,10 @@ mod tests {
 
     #[test]
     fn test_add_days() {
-        let mut tuple1 = super::DateTuple::new(2000, 5, 5).unwrap();
-        let tuple1_orig = super::DateTuple::new(2000, 5, 5).unwrap();
-        let mut tuple2 = super::DateTuple::new(2000, 11, 31).unwrap();
-        let tuple2_orig = super::DateTuple::new(2000, 11, 31).unwrap();
+        let mut tuple1 = super::DateTuple::new(2000, 6, 5).unwrap();
+        let tuple1_orig = super::DateTuple::new(2000, 6, 5).unwrap();
+        let mut tuple2 = super::DateTuple::new(2000, 12, 31).unwrap();
+        let tuple2_orig = super::DateTuple::new(2000, 12, 31).unwrap();
         tuple1.add_days(1);
         assert_eq!(tuple1, tuple1_orig.next_date());
         tuple2.add_days(2);
@@ -521,10 +478,10 @@ mod tests {
 
     #[test]
     fn test_subtract_days() {
-        let mut tuple1 = super::DateTuple::new(2000, 5, 5).unwrap();
-        let tuple1_orig = super::DateTuple::new(2000, 5, 5).unwrap();
-        let mut tuple2 = super::DateTuple::new(2000, 11, 31).unwrap();
-        let tuple2_orig = super::DateTuple::new(2000, 11, 31).unwrap();
+        let mut tuple1 = super::DateTuple::new(2000, 6, 5).unwrap();
+        let tuple1_orig = super::DateTuple::new(2000, 6, 5).unwrap();
+        let mut tuple2 = super::DateTuple::new(2000, 12, 31).unwrap();
+        let tuple2_orig = super::DateTuple::new(2000, 12, 31).unwrap();
         tuple1.subtract_days(1);
         assert_eq!(tuple1, tuple1_orig.previous_date());
         tuple2.subtract_days(2);
@@ -533,45 +490,45 @@ mod tests {
 
     #[test]
     fn test_add_months() {
-        let mut tuple1 = super::DateTuple::new(2000, 5, 1).unwrap();
-        let mut tuple2 = super::DateTuple::new(2000, 6, 31).unwrap();
-        tuple1.add_months(1);
-        assert_eq!(tuple1, super::DateTuple::new(2000, 6, 1).unwrap());
+        let mut tuple1 = super::DateTuple::new(2000, 6, 1).unwrap();
+        let mut tuple2 = super::DateTuple::new(2000, 7, 31).unwrap();
         tuple1.add_months(1);
         assert_eq!(tuple1, super::DateTuple::new(2000, 7, 1).unwrap());
+        tuple1.add_months(1);
+        assert_eq!(tuple1, super::DateTuple::new(2000, 8, 1).unwrap());
         tuple2.add_months(2);
-        assert_eq!(tuple2, super::DateTuple::new(2000, 8, 30).unwrap());
+        assert_eq!(tuple2, super::DateTuple::new(2000, 9, 30).unwrap());
     }
 
     #[test]
     fn test_subtract_months() {
-        let mut tuple1 = super::DateTuple::new(2000, 5, 1).unwrap();
-        let mut tuple2 = super::DateTuple::new(2000, 6, 31).unwrap();
-        let mut tuple3 = super::DateTuple::new(2000, 10, 30).unwrap();
+        let mut tuple1 = super::DateTuple::new(2000, 6, 1).unwrap();
+        let mut tuple2 = super::DateTuple::new(2000, 7, 31).unwrap();
+        let mut tuple3 = super::DateTuple::new(2000, 11, 30).unwrap();
         tuple1.subtract_months(1);
-        assert_eq!(tuple1, super::DateTuple::new(2000, 4, 1).unwrap());
+        assert_eq!(tuple1, super::DateTuple::new(2000, 5, 1).unwrap());
         tuple2.subtract_months(3);
-        assert_eq!(tuple2, super::DateTuple::new(2000, 3, 30).unwrap());
+        assert_eq!(tuple2, super::DateTuple::new(2000, 4, 30).unwrap());
         tuple3.subtract_months(1);
-        assert_eq!(tuple3, super::DateTuple::new(2000, 9, 30).unwrap());
+        assert_eq!(tuple3, super::DateTuple::new(2000, 10, 30).unwrap());
     }
 
     #[test]
     fn test_add_and_subtract_years() {
-        let mut tuple1 = super::Date::new(2000, 1, 29).unwrap();
-        let mut tuple2 = super::Date::new(2000, 1, 29).unwrap();
+        let mut tuple1 = super::Date::new(2000, 2, 29).unwrap();
+        let mut tuple2 = super::Date::new(2000, 2, 29).unwrap();
         tuple1.add_years(1);
         tuple2.add_years(4);
-        assert_eq!(super::Date::new(2001, 1, 28).unwrap(), tuple1);
-        assert_eq!(super::Date::new(2004, 1, 29).unwrap(), tuple2);
+        assert_eq!(super::Date::new(2001, 2, 28).unwrap(), tuple1);
+        assert_eq!(super::Date::new(2004, 2, 29).unwrap(), tuple2);
         tuple1.subtract_years(1);
         tuple2.subtract_years(4);
-        assert_eq!(super::Date::new(2000, 1, 28).unwrap(), tuple1);
-        assert_eq!(super::Date::new(2000, 1, 29).unwrap(), tuple2);
+        assert_eq!(super::Date::new(2000, 2, 28).unwrap(), tuple1);
+        assert_eq!(super::Date::new(2000, 2, 29).unwrap(), tuple2);
         tuple2.subtract_years(1);
-        assert_eq!(super::Date::new(1999, 1, 28).unwrap(), tuple2);
-        let mut tuple3 = super::Date::new(9999, 5, 10).unwrap();
-        let mut tuple4 = super::Date::new(0, 5, 10).unwrap();
+        assert_eq!(super::Date::new(1999, 2, 28).unwrap(), tuple2);
+        let mut tuple3 = super::Date::new(9999, 6, 10).unwrap();
+        let mut tuple4 = super::Date::new(0, 6, 10).unwrap();
         tuple3.add_years(1);
         tuple4.subtract_years(1);
         assert_eq!(9999, tuple3.get_year());
@@ -580,65 +537,15 @@ mod tests {
 
     #[test]
     fn test_in_days() {
-        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let feb_29_2000 = super::DateTuple::new(2000, 2, 29).unwrap();
         assert_eq!(730545, feb_29_2000.to_days());
     }
 
     #[test]
     fn test_from_days() {
-        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
+        let feb_29_2000 = super::DateTuple::new(2000, 2, 29).unwrap();
         assert_eq!(feb_29_2000, super::DateTuple::from_days(730545).unwrap());
         assert!(super::DateTuple::from_days(0).is_err());
-    }
-
-    #[test]
-    fn test_addition() {
-        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
-        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
-        assert_eq!(
-            super::DateTuple::new(2000, 2, 28).unwrap(),
-            feb_29_2000 + four_weeks
-        );
-    }
-
-    #[test]
-    fn test_addition_too_large() {
-        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
-        let feb_29_8000 = super::DateTuple::new(8000, 1, 29).unwrap();
-        assert_eq!(super::DateTuple::max_value(), feb_29_2000 + feb_29_8000);
-    }
-
-    #[test]
-    fn test_addition_assignment() {
-        let mut start_date = super::DateTuple::new(2000, 1, 29).unwrap();
-        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
-        start_date += four_weeks;
-        assert_eq!(super::DateTuple::new(2000, 2, 28).unwrap(), start_date);
-    }
-
-    #[test]
-    fn test_subtraction() {
-        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
-        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
-        assert_eq!(
-            super::DateTuple::new(2000, 1, 1).unwrap(),
-            feb_29_2000 - four_weeks
-        );
-    }
-
-    #[test]
-    fn test_subtraction_too_small() {
-        let feb_29_2000 = super::DateTuple::new(2000, 1, 29).unwrap();
-        let feb_29_8000 = super::DateTuple::new(8000, 1, 29).unwrap();
-        assert_eq!(super::DateTuple::min_value(), feb_29_2000 - feb_29_8000);
-    }
-
-    #[test]
-    fn test_subtraction_assignment() {
-        let mut start_date = super::DateTuple::new(2000, 1, 29).unwrap();
-        let four_weeks = super::DateTuple::new(0, 0, 28).unwrap();
-        start_date -= four_weeks;
-        assert_eq!(super::DateTuple::new(2000, 1, 1).unwrap(), start_date);
     }
 
 }

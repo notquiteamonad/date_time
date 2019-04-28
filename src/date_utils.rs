@@ -33,7 +33,8 @@ pub fn get_last_date_in_month(month: u8, year: u16) -> u8 {
 /// Gets the current date as a `DateTuple`
 pub fn now_as_datetuple() -> DateTuple {
     let seconds = duration_since_unix_epoch().as_secs();
-    DateTuple::from_days(extract_days_from_duration(seconds)).unwrap() + *UNIX_EPOCH_DATETUPLE
+    DateTuple::from_days(extract_days_from_duration(seconds) + UNIX_EPOCH_DATETUPLE.to_days())
+        .unwrap()
 }
 
 /// Gets the current month as a `MonthTuple`
