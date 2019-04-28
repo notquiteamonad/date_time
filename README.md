@@ -45,7 +45,7 @@ Dec 31 9999 at 23:59:59.
 **Note:** This README may contain documentation of features which have not been released yet. To ensure
 it is accurate for a specific version, use the tag selector and select the version you're using.
 
-[Changelog](https://github.com/samueldple/date_time/blob/master/CHANGELOG.md)
+[Changelog](https://github.com/samueldple/date_time/blob/master/CHANGELOG.md) - **Note Version 2.0.0 includes a breaking change.**
 
 [Code of Conduct](https://github.com/samueldple/date_time/blob/master/CODE_OF_CONDUCT.md)
 
@@ -55,7 +55,7 @@ Put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-date_time = "1.5.0"
+date_time = "2.0.0"
 ```
 
 Then put this in your crate root:
