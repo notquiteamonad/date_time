@@ -42,6 +42,9 @@ precision beyond seconds is not necessary.
 It handles serialisable dates and times from 01 Jan 0000 at 00:00:00 to
 Dec 31 9999 at 23:59:59.
 
+**Note:** This README may contain documentation of features which have not been released yet. To ensure
+it is accurate for a specific version, use the tag selector and select the version you're using.
+
 [Changelog](https://github.com/samueldple/date_time/blob/master/CHANGELOG.md)
 
 [Code of Conduct](https://github.com/samueldple/date_time/blob/master/CODE_OF_CONDUCT.md)
