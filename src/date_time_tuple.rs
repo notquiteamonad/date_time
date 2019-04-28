@@ -109,7 +109,7 @@ mod tests {
             ::time_tuple::TimeTuple::new(8, 30, 0),
         );
         assert_eq!(
-            String::from("10 Jun 2000 08:30:00"),
+            String::from("10 May 2000 08:30:00"),
             tuple.to_readable_string()
         );
     }
