@@ -1,9 +1,9 @@
 # Changelog
 
-## Next Version
+## Version 2.0.0 - _Includes Breaking Changes_
 
+-   **BREAKING CHANGE:** Months in `MonthTuple` and `DateTuple` are now one-based rather than zero-based (i.e. 1 represents January). If you have any serialised data from this library which is to be reingested in code, all months will need to be incremented by 1 before use with version 2.0.0.
 -   Added `min_value()` and `max_value()` to `DateTuple`.
--   Implemented the `Add`, `Sub`, `AddAssign`, and `SubAssign` operators for `DateTuple`. See [README.md](https://github.com/samueldple/date_time/blob/master/README.md) or [the docs](https://docs.rs/date_time) for how these work.
 
 ## Version 1.5.0
 

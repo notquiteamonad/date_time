@@ -45,7 +45,7 @@ Dec 31 9999 at 23:59:59.
 **Note:** This README may contain documentation of features which have not been released yet. To ensure
 it is accurate for a specific version, use the tag selector and select the version you're using.
 
-[Changelog](https://github.com/samueldple/date_time/blob/master/CHANGELOG.md)
+[Changelog](https://github.com/samueldple/date_time/blob/master/CHANGELOG.md) - **Note Version 2.0.0 includes a breaking change.**
 
 [Code of Conduct](https://github.com/samueldple/date_time/blob/master/CODE_OF_CONDUCT.md)
 
@@ -55,7 +55,7 @@ Put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-date_time = "1.5.0"
+date_time = "2.0.0"
 ```
 
 Then put this in your crate root:
@@ -128,8 +128,6 @@ Dates can be generated using the `datetuple::DateTuple` and `monthtuple::MonthTu
 
 #### DateTuple
 
-**_NOTE: The month in a `DateTuple` is zero-based._**
-
 `DateTuple` wraps a year, month, and day of month in a struct.
 
 A `DateTuple` can be created using `DateTuple::new()`, passing a year between 0 and 9999 and a month and date which are valid for that year. Feb 29 can be created if the year is a leap year.
@@ -140,7 +138,7 @@ A `DateTuple` can be created using `DateTuple::new()`, passing a year between 0 
 
 `DateTuple` can be serialised using `to_string()` (generated from Display trait) and `to_readable_string()`.
 
-For 23rd January 2002, the former will produce `"2002-00-23"` and the latter will produce `"23 Jan 2002"`.
+For 23rd January 2002, the former will produce `"2002-01-23"` and the latter will produce `"23 Jan 2002"`.
 
 A `DateTuple` can be instantiated by calling `DateTuple::from_str()` with a string in the format of `yyyy-mm-dd`.
 
@@ -168,11 +166,9 @@ They work similarly to `next_month()` and `previous_month()` described below.
 
 #### MonthTuple
 
-**_NOTE: The month in a `MonthTuple` is zero-based._**
-
 `MonthTuple` is identical to `DateTuple` but without a day of the month.
 
-It can be instantiated using `MonthTuple::new()`, passing a year between 0000 and 9999 and a month between 0 and 11.
+It can be instantiated using `MonthTuple::new()`, passing a year between 0000 and 9999 and a month between 1 and 12.
 
 `MonthTuple` is fully comparable with another `MonthTuple` and implements `PartialOrd`, `Ord`, `PartialEq`, and `Eq`.
 
@@ -201,7 +197,7 @@ These methods consume the existing `MonthTuple`.
 
 `MonthTuple` can be serialised using `to_string()` (generated from Display trait) and `to_readable_string()`.
 
-For January 2002, the former will produce `"2002-00"` and the latter will produce `"Jan 2002"`.
+For January 2002, the former will produce `"2002-01"` and the latter will produce `"Jan 2002"`.
 
 A `MonthTuple` can be instantiated by calling `MonthTuple::from_str()` with a string in the format of `yyyy-mm`.
 
@@ -215,7 +211,7 @@ Like the other modules in this library, it is fully comparable with other `DateT
 
 `DateTimeTuple` can be serialised using `to_string()` (generated from Display trait) and `to_readable_string()`.
 
-For 23rd January 2002 at 08:30:30 AM, the former will produce `"2002-00-23@08:30:30"` and the latter will produce `"23 Jan 2002 08:30:30"`.
+For 23rd January 2002 at 08:30:30 AM, the former will produce `"2002-01-23@08:30:30"` and the latter will produce `"23 Jan 2002 08:30:30"`.
 
 A `DateTimeTuple` can be instantiated by calling `DateTimeTuple::from_str()` with a string in the format of `yyyy-mm-dd@hh:mm:ss`.
 

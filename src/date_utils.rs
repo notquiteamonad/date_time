@@ -14,8 +14,7 @@ pub fn is_leap_year(year: u16) -> bool {
     (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
 }
 
-/// Produces the integer representing the last date in the **ZERO-BASED**
-/// month in year.
+/// Produces the integer representing the last date in the month in year.
 pub fn get_last_date_in_month(month: u8, year: u16) -> u8 {
     match month {
         2 => {
