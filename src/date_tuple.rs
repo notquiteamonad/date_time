@@ -536,7 +536,7 @@ mod tests {
     }
 
     #[test]
-    fn test_in_days() {
+    fn test_to_days() {
         let feb_29_2000 = super::DateTuple::new(2000, 2, 29).unwrap();
         assert_eq!(730545, feb_29_2000.to_days());
     }

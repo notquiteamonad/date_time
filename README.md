@@ -137,6 +137,8 @@ Dates can be generated using the `datetuple::DateTuple` and `monthtuple::MonthTu
 
 A `DateTuple` can be created using `DateTuple::new()`, passing a year between 0 and 9999 and a month and date which are valid for that year. Feb 29 can be created if the year is a leap year.
 
+A `DateTuple` can be converted to and from a number of days as a `u32` using the `to_days()` and `from_days()` methods. The number of days referenced is the number of days between 0000-01-01 and the `DateTuple`'s value inclusive.
+
 `DateTuple` is fully comparable with another `DateTuple` and implements `PartialOrd`, `Ord`, `PartialEq`, and `Eq`.
 
 ##### Serialisation
