@@ -213,117 +213,40 @@ impl From<DateTuple> for MonthTuple {
 #[cfg(test)]
 mod tests {
 
-    #[test]
-    fn test_component_too_large() {
-        assert!(super::MonthTuple::new(2000, 12).is_ok());
-        assert!(super::MonthTuple::new(2000, 13).is_err());
-        assert!(super::MonthTuple::new(10000, 5).is_err());
-    }
+    use super::MonthTuple;
+    use date_tuple::DateTuple;
 
     #[test]
     fn test_next_month() {
-        let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
-        let tuple2 = super::MonthTuple::new(2000, 12).unwrap();
-        let tuple3 = super::MonthTuple::new(9999, 12).unwrap();
-        assert_eq!(super::MonthTuple { y: 2000, m: 6 }, tuple1.next_month());
-        assert_eq!(super::MonthTuple { y: 2001, m: 1 }, tuple2.next_month());
+        let tuple1 = MonthTuple::new(2000, 5).unwrap();
+        let tuple2 = MonthTuple::new(2000, 12).unwrap();
+        let tuple3 = MonthTuple::new(9999, 12).unwrap();
+        assert_eq!(MonthTuple { y: 2000, m: 6 }, tuple1.next_month());
+        assert_eq!(MonthTuple { y: 2001, m: 1 }, tuple2.next_month());
         assert_eq!(tuple3, tuple3.next_month());
     }
 
     #[test]
     fn test_previous_month() {
-        let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
-        let tuple2 = super::MonthTuple::new(2000, 1).unwrap();
-        let tuple3 = super::MonthTuple::new(0, 1).unwrap();
-        assert_eq!(super::MonthTuple { y: 2000, m: 4 }, tuple1.previous_month());
-        assert_eq!(
-            super::MonthTuple { y: 1999, m: 12 },
-            tuple2.previous_month()
-        );
+        let tuple1 = MonthTuple::new(2000, 5).unwrap();
+        let tuple2 = MonthTuple::new(2000, 1).unwrap();
+        let tuple3 = MonthTuple::new(0, 1).unwrap();
+        assert_eq!(MonthTuple { y: 2000, m: 4 }, tuple1.previous_month());
+        assert_eq!(MonthTuple { y: 1999, m: 12 }, tuple2.previous_month());
         assert_eq!(tuple3, tuple3.previous_month());
-    }
-
-    #[test]
-    fn test_to_readable_string() {
-        let tuple = super::MonthTuple::new(2000, 5).unwrap();
-        assert_eq!(String::from("May 2000"), tuple.to_readable_string());
     }
 
     #[test]
     #[should_panic]
     fn test_to_readable_string_panic() {
-        let tuple = super::MonthTuple { y: 2000, m: 13 };
+        let tuple = MonthTuple { y: 2000, m: 13 };
         tuple.to_readable_string();
     }
 
     #[test]
-    fn test_to_string() {
-        let tuple = super::MonthTuple::new(2000, 5).unwrap();
-        assert_eq!(String::from("2000-05"), tuple.to_string());
-    }
-
-    #[test]
-    fn test_equals() {
-        let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
-        let tuple2 = super::MonthTuple::new(2000, 5).unwrap();
-        assert_eq!(tuple1, tuple2);
-    }
-
-    #[test]
-    fn test_comparisons() {
-        let tuple1 = super::MonthTuple::new(2000, 5).unwrap();
-        let tuple2 = super::MonthTuple::new(2000, 5).unwrap();
-        let tuple3 = super::MonthTuple::new(2000, 6).unwrap();
-        let tuple4 = super::MonthTuple::new(2001, 1).unwrap();
-        assert!(tuple1 <= tuple2);
-        assert!(!(tuple1 < tuple2));
-        assert!(tuple1 >= tuple2);
-        assert!(tuple1 < tuple3);
-        assert!(tuple3 < tuple4);
-        assert!(tuple4 > tuple2);
-    }
-
-    #[test]
     fn test_from_date() {
-        let date = ::date_tuple::DateTuple::new(2000, 5, 10).unwrap();
-        assert_eq!(
-            super::MonthTuple { y: 2000, m: 5 },
-            super::MonthTuple::from(date)
-        );
-    }
-
-    #[test]
-    fn test_from_string() {
-        let tuple = super::MonthTuple::new(2000, 5).unwrap();
-        assert_eq!(tuple, str::parse("2000-05").unwrap());
-        assert_eq!(tuple, str::parse("200005").unwrap());
-        assert!(str::parse::<super::MonthTuple>("2000-15").is_err());
-        assert!(str::parse::<super::MonthTuple>("200015").is_err());
-        assert!(str::parse::<super::MonthTuple>("200O05").is_err());
-    }
-
-    #[test]
-    fn test_add_months() {
-        let mut tuple1 = super::MonthTuple::new(2000, 6).unwrap();
-        let tuple1_orig = super::MonthTuple::new(2000, 6).unwrap();
-        let mut tuple2 = super::MonthTuple::new(2000, 12).unwrap();
-        let tuple2_orig = super::MonthTuple::new(2000, 12).unwrap();
-        tuple1.add_months(1);
-        assert_eq!(tuple1, tuple1_orig.next_month());
-        tuple2.add_months(2);
-        assert_eq!(tuple2, tuple2_orig.next_month().next_month());
-    }
-
-    #[test]
-    fn test_subtract_months() {
-        let mut tuple1 = super::MonthTuple::new(2000, 6).unwrap();
-        let tuple1_orig = super::MonthTuple::new(2000, 6).unwrap();
-        let mut tuple2 = super::MonthTuple::new(2000, 12).unwrap();
-        let tuple2_orig = super::MonthTuple::new(2000, 12).unwrap();
-        tuple1.subtract_months(1);
-        assert_eq!(tuple1, tuple1_orig.previous_month());
-        tuple2.subtract_months(2);
-        assert_eq!(tuple2, tuple2_orig.previous_month().previous_month());
+        let date = DateTuple::new(2000, 5, 10).unwrap();
+        assert_eq!(MonthTuple { y: 2000, m: 5 }, MonthTuple::from(date));
     }
 
 }
