@@ -80,6 +80,9 @@ similar functionality. As such, each of the types are suffixed with "Tuple".
 
 Type aliases exist without the Tuple suffixes from version 1.2.1 onwards.
 
+There is a new replacement of the Kotlin library available
+[here](https://github.com/samueldple/date-time-kt).
+
 ### Times
 
 #### TimeTuple
