@@ -22,7 +22,7 @@ addons:
     - zlib1g-dev
     - libdw-dev
     - libiberty-dev
-    - oracle-java8-installer
+    - openjdk-8-jdk
 
 after_success:
 - 'if [ "$TRAVIS_RUST_VERSION" == "stable" ]; then
