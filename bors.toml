@@ -1,2 +1,3 @@
 status = ["continuous-integration/travis-ci/push"]
-pr-status = ["License Compliance"]
+pr-status = ["License Compliance", "WIP"]
+delete-merged-branches = true
