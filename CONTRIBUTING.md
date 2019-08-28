@@ -4,7 +4,7 @@ Please note we have a [code of conduct](https://github.com/samueldple/date_time/
 
 ## Issues and Feedback Process
 
--   If you spot any issues with the project, feel free to add an issue in the GitHub issue tracker.
+-   If you spot any issues with the project or wish to request any new features, feel free to add an issue in the GitHub issue tracker.
 -   You can also use the issue tracker to leave feedback which I'll respond to if required.
 
 ## Pull Request Process
