@@ -493,5 +493,4 @@ mod tests {
         assert_eq!(58, tuple.m);
         assert_eq!(59, tuple.s);
     }
-
 }

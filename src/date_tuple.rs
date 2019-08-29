@@ -241,11 +241,13 @@ impl DateTuple {
     pub fn from_days(mut total_days: u32) -> Result<DateTuple, String> {
         let mut years = 0u16;
         let mut months = 1u8;
-        while total_days > if date_utils::is_leap_year(years) {
-            DAYS_IN_A_LEAP_YEAR
-        } else {
-            DAYS_IN_A_COMMON_YEAR
-        } {
+        while total_days
+            > if date_utils::is_leap_year(years) {
+                DAYS_IN_A_LEAP_YEAR
+            } else {
+                DAYS_IN_A_COMMON_YEAR
+            }
+        {
             total_days -= if date_utils::is_leap_year(years) {
                 DAYS_IN_A_LEAP_YEAR
             } else {
@@ -398,5 +400,4 @@ mod tests {
             tuple4.previous_date()
         );
     }
-
 }
