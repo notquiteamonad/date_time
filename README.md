@@ -7,6 +7,7 @@
 [![DateTime on Travis CI][travis-image]][travis]
 [![FOSSA Status][fossa-image]][fossa]
 [![Coverage Status][coveralls-image]][coveralls]
+[![CII Best Practices Status][cii-best-practices-image]][cii-best-practices]
 
 [![Average time to resolve an issue][isitmaintained-resolution-image]][isitmaintained]
 [![Percentage of issues still open][isitmaintained-open-image]][isitmaintained]
@@ -40,6 +41,10 @@
 [coveralls]: https://coveralls.io/github/samueldple/date_time
 
 [coveralls-image]: https://coveralls.io/repos/github/samueldple/date_time/badge.svg
+
+[cii-best-practices]: https://bestpractices.coreinfrastructure.org/projects/2953
+
+[cii-best-practices-image]: https://bestpractices.coreinfrastructure.org/projects/2953/badge
 
 Date_Time is a high-level rust library for use in situations where
 precision beyond seconds is not necessary.
