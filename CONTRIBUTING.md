@@ -13,3 +13,16 @@ Please note we have a [code of conduct](https://github.com/samueldple/date_time/
 2.  If you have any questions, feel free to ask on the issue. I'll respond as quickly as possible and am happy to help newcomers out if you don't know how to get started.
 3.  Once you've edited the repo, put in a PR. Assign [@samueldple](https://github.com/samueldple/) and attach any labels you think fit the PR. Our bots will add more labels once you submit the PR.
 4.  I'll get back to you with any changes that need making before the PR can be merged, and merge it once it all looks good
+
+## Coding Standards
+
+Code in this repository is held to a high standard, but don't let that put you off from contributing; it's all about following these simple rules:
+
+-   Code submitted should be formatted using rustfmt.
+-   All code submitted should be covered by tests unless a good reason for not testing them is provided. This is assessed by our code coverage score.
+
+These good practices are enforced by the following procedures:
+
+-   All PRs will be reviewed by a maintainer. Here, suggestions will be made on how to improve the code until it is agreed that it is of the required standard.
+-   Bors will be used to merge all PRs. This ensures that the `master` branch is always green.
+-   Dependabot will ensure dependencies are kept up to date.

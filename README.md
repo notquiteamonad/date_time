@@ -7,6 +7,7 @@
 [![DateTime on Travis CI][travis-image]][travis]
 [![FOSSA Status][fossa-image]][fossa]
 [![Coverage Status][coveralls-image]][coveralls]
+[![CII Best Practices Status][cii-best-practices-image]][cii-best-practices]
 
 [![Average time to resolve an issue][isitmaintained-resolution-image]][isitmaintained]
 [![Percentage of issues still open][isitmaintained-open-image]][isitmaintained]
@@ -40,6 +41,10 @@
 [coveralls]: https://coveralls.io/github/samueldple/date_time
 
 [coveralls-image]: https://coveralls.io/repos/github/samueldple/date_time/badge.svg
+
+[cii-best-practices]: https://bestpractices.coreinfrastructure.org/projects/2953
+
+[cii-best-practices-image]: https://bestpractices.coreinfrastructure.org/projects/2953/badge
 
 Date_Time is a high-level rust library for use in situations where
 precision beyond seconds is not necessary.
@@ -234,3 +239,9 @@ For a more precise wrapper of dates, try a crate such as [chrono](https://crates
 -   This library is only designed for use when dates need only to be precise to the level of seconds.
 -   This library is timezone-agnostic; it doesn't deal with any difference between time zones.
 -   Only datetimes between `01 Jan 0000 00:00:00` and `31 Dec 9999 23:59:59` are supported.
+
+## Vulnerabilities
+
+Vulnerabilities should be reported through GitHub issues (or confidentially by email to samueldple(at)gmail.com).
+
+Dependabot is being used by this repository to ensure dependencies are kept up-to-date, meaning security fixes will be applied as quickly as possible once vulnerabilities are patched in dependencies.
