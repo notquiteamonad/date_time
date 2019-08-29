@@ -234,3 +234,9 @@ For a more precise wrapper of dates, try a crate such as [chrono](https://crates
 -   This library is only designed for use when dates need only to be precise to the level of seconds.
 -   This library is timezone-agnostic; it doesn't deal with any difference between time zones.
 -   Only datetimes between `01 Jan 0000 00:00:00` and `31 Dec 9999 23:59:59` are supported.
+
+## Vulnerabilities
+
+Vulnerabilities should be reported through GitHub issues (or confidentially by email to samueldple(at)gmail.com).
+
+Dependabot is being used by this repository to ensure dependencies are kept up-to-date, meaning security fixes will be applied as quickly as possible once vulnerabilities are patched in dependencies.
