@@ -3,6 +3,7 @@
 [![DateTime on crates.io][cratesio-image]][cratesio]
 [![DateTime on docs.rs][docsrs-image]][docsrs]
 [![License][apache-image]][apache]
+[![Downloads on Crates.io][cratesio-downloads-image]][cratesio]
 
 [![DateTime on Travis CI][travis-image]][travis]
 [![FOSSA Status][fossa-image]][fossa]
@@ -27,6 +28,8 @@
 [apache-image]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
 
 [apache]: https://opensource.org/licenses/Apache-2.0
+
+[cratesio-downloads-image]: https://img.shields.io/crates/d/date_time
 
 [fossa]: https://app.fossa.io/projects/git%2Bgithub.com%2Fsamueldple%2Fdate_time?ref=badge_shield
 
