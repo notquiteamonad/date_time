@@ -45,9 +45,9 @@
 
 [coveralls-image]: https://coveralls.io/repos/github/samueldple/date_time/badge.svg
 
-[cii-best-practices]: https://bestpractices.coreinfrastructure.org/projects/2953
+[cii-best-practices]: https://bestpractices.coreinfrastructure.org/projects/3127
 
-[cii-best-practices-image]: https://bestpractices.coreinfrastructure.org/projects/2953/badge
+[cii-best-practices-image]: https://bestpractices.coreinfrastructure.org/projects/3127/badge
 
 Date_Time is a high-level rust library for use in situations where
 precision beyond seconds is not necessary.
