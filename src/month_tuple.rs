@@ -248,5 +248,4 @@ mod tests {
         let date = DateTuple::new(2000, 5, 10).unwrap();
         assert_eq!(MonthTuple { y: 2000, m: 5 }, MonthTuple::from(date));
     }
-
 }

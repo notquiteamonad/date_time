@@ -23,6 +23,7 @@ Code in this repository is held to a high standard, but don't let that put you o
 
 These good practices are enforced by the following procedures:
 
+-   Continuous Integration is used to check that code is formatted correctly and all works as expected.
 -   All PRs will be reviewed by a maintainer. Here, suggestions will be made on how to improve the code until it is agreed that it is of the required standard.
 -   Bors will be used to merge all PRs. This ensures that the `master` branch is always green.
 -   Dependabot will ensure dependencies are kept up to date.
