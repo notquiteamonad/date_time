@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.0.1
+
+- Minor documentation improvements
+
 ## Version 2.0.0 - _Includes Breaking Changes_
 
 -   **BREAKING CHANGE:** Months in `MonthTuple` and `DateTuple` are now one-based rather than zero-based (i.e. 1 represents January). If you have any serialised data from this library which is to be reingested in code, all months will need to be incremented by 1 before use with version 2.0.0.
