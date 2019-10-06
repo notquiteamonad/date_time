@@ -52,14 +52,14 @@ impl MonthTuple {
         date_utils::now_as_monthtuple()
     }
 
-    pub fn get_year(&self) -> u16 {
+    pub fn get_year(self) -> u16 {
         self.y
     }
 
     /// Retrieves the month component of the tuple.
     ///
     /// Note this month is **ONE-BASED** (one represents January).
-    pub fn get_month(&self) -> u8 {
+    pub fn get_month(self) -> u8 {
         self.m
     }
 
@@ -126,7 +126,7 @@ impl MonthTuple {
 
     /// Subtracts a number of years from a MonthTuple.
     pub fn subtract_years(&mut self, years: u16) {
-        let mut new_years = self.y as i32 - years as i32;
+        let mut new_years = i32::from(self.y) - i32::from(years);
         if new_years < 0 {
             new_years = 0;
         }
@@ -138,8 +138,8 @@ impl MonthTuple {
     /// ## Examples
     /// * Jan 2018
     /// * Dec 1994
-    pub fn to_readable_string(&self) -> String {
-        match MONTH_STRINGS.iter().skip(self.m as usize - 1).next() {
+    pub fn to_readable_string(self) -> String {
+        match MONTH_STRINGS.iter().nth(self.m as usize - 1) {
             Some(s) => return format!("{} {:04}", s, self.y),
             None => panic!("Invalid MonthTuple: {:?}", self),
         }

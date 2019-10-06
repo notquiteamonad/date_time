@@ -62,15 +62,15 @@ impl DateTuple {
         date_utils::now_as_datetuple()
     }
 
-    pub fn get_year(&self) -> u16 {
+    pub fn get_year(self) -> u16 {
         self.y
     }
 
-    pub fn get_month(&self) -> u8 {
+    pub fn get_month(self) -> u8 {
         self.m
     }
 
-    pub fn get_date(&self) -> u8 {
+    pub fn get_date(self) -> u8 {
         self.d
     }
 
@@ -198,7 +198,7 @@ impl DateTuple {
     /// If the date is set to Feb 29 and the resulting year is not a leap year,
     /// it will be changed to Feb 28.
     pub fn subtract_years(&mut self, years: u16) {
-        let mut new_years = self.y as i32 - years as i32;
+        let mut new_years = i32::from(self.y) - i32::from(years);
         if new_years < 0 {
             new_years = 0;
         }
@@ -214,14 +214,14 @@ impl DateTuple {
     /// ## Examples
     /// * 2 Oct 2018
     /// * 13 Jan 2019
-    pub fn to_readable_string(&self) -> String {
-        let month = MonthTuple::from(*self);
+    pub fn to_readable_string(self) -> String {
+        let month = MonthTuple::from(self);
         format!("{} {}", self.d, month.to_readable_string())
     }
 
     /// Gets the total number of days in the tuple,
     /// with the first being `DateTuple::min_value()`.
-    pub fn to_days(&self) -> u32 {
+    pub fn to_days(self) -> u32 {
         let mut total_days = 0u32;
         for y in 0..self.y {
             total_days += if date_utils::is_leap_year(y) {
@@ -231,9 +231,9 @@ impl DateTuple {
             }
         }
         for m in 1..self.m {
-            total_days += date_utils::get_last_date_in_month(m, self.y) as u32;
+            total_days += u32::from(date_utils::get_last_date_in_month(m, self.y));
         }
-        total_days + self.d as u32
+        total_days + u32::from(self.d)
     }
 
     /// Calculates years, months, and days from a total number of
@@ -255,8 +255,8 @@ impl DateTuple {
             };
             years += 1;
         }
-        while total_days > date_utils::get_last_date_in_month(months, years) as u32 {
-            total_days -= date_utils::get_last_date_in_month(months, years) as u32;
+        while total_days > u32::from(date_utils::get_last_date_in_month(months, years)) {
+            total_days -= u32::from(date_utils::get_last_date_in_month(months, years));
             months += 1;
         }
         DateTuple::new(years, months, total_days as u8)

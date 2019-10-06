@@ -63,75 +63,75 @@ impl TimeTuple {
         date_utils::now_as_timetuple()
     }
 
-    pub fn get_hours(&self) -> u8 {
+    pub fn get_hours(self) -> u8 {
         self.h
     }
 
-    pub fn get_minutes(&self) -> u8 {
+    pub fn get_minutes(self) -> u8 {
         self.m
     }
 
-    pub fn get_seconds(&self) -> u8 {
+    pub fn get_seconds(self) -> u8 {
         self.s
     }
 
     /// Produces a string such as 08:30 for 8 hours and 30 minutes.
     ///
     /// Ignores seconds.
-    pub fn to_hhmm_string(&self) -> String {
+    pub fn to_hhmm_string(self) -> String {
         format!("{:02}:{:02}", self.h, self.m)
     }
 
     /// Gets the total number of seconds in the tuple.
-    pub fn to_seconds(&self) -> u32 {
-        3600 * self.h as u32 + 60 * self.m as u32 + self.s as u32
+    pub fn to_seconds(self) -> u32 {
+        3600 * u32::from(self.h) + 60 * u32::from(self.m) + u32::from(self.s)
     }
 
     /// Gets the total number of minutes in the tuple, ignoring seconds.
-    pub fn to_minutes(&self) -> u32 {
-        60 * self.h as u32 + self.m as u32
+    pub fn to_minutes(self) -> u32 {
+        60 * u32::from(self.h) + u32::from(self.m)
     }
 
     /// Adds a number of seconds to the TimeTuple,
     /// wrapping the same way `TimeTuple::new()` does.
     pub fn add_seconds(&mut self, seconds: i32) {
-        let new_seconds = self.s as i32 + seconds;
-        *self = TimeTuple::new(self.h as i32, self.m as i32, new_seconds);
+        let new_seconds = i32::from(self.s) + seconds;
+        *self = TimeTuple::new(i32::from(self.h), i32::from(self.m), new_seconds);
     }
 
     /// Subtracts a number of seconds from the TimeTuple,
     /// wrapping the same way `TimeTuple::new()` does.
     pub fn subtract_seconds(&mut self, seconds: i32) {
-        let new_seconds = self.s as i32 - seconds;
-        *self = TimeTuple::new(self.h as i32, self.m as i32, new_seconds);
+        let new_seconds = i32::from(self.s) - seconds;
+        *self = TimeTuple::new(i32::from(self.h), i32::from(self.m), new_seconds);
     }
 
     /// Adds a number of minutes to the TimeTuple,
     /// wrapping the same way `TimeTuple::new()` does.
     pub fn add_minutes(&mut self, minutes: i32) {
-        let new_minutes = self.m as i32 + minutes;
-        *self = TimeTuple::new(self.h as i32, new_minutes, self.s as i32);
+        let new_minutes = i32::from(self.m) + minutes;
+        *self = TimeTuple::new(i32::from(self.h), new_minutes, i32::from(self.s));
     }
 
     /// Subtracts a number of minutes from the TimeTuple,
     /// wrapping the same way `TimeTuple::new()` does.
     pub fn subtract_minutes(&mut self, minutes: i32) {
-        let new_minutes = self.m as i32 - minutes;
-        *self = TimeTuple::new(self.h as i32, new_minutes, self.s as i32);
+        let new_minutes = i32::from(self.m) - minutes;
+        *self = TimeTuple::new(i32::from(self.h), new_minutes, i32::from(self.s));
     }
 
     /// Adds a number of hours to the TimeTuple,
     /// wrapping the same way `TimeTuple::new()` does.
     pub fn add_hours(&mut self, hours: i32) {
-        let new_hours = self.h as i32 + hours;
-        *self = TimeTuple::new(new_hours, self.m as i32, self.s as i32);
+        let new_hours = i32::from(self.h) + hours;
+        *self = TimeTuple::new(new_hours, i32::from(self.m), i32::from(self.s));
     }
 
     /// Subtracts a number of hours from the TimeTuple,
     /// wrapping the same way `TimeTuple::new()` does.
     pub fn subtract_hours(&mut self, hours: i32) {
-        let new_hours = self.h as i32 - hours;
-        *self = TimeTuple::new(new_hours, self.m as i32, self.s as i32);
+        let new_hours = i32::from(self.h) - hours;
+        *self = TimeTuple::new(new_hours, i32::from(self.m), i32::from(self.s));
     }
 }
 
@@ -178,9 +178,9 @@ impl Add for TimeTuple {
     type Output = TimeTuple;
     fn add(self, other: TimeTuple) -> TimeTuple {
         TimeTuple::new(
-            (self.h + other.h) as i32,
-            (self.m + other.m) as i32,
-            (self.s + other.s) as i32,
+            i32::from(self.h + other.h),
+            i32::from(self.m + other.m),
+            i32::from(self.s + other.s),
         )
     }
 }
@@ -188,9 +188,9 @@ impl Add for TimeTuple {
 impl AddAssign for TimeTuple {
     fn add_assign(&mut self, other: TimeTuple) {
         *self = TimeTuple::new(
-            (self.h + other.h) as i32,
-            (self.m + other.m) as i32,
-            (self.s + other.s) as i32,
+            i32::from(self.h + other.h),
+            i32::from(self.m + other.m),
+            i32::from(self.s + other.s),
         );
     }
 }
@@ -199,9 +199,9 @@ impl Sub for TimeTuple {
     type Output = TimeTuple;
     fn sub(self, other: TimeTuple) -> TimeTuple {
         TimeTuple::new(
-            (self.h - other.h) as i32,
-            (self.m - other.m) as i32,
-            (self.s - other.s) as i32,
+            i32::from(self.h - other.h),
+            i32::from(self.m - other.m),
+            i32::from(self.s - other.s),
         )
     }
 }
@@ -209,9 +209,9 @@ impl Sub for TimeTuple {
 impl SubAssign for TimeTuple {
     fn sub_assign(&mut self, other: TimeTuple) {
         *self = TimeTuple::new(
-            (self.h - other.h) as i32,
-            (self.m - other.m) as i32,
-            (self.s - other.s) as i32,
+            i32::from(self.h - other.h),
+            i32::from(self.m - other.m),
+            i32::from(self.s - other.s),
         );
     }
 }
@@ -238,7 +238,7 @@ impl Duration {
     /// and set the minutes to 30, for example.
     pub fn new(h: u32, m: u32, s: u32) -> Duration {
         let total_seconds = s + 60 * m + 3600 * h;
-        Duration::from_seconds(total_seconds as u64)
+        Duration::from_seconds(u64::from(total_seconds))
     }
 
     /// Same as `Duration::new()` but takes the total number of seconds
@@ -256,15 +256,15 @@ impl Duration {
         }
     }
 
-    pub fn get_hours(&self) -> u32 {
+    pub fn get_hours(self) -> u32 {
         self.h
     }
 
-    pub fn get_minutes(&self) -> u8 {
+    pub fn get_minutes(self) -> u8 {
         self.m
     }
 
-    pub fn get_seconds(&self) -> u8 {
+    pub fn get_seconds(self) -> u8 {
         self.s
     }
 
@@ -273,60 +273,60 @@ impl Duration {
     /// Hours field will expand as necessary; 150:30 is a possible result.
     ///
     /// Ignores seconds.
-    pub fn to_hours_and_minutes_string(&self) -> String {
+    pub fn to_hours_and_minutes_string(self) -> String {
         format!("{}:{:02}", self.h, self.m)
     }
 
     /// Gets the total number of seconds in the Duration.
-    pub fn to_seconds(&self) -> u64 {
-        3600 * self.h as u64 + 60 * self.m as u64 + self.s as u64
+    pub fn to_seconds(self) -> u64 {
+        3600 * u64::from(self.h) + 60 * u64::from(self.m) + u64::from(self.s)
     }
 
     /// Gets the total number of minutes in the Duration, ignoring seconds.
-    pub fn to_minutes(&self) -> u32 {
-        60 * self.h as u32 + self.m as u32
+    pub fn to_minutes(self) -> u32 {
+        60 * self.h + u32::from(self.m)
     }
 
     /// Adds a number of seconds to the Duration,
     /// wrapping the same way `Duration::new()` does.
     pub fn add_seconds(&mut self, seconds: u32) {
-        let new_seconds = self.s as u32 + seconds;
-        *self = Duration::new(self.h as u32, self.m as u32, new_seconds);
+        let new_seconds = u32::from(self.s) + seconds;
+        *self = Duration::new(self.h, u32::from(self.m), new_seconds);
     }
 
     /// Subtracts a number of seconds from the Duration,
     /// wrapping the same way `Duration::new()` does.
     pub fn subtract_seconds(&mut self, seconds: u32) {
-        let new_seconds = self.s as u32 - seconds;
-        *self = Duration::new(self.h as u32, self.m as u32, new_seconds);
+        let new_seconds = u32::from(self.s) - seconds;
+        *self = Duration::new(self.h, u32::from(self.m), new_seconds);
     }
 
     /// Adds a number of minutes to the Duration,
     /// wrapping the same way `Duration::new()` does.
     pub fn add_minutes(&mut self, minutes: u32) {
-        let new_minutes = self.m as u32 + minutes;
-        *self = Duration::new(self.h as u32, new_minutes, self.s as u32);
+        let new_minutes = u32::from(self.m) + minutes;
+        *self = Duration::new(self.h, new_minutes, u32::from(self.s));
     }
 
     /// Subtracts a number of minutes from the Duration,
     /// wrapping the same way `Duration::new()` does.
     pub fn subtract_minutes(&mut self, minutes: u32) {
-        let new_minutes = self.m as u32 - minutes;
-        *self = Duration::new(self.h as u32, new_minutes, self.s as u32);
+        let new_minutes = u32::from(self.m) - minutes;
+        *self = Duration::new(self.h, new_minutes, u32::from(self.s));
     }
 
     /// Adds a number of hours to the Duration,
     /// wrapping the same way `Duration::new()` does.
     pub fn add_hours(&mut self, hours: u32) {
-        let new_hours = self.h as u32 + hours;
-        *self = Duration::new(new_hours, self.m as u32, self.s as u32);
+        let new_hours = self.h + hours;
+        *self = Duration::new(new_hours, u32::from(self.m), u32::from(self.s));
     }
 
     /// Subtracts a number of hours from the Duration,
     /// wrapping the same way `Duration::new()` does.
     pub fn subtract_hours(&mut self, hours: u32) {
-        let new_hours = self.h as u32 - hours;
-        *self = Duration::new(new_hours, self.m as u32, self.s as u32);
+        let new_hours = self.h - hours;
+        *self = Duration::new(new_hours, u32::from(self.m), u32::from(self.s));
     }
 }
 
@@ -373,9 +373,9 @@ impl Add for Duration {
     type Output = Duration;
     fn add(self, other: Duration) -> Duration {
         Duration::new(
-            (self.h + other.h) as u32,
-            (self.m + other.m) as u32,
-            (self.s + other.s) as u32,
+            self.h + other.h,
+            u32::from(self.m + other.m),
+            u32::from(self.s + other.s),
         )
     }
 }
@@ -383,9 +383,9 @@ impl Add for Duration {
 impl AddAssign for Duration {
     fn add_assign(&mut self, other: Duration) {
         *self = Duration::new(
-            (self.h + other.h) as u32,
-            (self.m + other.m) as u32,
-            (self.s + other.s) as u32,
+            self.h + other.h,
+            u32::from(self.m + other.m),
+            u32::from(self.s + other.s),
         );
     }
 }
@@ -394,9 +394,9 @@ impl Sub for Duration {
     type Output = Duration;
     fn sub(self, other: Duration) -> Duration {
         Duration::new(
-            (self.h - other.h) as u32,
-            (self.m - other.m) as u32,
-            (self.s - other.s) as u32,
+            self.h - other.h,
+            u32::from(self.m - other.m),
+            u32::from(self.s - other.s),
         )
     }
 }
@@ -404,16 +404,16 @@ impl Sub for Duration {
 impl SubAssign for Duration {
     fn sub_assign(&mut self, other: Duration) {
         *self = Duration::new(
-            (self.h - other.h) as u32,
-            (self.m - other.m) as u32,
-            (self.s - other.s) as u32,
+            self.h - other.h,
+            u32::from(self.m - other.m),
+            u32::from(self.s - other.s),
         );
     }
 }
 
 impl From<TimeTuple> for Duration {
     fn from(time: TimeTuple) -> Self {
-        Duration::from_seconds(time.to_seconds() as u64)
+        Duration::from_seconds(u64::from(time.to_seconds()))
     }
 }
 
