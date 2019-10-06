@@ -19,6 +19,7 @@ Please note we have a [code of conduct](https://github.com/samueldple/date_time/
 Code in this repository is held to a high standard, but don't let that put you off from contributing; it's all about following these simple rules:
 
 -   Code submitted should be formatted using rustfmt.
+-   Code submitted should pass `cargo clippy -- -D warnings`.
 -   All code submitted should be covered by tests unless a good reason for not testing them is provided. This is assessed by our code coverage score.
 
 These good practices are enforced by the following procedures:

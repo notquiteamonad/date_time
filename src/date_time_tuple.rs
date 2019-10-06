@@ -21,11 +21,11 @@ impl DateTimeTuple {
         DateTimeTuple { d, t }
     }
 
-    pub fn get_date(&self) -> DateTuple {
+    pub fn get_date(self) -> DateTuple {
         self.d
     }
 
-    pub fn get_time(&self) -> TimeTuple {
+    pub fn get_time(self) -> TimeTuple {
         self.t
     }
 
@@ -34,7 +34,7 @@ impl DateTimeTuple {
     /// ## Examples
     /// * 2 Oct 2018 08:30:00
     /// * 13 Jan 2019 11:00:10
-    pub fn to_readable_string(&self) -> String {
+    pub fn to_readable_string(self) -> String {
         format!("{} {}", self.d.to_readable_string(), self.t.to_string())
     }
 }
