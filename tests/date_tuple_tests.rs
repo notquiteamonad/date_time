@@ -141,12 +141,12 @@ fn test_add_and_subtract_years() {
 #[test]
 fn test_to_days() {
     let feb_29_2000 = DateTuple::new(2000, 2, 29).unwrap();
-    assert_eq!(730545, feb_29_2000.to_days());
+    assert_eq!(730_545, feb_29_2000.to_days());
 }
 
 #[test]
 fn test_from_days() {
     let feb_29_2000 = DateTuple::new(2000, 2, 29).unwrap();
-    assert_eq!(feb_29_2000, DateTuple::from_days(730545).unwrap());
+    assert_eq!(feb_29_2000, DateTuple::from_days(730_545).unwrap());
     assert!(DateTuple::from_days(0).is_err());
 }

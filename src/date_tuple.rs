@@ -82,24 +82,24 @@ impl DateTuple {
         }
         if self.d == date_utils::get_last_date_in_month(self.m, self.y) {
             if self.m == 12 {
-                return DateTuple {
+                DateTuple {
                     y: self.y + 1,
                     m: 1,
                     d: 1,
-                };
+                }
             } else {
-                return DateTuple {
+                DateTuple {
                     y: self.y,
                     m: self.m + 1,
                     d: 1,
-                };
+                }
             }
         } else {
-            return DateTuple {
+            DateTuple {
                 y: self.y,
                 m: self.m,
                 d: self.d + 1,
-            };
+            }
         }
     }
 
@@ -111,24 +111,24 @@ impl DateTuple {
         }
         if self.d == 1 {
             if self.m == 1 {
-                return DateTuple {
+                DateTuple {
                     y: self.y - 1,
                     m: 12,
                     d: date_utils::get_last_date_in_month(12, self.y - 1),
-                };
+                }
             } else {
-                return DateTuple {
+                DateTuple {
                     y: self.y,
                     m: self.m - 1,
                     d: date_utils::get_last_date_in_month(self.m - 1, self.y),
-                };
+                }
             }
         } else {
-            return DateTuple {
+            DateTuple {
                 y: self.y,
                 m: self.m,
                 d: self.d - 1,
-            };
+            }
         }
     }
 
