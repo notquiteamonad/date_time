@@ -6,6 +6,7 @@
 [![Downloads on Crates.io][cratesio-downloads-image]][cratesio]
 
 [![DateTime on Travis CI][travis-image]][travis]
+[![Build Status][github-actions-image]][github-actions]
 [![FOSSA Status][fossa-image]][fossa]
 [![Coverage Status][coveralls-image]][coveralls]
 [![CII Best Practices Status][cii-best-practices-image]][cii-best-practices]
@@ -16,6 +17,10 @@
 [travis-image]: https://travis-ci.com/samueldple/date_time.svg?branch=master
 
 [travis]: https://travis-ci.com/samueldple/date_time
+
+[github-actions-image]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fsamueldple%2Fdate_time%2Fbadge&style=flat
+
+[github-actions]: https://actions-badge.atrox.dev/samueldple/date_time/goto
 
 [cratesio-image]: https://img.shields.io/crates/v/date_time.svg
 
