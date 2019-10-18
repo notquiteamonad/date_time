@@ -1,3 +1,4 @@
+use crate::date_time_tuple::DateTimeTuple;
 use date_utils;
 use regex::Regex;
 use std::cmp::Ordering;
@@ -237,8 +238,8 @@ impl Duration {
     /// with a minute value of 90 would add an hour to the resulting tuple
     /// and set the minutes to 30, for example.
     pub fn new(h: u32, m: u32, s: u32) -> Duration {
-        let total_seconds = s + 60 * m + 3600 * h;
-        Duration::from_seconds(u64::from(total_seconds))
+        let total_seconds: u64 = u64::from(s) + 60 * u64::from(m) + 3600 * u64::from(h);
+        Duration::from_seconds(total_seconds)
     }
 
     /// Same as `Duration::new()` but takes the total number of seconds
@@ -253,6 +254,23 @@ impl Duration {
             h: h as u32,
             m: m as u8,
             s: total_seconds as u8,
+        }
+    }
+
+    /// Calculates the `Duration` between two `DateTimeTuple`s.
+    pub fn between(dt1: DateTimeTuple, dt2: DateTimeTuple) -> Duration {
+        if dt1 == dt2 {
+            return Duration { h: 0, m: 0, s: 0 };
+        }
+        let smaller = if dt1 < dt2 { dt1 } else { dt2 };
+        let greater = if dt1 < dt2 { dt2 } else { dt1 };
+        let days_between = greater.get_date().to_days() - smaller.get_date().to_days();
+        if days_between == 0 {
+            Duration::from(greater.get_time()) - Duration::from(smaller.get_time())
+        } else {
+            let time_between = Duration::from(greater.get_time()) + Duration::new(24, 0, 0)
+                - Duration::from(smaller.get_time());
+            time_between + Duration::new(24 * (days_between - 1), 0, 0)
         }
     }
 

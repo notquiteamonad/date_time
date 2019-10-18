@@ -143,6 +143,8 @@ Each takes a single argument of the number to add/subtract. These methods all wr
 
 A second time type, `Duration` exists for cases where a duration should be stored in hours, minutes and seconds. This is similar to the `TimeTuple` type but allows hours to be greater than 24.
 
+The difference between any two `DateTime`s can be calculated using `Duration::between()`.
+
 ### Dates
 
 Dates can be generated using the `datetuple::DateTuple` and `monthtuple::MonthTuple` types. The `MonthTuple` type is similar to `DateTuple` but doesn't include a day of the month.
@@ -229,6 +231,8 @@ A `MonthTuple` can be instantiated by calling `MonthTuple::from_str()` with a st
 The `date_time_tuple::DateTimeTuple` type wraps a `DateTuple` and a `TimeTuple`.
 
 Like the other modules in this library, it is fully comparable with other `DateTimeTuple` structs.
+
+The difference between two `DateTime`s can be calculated using `Duration::between()`.
 
 ##### Serialisation
 

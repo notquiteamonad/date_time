@@ -1,5 +1,9 @@
 # Changelog
 
+## Since Version 2.0.1 (Unreleased)
+
+- Added `between` method to get the `Duration` between two `DateTime`s.
+
 ## Version 2.0.1
 
 - Minor documentation improvements
