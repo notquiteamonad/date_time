@@ -1,3 +1,4 @@
+use crate::date_time_tuple::DateTimeTuple;
 use date_utils;
 use regex::Regex;
 use std::cmp::Ordering;
@@ -254,6 +255,30 @@ impl Duration {
             m: m as u8,
             s: total_seconds as u8,
         }
+    }
+
+    /// Calculates the `Duration` between two `DateTimeTuple`s.
+    pub fn between(dt1: DateTimeTuple, dt2: DateTimeTuple) -> Duration {
+        if dt1 == dt2 {
+            return Duration { h: 0, m: 0, s: 0 };
+        }
+        let smaller: DateTimeTuple;
+        let greater: DateTimeTuple;
+        if dt1 < dt2 {
+            smaller = dt1;
+            greater = dt2;
+        } else {
+            smaller = dt2;
+            greater = dt1;
+        }
+        let days_between = greater.get_date().to_days() - greater.get_date().to_days();
+        let time_between = if days_between == 0 {
+            Duration::from(greater.get_time()) - Duration::from(smaller.get_time())
+        } else {
+            Duration::from(greater.get_time()) + Duration::new(24, 0, 0)
+                - Duration::from(smaller.get_time())
+        };
+        time_between + Duration::new(24 * (days_between - 1), 0, 0)
     }
 
     pub fn get_hours(self) -> u32 {
