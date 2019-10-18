@@ -238,8 +238,8 @@ impl Duration {
     /// with a minute value of 90 would add an hour to the resulting tuple
     /// and set the minutes to 30, for example.
     pub fn new(h: u32, m: u32, s: u32) -> Duration {
-        let total_seconds = s + 60 * m + 3600 * h;
-        Duration::from_seconds(u64::from(total_seconds))
+        let total_seconds: u64 = u64::from(s) + 60 * u64::from(m) + 3600 * u64::from(h);
+        Duration::from_seconds(total_seconds)
     }
 
     /// Same as `Duration::new()` but takes the total number of seconds
@@ -271,7 +271,7 @@ impl Duration {
             smaller = dt2;
             greater = dt1;
         }
-        let days_between = greater.get_date().to_days() - greater.get_date().to_days();
+        let days_between = greater.get_date().to_days() - smaller.get_date().to_days();
         let time_between = if days_between == 0 {
             Duration::from(greater.get_time()) - Duration::from(smaller.get_time())
         } else {
