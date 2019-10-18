@@ -265,13 +265,13 @@ impl Duration {
         let smaller = if dt1 < dt2 { dt1 } else { dt2 };
         let greater = if dt1 < dt2 { dt2 } else { dt1 };
         let days_between = greater.get_date().to_days() - smaller.get_date().to_days();
-        let time_between = if days_between == 0 {
+        if days_between == 0 {
             Duration::from(greater.get_time()) - Duration::from(smaller.get_time())
         } else {
-            Duration::from(greater.get_time()) + Duration::new(24, 0, 0)
-                - Duration::from(smaller.get_time())
-        };
-        time_between + Duration::new(24 * (days_between - 1), 0, 0)
+            let time_between = Duration::from(greater.get_time()) + Duration::new(24, 0, 0)
+                - Duration::from(smaller.get_time());
+            time_between + Duration::new(24 * (days_between - 1), 0, 0)
+        }
     }
 
     pub fn get_hours(self) -> u32 {
