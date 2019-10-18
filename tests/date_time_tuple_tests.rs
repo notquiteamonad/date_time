@@ -92,3 +92,14 @@ fn test_between_max_cant_overflow() {
     )
     .to_seconds();
 }
+
+#[test]
+fn test_days_between() {
+    assert_eq!(
+        Duration::new(25, 0, 0),
+        Duration::between(
+            DateTimeTuple::new(DateTuple::new(0, 1, 1).unwrap(), TimeTuple::new(0, 0, 0)),
+            DateTimeTuple::new(DateTuple::new(0, 1, 2).unwrap(), TimeTuple::new(1, 0, 0),),
+        )
+    );
+}
