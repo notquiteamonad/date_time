@@ -1,0 +1,21 @@
+name: Code Style
+
+on:
+  push:
+    branches:
+      - master
+      - staging
+      - trying
+      - staging.tmp
+      - trying.tmp
+  pull_request:
+
+jobs:
+  code-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Check Formatting
+        run: cargo fmt -- --check
+      - name: Lint
+        run: cargo clippy -- -D warnings

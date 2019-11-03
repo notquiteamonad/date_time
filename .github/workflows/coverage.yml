@@ -1,19 +1,16 @@
-name: Rust
+name: Coverage
 
-on: [push]
+on:
+  push:
+    branches: [master]
+  pull_request:
 
 jobs:
-  build:
+  coverage:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v1
-      - name: Check Formatting
-        run: cargo fmt -- --check
-      - name: Lint
-        run: cargo clippy -- -D warnings
-      - name: Build
-        run: cargo build --verbose
       - name: Test
         run: >-
             rustup toolchain install nightly &&
