@@ -14,5 +14,19 @@ jobs:
         run: cargo clippy -- -D warnings
       - name: Build
         run: cargo build --verbose
-      - name: Run tests
-        run: cargo test --verbose
+      - name: Test
+        run: >-
+            rustup toolchain install nightly &&
+            cargo clean &&
+            cargo +nightly test --verbose
+        env:
+          CARGO_INCREMENTAL: 0
+          RUSTFLAGS: -Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code
+      - name: Generate Coverage
+        id: coverage
+        uses: actions-rs/grcov@v0.1
+      - name: Upload Coverage
+        uses: coverallsapp/github-action@v1.0.1
+        with:
+          github-token: ${{ secrets.github_token }}
+          path-to-lcov: ${{ steps.coverage.outputs.report }}
