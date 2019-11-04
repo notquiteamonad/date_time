@@ -169,6 +169,7 @@ impl PartialOrd for TimeTuple {
     }
 }
 
+#[cfg_attr(tarpaulin, skip)]
 impl Ord for TimeTuple {
     fn cmp(&self, other: &TimeTuple) -> Ordering {
         self.to_seconds().cmp(&other.to_seconds())
@@ -291,6 +292,19 @@ impl Duration {
     /// Hours field will expand as necessary; 150:30 is a possible result.
     ///
     /// Ignores seconds.
+    pub fn to_hhmm_string(self) -> String {
+        format!("{}:{:02}", self.h, self.m)
+    }
+
+    /// Produces a string such as 8:30 for 8 hours and 30 minutes.
+    ///
+    /// Hours field will expand as necessary; 150:30 is a possible result.
+    ///
+    /// Ignores seconds.
+    #[deprecated(
+        since = "2.1.0",
+        note = "Replace with to_hhmm_string()"
+    )]
     pub fn to_hours_and_minutes_string(self) -> String {
         format!("{}:{:02}", self.h, self.m)
     }
@@ -315,8 +329,7 @@ impl Duration {
     /// Subtracts a number of seconds from the Duration,
     /// wrapping the same way `Duration::new()` does.
     pub fn subtract_seconds(&mut self, seconds: u32) {
-        let new_seconds = u32::from(self.s) - seconds;
-        *self = Duration::new(self.h, u32::from(self.m), new_seconds);
+        *self = Duration::from_seconds(self.to_seconds() - u64::from(seconds));
     }
 
     /// Adds a number of minutes to the Duration,
@@ -329,8 +342,7 @@ impl Duration {
     /// Subtracts a number of minutes from the Duration,
     /// wrapping the same way `Duration::new()` does.
     pub fn subtract_minutes(&mut self, minutes: u32) {
-        let new_minutes = u32::from(self.m) - minutes;
-        *self = Duration::new(self.h, new_minutes, u32::from(self.s));
+        *self = Duration::from_seconds(self.to_seconds() - u64::from(minutes) * 60);
     }
 
     /// Adds a number of hours to the Duration,
@@ -381,6 +393,7 @@ impl PartialOrd for Duration {
     }
 }
 
+#[cfg_attr(tarpaulin, skip)]
 impl Ord for Duration {
     fn cmp(&self, other: &Duration) -> Ordering {
         self.to_seconds().cmp(&other.to_seconds())
