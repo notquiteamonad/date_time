@@ -10,6 +10,11 @@ fn test_component_too_large() {
 }
 
 #[test]
+fn test_this_month_does_not_panic() {
+    MonthTuple::this_month();
+}
+
+#[test]
 fn test_to_readable_string() {
     let tuple = MonthTuple::new(2000, 5).unwrap();
     assert_eq!(String::from("May 2000"), tuple.to_readable_string());
@@ -74,4 +79,24 @@ fn test_subtract_months() {
     assert_eq!(tuple1, tuple1_orig.previous_month());
     tuple2.subtract_months(2);
     assert_eq!(tuple2, tuple2_orig.previous_month().previous_month());
+}
+
+#[test]
+fn test_add_years() {
+    let mut tuple1 = MonthTuple::new(2000, 6).unwrap();
+    let mut tuple2 = MonthTuple::new(9998, 6).unwrap();
+    tuple1.add_years(2);
+    assert_eq!(2002, tuple1.get_year());
+    tuple2.add_years(2);
+    assert_eq!(9999, tuple2.get_year());
+}
+
+#[test]
+fn test_subtract_years() {
+    let mut tuple1 = MonthTuple::new(2000, 6).unwrap();
+    let mut tuple2 = MonthTuple::new(1, 6).unwrap();
+    tuple1.subtract_years(2);
+    assert_eq!(1998, tuple1.get_year());
+    tuple2.subtract_years(2);
+    assert_eq!(0, tuple2.get_year());
 }
