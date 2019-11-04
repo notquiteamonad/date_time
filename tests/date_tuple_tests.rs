@@ -8,6 +8,24 @@ fn test_year_too_large() {
 }
 
 #[test]
+fn test_min_value() {
+    assert_eq!(DateTuple::new(0, 1, 1).unwrap(), DateTuple::min_value());
+}
+
+#[test]
+fn test_today_does_not_panic() {
+    DateTuple::today();
+}
+
+#[test]
+fn test_getters() {
+    let date = DateTuple::new(2000, 5, 10).unwrap();
+    assert_eq!(2000, date.get_year());
+    assert_eq!(5, date.get_month());
+    assert_eq!(10, date.get_date());
+}
+
+#[test]
 fn test_to_string() {
     let tuple = DateTuple::new(2000, 6, 10).unwrap();
     assert_eq!(String::from("2000-06-10"), tuple.to_string());
