@@ -62,15 +62,34 @@ fn duration_since_unix_epoch() -> Duration {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test_leap_years() {
-        let valid: [u16; 3] = [2000, 2012, 2016];
-        let invalid: [u16; 3] = [2100, 2018, 2013];
-        for v in valid.iter() {
-            assert!(super::is_leap_year(*v));
-        }
-        for i in invalid.iter() {
-            assert!(!super::is_leap_year(*i));
-        }
+        assert!(is_leap_year(2000));
+        assert!(is_leap_year(2012));
+        assert!(is_leap_year(2016));
+        assert!(!is_leap_year(2100));
+        assert!(!is_leap_year(2018));
+        assert!(!is_leap_year(2013));
+    }
+
+    #[test]
+    fn test_now_functions_do_not_panic() {
+        now_as_datetuple();
+        now_as_monthtuple();
+        now_as_timetuple();
+    }
+
+    #[test]
+    fn test_days_from_duration() {
+        assert_eq!(0, extract_days_from_duration(0));
+        assert_eq!(0, extract_days_from_duration(500));
+        assert_eq!(26, extract_days_from_duration(2246500));
+    }
+
+    #[test]
+    fn test_duration_since_epoch() {
+        assert!(duration_since_unix_epoch().as_secs() > 0);
     }
 }
