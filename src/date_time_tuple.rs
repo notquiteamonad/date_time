@@ -80,6 +80,7 @@ impl PartialOrd for DateTimeTuple {
     }
 }
 
+#[cfg_attr(tarpaulin, skip)]
 impl Ord for DateTimeTuple {
     fn cmp(&self, other: &DateTimeTuple) -> Ordering {
         if self.d == other.d {
