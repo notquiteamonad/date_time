@@ -191,6 +191,7 @@ impl PartialOrd for MonthTuple {
     }
 }
 
+#[cfg_attr(tarpaulin, skip)]
 impl Ord for MonthTuple {
     fn cmp(&self, other: &MonthTuple) -> Ordering {
         if self.y == other.y {

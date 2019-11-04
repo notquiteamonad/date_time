@@ -1,0 +1,25 @@
+name: Coverage
+
+on: pull_request
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Reattach HEAD
+        run: git checkout ${{ github.head_ref }}
+      - name: Test
+        run: >-
+            cargo clean &&
+            cargo build &&
+            cargo test
+      - name: Install tarpaulin
+        run: >-
+          sudo apt-get install libssl-dev &&
+          cd .. &&
+          wget https://github.com/xd009642/tarpaulin/releases/download/0.9.1/cargo-tarpaulin-0.9.1-travis.tar.gz &&
+          tar xf cargo-tarpaulin-0.9.1-travis.tar.gz &&
+          cd date_time
+      - name: Generate and Upload Coverage
+        run: ../cargo-tarpaulin tarpaulin --coveralls ${{ secrets.CoverallsToken }}
