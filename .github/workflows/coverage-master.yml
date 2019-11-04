@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Reattach Head
+      - name: Reattach HEAD
         run: git checkout master
       - name: Test
         run: >-

@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Reattach Head
+      - name: Reattach HEAD
         run: git checkout ${{ github.head_ref }}
       - name: Test
         run: >-

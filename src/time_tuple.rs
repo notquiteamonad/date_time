@@ -301,10 +301,7 @@ impl Duration {
     /// Hours field will expand as necessary; 150:30 is a possible result.
     ///
     /// Ignores seconds.
-    #[deprecated(
-        since = "2.1.0",
-        note = "Replace with to_hhmm_string()"
-    )]
+    #[deprecated(since = "2.1.0", note = "Replace with to_hhmm_string()")]
     pub fn to_hours_and_minutes_string(self) -> String {
         format!("{}:{:02}", self.h, self.m)
     }

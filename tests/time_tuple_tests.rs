@@ -30,7 +30,10 @@ fn test_to_hhmm_string() {
     let tuple = TimeTuple::new(3, 0, 39);
     let duration = Duration::new(30, 0, 39);
     assert_eq!(String::from("03:00"), tuple.to_hhmm_string());
-    assert_eq!(String::from("30:00"), duration.to_hours_and_minutes_string());
+    assert_eq!(
+        String::from("30:00"),
+        duration.to_hours_and_minutes_string()
+    );
     assert_eq!(String::from("30:00"), duration.to_hhmm_string());
 }
 
