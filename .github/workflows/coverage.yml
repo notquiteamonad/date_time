@@ -19,6 +19,8 @@ jobs:
         env:
           CARGO_INCREMENTAL: 0
           RUSTFLAGS: -Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code
+      - name: Install grcov
+        run: cargo install grcov
       - name: Generate Coverage
         id: coverage
         uses: actions-rs/grcov@v0.1
