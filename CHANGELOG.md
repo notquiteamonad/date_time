@@ -1,8 +1,9 @@
 # Changelog
 
-## Since Version 2.0.1 (Unreleased)
+## Version 2.1.0
 
 - Added `between` method to get the `Duration` between two `DateTime`s.
+- Deprecated `to_hours_and_minutes_string` on `Duration` in favour of `to_hhmm_string` for consistency with `TimeTuple`.
 
 ## Version 2.0.1
 
