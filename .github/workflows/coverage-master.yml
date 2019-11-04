@@ -1,6 +1,8 @@
 name: Coverage
 
-on: pull_request
+on:
+  push:
+    branches: [master]
 
 jobs:
   coverage:
@@ -8,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Reattach Head
-        run: git checkout ${{ github.head_ref }}
+        run: git checkout master
       - name: Test
         run: >-
             cargo clean &&
