@@ -146,8 +146,11 @@ impl FromStr for TimeTuple {
     type Err = String;
 
     fn from_str(s: &str) -> Result<TimeTuple, Self::Err> {
-        let valid_format = Regex::new(r"^\d{2}:\d{2}:\d{2}$").unwrap();
-        if !valid_format.is_match(s) {
+        lazy_static! {
+            static ref VALID_FORMAT: Regex = Regex::new(r"^\d{2}:\d{2}:\d{2}$").unwrap();
+        }
+
+        if !VALID_FORMAT.is_match(s) {
             Err(format!(
                 "Invalid str formatting of TimeTuple: {}\nExpects a string formatted like 08:30:05",
                 s
@@ -367,8 +370,10 @@ impl FromStr for Duration {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Duration, Self::Err> {
-        let valid_format = Regex::new(r"^\d+:\d{2}:\d{2}$").unwrap();
-        if !valid_format.is_match(s) {
+        lazy_static! {
+            static ref VALID_FORMAT: Regex = Regex::new(r"^\d+:\d{2}:\d{2}$").unwrap();
+        }
+        if !VALID_FORMAT.is_match(s) {
             Err(format!(
                 "Invalid str formatting of Duration: {}\nExpects a string formatted like 8:30:05",
                 s

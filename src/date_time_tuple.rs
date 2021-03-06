@@ -54,9 +54,12 @@ impl FromStr for DateTimeTuple {
 
     /// Expects a string formatted like one obtained by calling `DateTimeTuple.to_string()`
     fn from_str(s: &str) -> Result<DateTimeTuple, Self::Err> {
-        let valid_format = Regex::new(r"^\d{4}-\d{2}-\d{2}@\d{2}:\d{2}:\d{2}$").unwrap();
-        let legacy_format = Regex::new(r"^\d{8}@\d{2}:\d{2}:\d{2}$").unwrap();
-        if valid_format.is_match(s) || legacy_format.is_match(s) {
+        lazy_static! {
+            static ref VALID_FORMAT: Regex = Regex::new(r"^\d{4}-\d{2}-\d{2}@\d{2}:\d{2}:\d{2}$").unwrap();
+            static ref LEGACY_FORMAT: Regex = Regex::new(r"^\d{8}@\d{2}:\d{2}:\d{2}$").unwrap();
+        }
+
+        if VALID_FORMAT.is_match(s) || LEGACY_FORMAT.is_match(s) {
             let mut parts = s.split('@');
             let date_part = match DateTuple::from_str(parts.next().unwrap()) {
                 Ok(d) => d,

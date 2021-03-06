@@ -156,9 +156,12 @@ impl FromStr for MonthTuple {
     type Err = String;
 
     fn from_str(s: &str) -> Result<MonthTuple, Self::Err> {
-        let valid_format = Regex::new(r"^\d{4}-\d{2}$").unwrap();
-        let legacy_format = Regex::new(r"^\d{6}$").unwrap();
-        if valid_format.is_match(s) {
+        lazy_static! {
+            static ref VALID_FORMAT: Regex = Regex::new(r"^\d{4}-\d{2}$").unwrap();
+            static ref LEGACY_FORMAT: Regex = Regex::new(r"^\d{6}$").unwrap();
+        }
+        
+        if VALID_FORMAT.is_match(s) {
             match MonthTuple::new(
                 u16::from_str(&s[0..4]).unwrap(),
                 u8::from_str(&s[5..7]).unwrap(),
@@ -166,7 +169,7 @@ impl FromStr for MonthTuple {
                 Ok(m) => Ok(m),
                 Err(e) => Err(format!("Invalid month passed to from_str: {}", e)),
             }
-        } else if legacy_format.is_match(s) {
+        } else if LEGACY_FORMAT.is_match(s) {
             let (s1, s2) = s.split_at(4);
             match MonthTuple::new(u16::from_str(s1).unwrap(), u8::from_str(s2).unwrap()) {
                 Ok(m) => Ok(m),
