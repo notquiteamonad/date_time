@@ -274,11 +274,14 @@ impl FromStr for DateTuple {
 
     /// Expects a string formatted like 2018-11-02.
     ///
-    /// Also accepts the legacy crate format of 2018-11-02.
+    /// Also accepts the legacy crate format of 20181102.
     fn from_str(s: &str) -> Result<DateTuple, Self::Err> {
-        let valid_format = Regex::new(r"^\d{4}-\d{2}-\d{2}$").unwrap();
-        let legacy_format = Regex::new(r"^\d{8}$").unwrap();
-        if valid_format.is_match(s) {
+        lazy_static! {
+            static ref VALID_FORMAT: Regex = Regex::new(r"^\d{4}-\d{2}-\d{2}$").unwrap();
+            static ref LEGACY_FORMAT: Regex = Regex::new(r"^\d{8}$").unwrap();
+        }
+
+        if VALID_FORMAT.is_match(s) {
             match DateTuple::new(
                 u16::from_str(&s[0..4]).unwrap(),
                 u8::from_str(&s[5..7]).unwrap(),
@@ -287,7 +290,7 @@ impl FromStr for DateTuple {
                 Ok(d) => Ok(d),
                 Err(e) => Err(format!("Invalid date passed to from_str: {}", e)),
             }
-        } else if legacy_format.is_match(s) {
+        } else if LEGACY_FORMAT.is_match(s) {
             let (s1, s2) = s.split_at(4);
             let (s2, s3) = s2.split_at(2);
             match DateTuple::new(
