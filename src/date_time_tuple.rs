@@ -55,7 +55,8 @@ impl FromStr for DateTimeTuple {
     /// Expects a string formatted like one obtained by calling `DateTimeTuple.to_string()`
     fn from_str(s: &str) -> Result<DateTimeTuple, Self::Err> {
         lazy_static! {
-            static ref VALID_FORMAT: Regex = Regex::new(r"^\d{4}-\d{2}-\d{2}@\d{2}:\d{2}:\d{2}$").unwrap();
+            static ref VALID_FORMAT: Regex =
+                Regex::new(r"^\d{4}-\d{2}-\d{2}@\d{2}:\d{2}:\d{2}$").unwrap();
             static ref LEGACY_FORMAT: Regex = Regex::new(r"^\d{8}@\d{2}:\d{2}:\d{2}$").unwrap();
         }
 

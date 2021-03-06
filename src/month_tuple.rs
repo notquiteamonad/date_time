@@ -160,7 +160,7 @@ impl FromStr for MonthTuple {
             static ref VALID_FORMAT: Regex = Regex::new(r"^\d{4}-\d{2}$").unwrap();
             static ref LEGACY_FORMAT: Regex = Regex::new(r"^\d{6}$").unwrap();
         }
-        
+
         if VALID_FORMAT.is_match(s) {
             match MonthTuple::new(
                 u16::from_str(&s[0..4]).unwrap(),
