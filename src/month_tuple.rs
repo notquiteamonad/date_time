@@ -30,7 +30,7 @@ impl MonthTuple {
     ///
     /// Only accepts a valid year value (`0 <= y <= 9999`).
     pub fn new(y: u16, m: u8) -> Result<MonthTuple, String> {
-        if 1 <= m && m <= 12 {
+        if (1..=12).contains(&m) {
             if y <= 9999 {
                 Ok(MonthTuple { y, m })
             } else {

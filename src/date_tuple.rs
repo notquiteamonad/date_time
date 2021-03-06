@@ -31,7 +31,7 @@ impl DateTuple {
                 DateTuple { y, m, d }
             ));
         }
-        if 1 <= m && m <= 12 {
+        if (1..=12).contains(&m) {
             if d == 0 || d > date_utils::get_last_date_in_month(m, y) {
                 return Err(format!(
                     "Invalid date in DateTuple: {:?}",

@@ -20,8 +20,8 @@ jobs:
         run: >-
           sudo apt-get install libssl-dev &&
           cd .. &&
-          wget https://github.com/xd009642/tarpaulin/releases/download/0.9.1/cargo-tarpaulin-0.9.1-travis.tar.gz &&
-          tar xf cargo-tarpaulin-0.9.1-travis.tar.gz &&
+          wget https://github.com/xd009642/tarpaulin/releases/download/0.16.0/cargo-tarpaulin-0.16.0-travis.tar.gz &&
+          tar xf cargo-tarpaulin-0.16.0-travis.tar.gz &&
           cd date_time
       - name: Generate and Upload Coverage
         run: ../cargo-tarpaulin tarpaulin --coveralls ${{ secrets.CoverallsToken }}
