@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.1.1
+
+- Improved performance of functions using regex (thanks, @tuube)
+- Updated maintainer name to @notquiteamonad
+
 ## Version 2.1.0
 
 - Added `between` method to get the `Duration` between two `DateTime`s.

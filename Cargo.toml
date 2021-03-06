@@ -1,6 +1,6 @@
 [package]
 name = "date_time"
-version = "2.1.0"
+version = "2.1.1"
 authors = ["notquiteamonad <44178347+notquiteamonad@users.noreply.github.com>"]
 description = "Date_Time is a high-level rust library for use in situations where precision beyond seconds is not necessary."
 documentation = "https://docs.rs/date_time"
