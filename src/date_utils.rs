@@ -11,7 +11,7 @@ lazy_static! {
 
 /// Takes a year as a u16 and returns whether it is a leap year.
 pub fn is_leap_year(year: u16) -> bool {
-    (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
+    year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
 }
 
 /// Produces the integer representing the last date in the month in year.
