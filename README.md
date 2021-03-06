@@ -13,9 +13,9 @@
 [![Average time to resolve an issue][isitmaintained-resolution-image]][isitmaintained]
 [![Percentage of issues still open][isitmaintained-open-image]][isitmaintained]
 
-[github-actions-image]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fsamueldple%2Fdate_time%2Fbadge&style=flat
+[github-actions-image]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fnotquiteamonad%2Fdate_time%2Fbadge&style=flat
 
-[github-actions]: https://actions-badge.atrox.dev/samueldple/date_time/goto
+[github-actions]: https://actions-badge.atrox.dev/notquiteamonad/date_time/goto
 
 [cratesio-image]: https://img.shields.io/crates/v/date_time.svg
 
@@ -31,19 +31,19 @@
 
 [cratesio-downloads-image]: https://img.shields.io/crates/d/date_time
 
-[fossa]: https://app.fossa.io/projects/git%2Bgithub.com%2Fsamueldple%2Fdate_time?ref=badge_shield
+[fossa]: https://app.fossa.io/projects/git%2Bgithub.com%2Fnotquiteamonad%2Fdate_time?ref=badge_shield
 
-[fossa-image]: https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsamueldple%2Fdate_time.svg?type=shield
+[fossa-image]: https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnotquiteamonad%2Fdate_time.svg?type=shield
 
-[isitmaintained]: http://isitmaintained.com/project/samueldple/date_time
+[isitmaintained]: http://isitmaintained.com/project/notquiteamonad/date_time
 
-[isitmaintained-resolution-image]: http://isitmaintained.com/badge/resolution/samueldple/date_time.svg
+[isitmaintained-resolution-image]: http://isitmaintained.com/badge/resolution/notquiteamonad/date_time.svg
 
-[isitmaintained-open-image]: http://isitmaintained.com/badge/open/samueldple/date_time.svg
+[isitmaintained-open-image]: http://isitmaintained.com/badge/open/notquiteamonad/date_time.svg
 
-[coveralls]: https://coveralls.io/github/samueldple/date_time
+[coveralls]: https://coveralls.io/github/notquiteamonad/date_time
 
-[coveralls-image]: https://coveralls.io/repos/github/samueldple/date_time/badge.svg
+[coveralls-image]: https://coveralls.io/repos/github/notquiteamonad/date_time/badge.svg
 
 [cii-best-practices]: https://bestpractices.coreinfrastructure.org/projects/3127
 
@@ -58,9 +58,9 @@ Dec 31 9999 at 23:59:59.
 **Note:** This README may contain documentation of features which have not been released yet. To ensure
 it is accurate for a specific version, use the tag selector and select the version you're using.
 
-[Changelog](https://github.com/samueldple/date_time/blob/master/CHANGELOG.md) - **Note Version 2.0.0 includes a breaking change.**
+[Changelog](https://github.com/notquiteamonad/date_time/blob/master/CHANGELOG.md) - **Note Version 2.0.0 includes a breaking change.**
 
-[Code of Conduct](https://github.com/samueldple/date_time/blob/master/CODE_OF_CONDUCT.md)
+[Code of Conduct](https://github.com/notquiteamonad/date_time/blob/master/CODE_OF_CONDUCT.md)
 
 ## Usage
 
@@ -89,7 +89,7 @@ similar functionality. As such, each of the types are suffixed with "Tuple".
 Type aliases exist without the Tuple suffixes from version 1.2.1 onwards.
 
 There is a new replacement of the Kotlin library available
-[here](https://github.com/samueldple/date-time-kt).
+[here](https://github.com/notquiteamonad/date-time-kt).
 
 ### Times
 
@@ -249,6 +249,6 @@ For a more precise wrapper of dates, try a crate such as [chrono](https://crates
 
 ## Vulnerabilities
 
-Vulnerabilities should be reported through GitHub issues (or confidentially by email to samueldple(at)gmail.com).
+Vulnerabilities should be reported through GitHub issues (or confidentially by email to 44178347+notquiteamonad@users.noreply.github.com).
 
 Dependabot is being used by this repository to ensure dependencies are kept up-to-date, meaning security fixes will be applied as quickly as possible once vulnerabilities are patched in dependencies.

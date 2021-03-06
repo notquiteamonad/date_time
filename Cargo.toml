@@ -1,20 +1,20 @@
 [package]
 name = "date_time"
 version = "2.1.0"
-authors = ["samueldple <samueldple@gmail.com>"]
+authors = ["notquiteamonad <44178347+notquiteamonad@users.noreply.github.com>"]
 description = "Date_Time is a high-level rust library for use in situations where precision beyond seconds is not necessary."
 documentation = "https://docs.rs/date_time"
-repository = "https://github.com/samueldple/date_time"
+repository = "https://github.com/notquiteamonad/date_time"
 readme = "README.md"
 keywords = ["date", "time", "datetime", "month"]
 categories = ["date-and-time"]
 license = "Apache-2.0"
 
 [badges]
-travis-ci = { repository = "samueldple/date_time" }
-is-it-maintained-issue-resolution = { repository = "samueldple/date_time" }
-is-it-maintained-open-issues = { repository = "samueldple/date_time" }
-coveralls = { repository = "samueldple/date_time", branch = "master", service = "github" }
+travis-ci = { repository = "notquiteamonad/date_time" }
+is-it-maintained-issue-resolution = { repository = "notquiteamonad/date_time" }
+is-it-maintained-open-issues = { repository = "notquiteamonad/date_time" }
+coveralls = { repository = "notquiteamonad/date_time", branch = "master", service = "github" }
 
 [dependencies]
 regex = "1.1.6"
