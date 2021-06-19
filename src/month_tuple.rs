@@ -17,7 +17,11 @@ pub type Month = MonthTuple;
 /// **NOTE:** MonthTuple's `m` field is one-based (one represents January) as of version 2.0.0.
 ///
 /// Only handles values between Jan 0000 and Dec 9999 (inclusive).
-#[derive(PartialEq, Eq, Debug, Copy, Clone)]
+#[cfg_attr(
+    feature = "serde_support",
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[derive(PartialEq, Eq, Debug, Copy, Clone, Hash)]
 pub struct MonthTuple {
     y: u16,
     m: u8,
