@@ -10,7 +10,7 @@ pub type DateTime = DateTimeTuple;
 /// Wrapper for a specific date and time.
 ///
 /// Comprised of a DateTuple and a TimeTuple.
-#[derive(PartialEq, Eq, Debug, Copy, Clone)]
+#[derive(PartialEq, Eq, Debug, Copy, Clone, Hash)]
 pub struct DateTimeTuple {
     d: DateTuple,
     t: TimeTuple,
