@@ -91,6 +91,11 @@ Type aliases exist without the Tuple suffixes from version 1.2.1 onwards.
 There is a new replacement of the Kotlin library available
 [here](https://github.com/notquiteamonad/date-time-kt).
 
+##### Serde Support
+
+Types exported by this library have `Serialize` and `Deserialize` implementations
+behind the `serde_support` feature flag.
+
 ### Times
 
 #### TimeTuple

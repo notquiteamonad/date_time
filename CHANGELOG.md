@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.2.0
+
+- Derived `Hash` on all types (#61, thanks @flauntingspade4)
+- Derived `Serialize` and `Deserialise` behind the `serde_support` flag (also #61)
+
 ## Version 2.1.1
 
 - Improved performance of functions using regex (thanks, @tuube)
