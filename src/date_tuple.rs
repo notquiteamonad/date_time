@@ -13,6 +13,7 @@ pub type Date = DateTuple;
 /// Holds a specific date by year, month, and day.
 ///
 /// Handles values from 01 Jan 0000 to 31 Dec 9999.
+#[cfg_attr(feature = "serde_support", derive(serde::Serialize, serde::Deserialize))]
 #[derive(PartialEq, Eq, Debug, Copy, Clone, Hash)]
 pub struct DateTuple {
     y: u16,

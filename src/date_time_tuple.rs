@@ -5,11 +5,13 @@ use std::fmt;
 use std::str::FromStr;
 use time_tuple::TimeTuple;
 
+
 pub type DateTime = DateTimeTuple;
 
 /// Wrapper for a specific date and time.
 ///
 /// Comprised of a DateTuple and a TimeTuple.
+#[cfg_attr(feature = "serde_support", derive(serde::Serialize, serde::Deserialize))]
 #[derive(PartialEq, Eq, Debug, Copy, Clone, Hash)]
 pub struct DateTimeTuple {
     d: DateTuple,

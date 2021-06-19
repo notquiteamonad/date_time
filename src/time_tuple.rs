@@ -17,6 +17,7 @@ pub type TimeOfDay = TimeTuple;
 /// **NOTE:** This cannot be 24 hours or greater - see `TimeTuple::new()` for more details.
 ///
 /// The wrapping described in `TimeTuple::new()` also applies when adding and subtracting times.
+#[cfg_attr(feature = "serde_support", derive(serde::Serialize, serde::Deserialize))]
 #[derive(PartialEq, Eq, Debug, Copy, Clone, Hash)]
 pub struct TimeTuple {
     h: u8,
