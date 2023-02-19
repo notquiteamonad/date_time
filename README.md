@@ -49,6 +49,14 @@
 
 [cii-best-practices-image]: https://bestpractices.coreinfrastructure.org/projects/3127/badge
 
+## DEPRECATION
+
+date_time is now deprecated. I'd recommend checking out some of the other excellent
+[Date and Time libraries for Rust](https://crates.io/categories/date-and-time).
+
+<details><summary>Rest of the README content</summary>
+
+
 Date_Time is a high-level rust library for use in situations where
 precision beyond seconds is not necessary.
 
@@ -251,3 +259,5 @@ For a more precise wrapper of dates, try a crate such as [chrono](https://crates
 Vulnerabilities should be reported through GitHub issues (or confidentially by email to 44178347+notquiteamonad@users.noreply.github.com).
 
 Dependabot is being used by this repository to ensure dependencies are kept up-to-date, meaning security fixes will be applied as quickly as possible once vulnerabilities are patched in dependencies.
+
+</details>
